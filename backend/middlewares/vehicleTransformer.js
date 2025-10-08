@@ -1,6 +1,6 @@
 // middleware/vehicleTransformer.js
 const transformVehicleData = (req, res, next) => {
-    let data = req.body;
+    let data = req.body || {};
 
     // Standardization and Coercion
     if (data['Fuel Type']) {

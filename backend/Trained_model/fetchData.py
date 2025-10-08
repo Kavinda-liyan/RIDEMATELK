@@ -5,7 +5,7 @@ from pymongo import MongoClient
 csv_file = r"D:\IT\Final Year Project\RideMateLK\backend\Trained_model\vehicles_merged.csv"
 df = pd.read_csv(r"D:\IT\Final Year Project\RideMateLK\backend\Trained_model\vehicles_merged.csv")
 
-df.drop(columns=['Unnamed: 0'], inplace=True, errors='ignore')
+df.drop(columns=['VehicleID'], inplace=True, errors='ignore')
 
 # 2️⃣ Connect to MongoDB
 MONGO_URI = "mongodb://localhost:27017/"   # change if needed

@@ -8,11 +8,18 @@ dotenv.config();
 connectDB();
 const app=express();
 app.use(express.json());
+app.use(express.urlencoded({extended:true}));
 
 app.get('/',(req,res)=>{
 
     res.send('Vehicle Recommender API is Running...');
 });
+
+app.post('/test-json', (req, res) => {
+    console.log('req.body:', req.body);
+    res.json({ received: req.body });
+});
+
 
 app.use('/api/vehicles',vehicleRoutes);
 app.use('/api/recommendations',recommendationRoutes);

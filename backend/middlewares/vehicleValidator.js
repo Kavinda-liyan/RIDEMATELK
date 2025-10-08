@@ -1,25 +1,24 @@
 // middleware/vehicleValidator.js
 const validateVehicleInput = (req, res, next) => {
-    const { 
-        Manufacturer, Model, 'Body Type': BodyType, 
-        'Seating Capacity': SeatingCapacity, 'Fuel Type': FuelType 
-    } = req.body;
+    const body = req.body || {};
 
-    // Check for required fields
-    if (!Manufacturer || !Model || !BodyType || !SeatingCapacity || !FuelType) {
-        return res.status(400).json({ 
-            message: "Missing required fields." 
-        });
+    const Manufacturer = body.Manufacturer;
+    const Model = body.Model;
+    const BodyType = body['Body Type'];
+    const SeatingCapacity = body['Seating Capacity'];
+    const FuelType = body['Fuel Type'];
+
+    // For updates, we only check if a field exists before validating
+    if ('Seating Capacity' in body && isNaN(parseInt(SeatingCapacity))) {
+        return res.status(400).json({ message: "Seating Capacity must be a valid number." });
     }
 
-    // Check for basic numeric validation
-    if (isNaN(parseInt(SeatingCapacity))) {
-        return res.status(400).json({ 
-            message: "Seating Capacity must be a valid number." 
-        });
+    // Optionally, check for required fields on creation
+    if (req.method === 'POST') {
+        if (!Manufacturer || !Model || !BodyType || !SeatingCapacity || !FuelType) {
+            return res.status(400).json({ message: "Missing required fields." });
+        }
     }
-    
-    // Add more detailed validation for EFF and Ground Clearance if they are in the body
 
     next();
 };

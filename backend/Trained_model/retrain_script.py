@@ -141,7 +141,7 @@ def save_artifacts(scaler, knn_model, feature_cols, weights, df):
     metadata_df = df[[c for c in metadata_cols if c in df.columns]].copy()
     joblib.dump(metadata_df, 'vehicle_metadata.joblib')
     
-    print("✅ Model, Scaler, and Metadata saved successfully.")
+    print("Model, Scaler, and Metadata saved successfully.")
 
 
 if __name__ == "__main__":
