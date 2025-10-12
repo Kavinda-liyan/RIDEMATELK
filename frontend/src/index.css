@@ -6,8 +6,12 @@
 @theme{
     --color-rmlk-red:#DE3031;
     --color-rmlk-dark_green:#0F2E37;
+    --color-rmlk-light_green:#184B59;
+    --color-rmlk-red-light:#E45959;
+    --color-rmlk-red-lighter:#FF7878;
     --font-rmlk-secondary:"Golos Text", sans-serif;
     --default-font-family: "Anybody", sans-serif;
+
     
 }
 :root{
@@ -20,6 +24,7 @@
 *{
     box-sizing: border-box;
     scroll-behavior: smooth;
+    animation-duration: 200ms;
    
 }
 .nav-link .tracking-widest{
@@ -51,5 +56,6 @@
     background-size: cover;
     background-repeat: no-repeat;
     background-position: 0px -180px;
+   
     
 }
