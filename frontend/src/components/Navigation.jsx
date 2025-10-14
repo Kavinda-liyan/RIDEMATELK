@@ -6,7 +6,7 @@ const Navigation = () => {
   const location = useLocation();
   return (
     <>
-      <nav className=" w-full h-[45px]  fixed bg-gradient-to-b from-rmlk-dark_green/100 to-rmlk-dark_green/0">
+      <nav className=" w-full h-[45px]  fixed bg-gradient-to-b from-rmlk-dark/100 to-rmlk-dark/0">
         <div className="pl-[60px] pr-[60px] py-[8px] h-full grid grid-cols-12">
           <div className="col-span-2 flex justify-start">
             <div className="font-rmlk-secondary font-bold tracking-wider text-white flex items-center justify-center ">
@@ -14,7 +14,7 @@ const Navigation = () => {
             </div>
           </div>
           <div className="col-span-8 flex justify-center items-center">
-            <ul className="navs flex gap-[32px] text-[12px] font-extralight">
+            <ul className="navs flex gap-[32px] text-[12px] font-light">
               <NavLinks path={"/"} navlink={"Home"} />
               <NavLinks path={"/recommendations"} navlink={"Recommendations"} />
               <NavLinks path={""} navlink={"About Us"} />
