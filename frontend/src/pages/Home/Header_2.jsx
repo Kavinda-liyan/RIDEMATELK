@@ -53,7 +53,7 @@ const Header_2 = () => {
     },
   ];
   return (
-    <div className="h-dvh bg-rmlk-dark grid grid-cols-12 pl-[60px] pr-[60px] pt-[45px] pb-[45px] gap-[20px]">
+    <div className="h-dvh bg-rmlk-dark grid grid-cols-12 pl-[60px] pr-[60px] pt-[45px] pb-[45px] gap-[20px]" id="Specifications">
       <div className="col-span-6 h-full">
         <div className=" grid grid-rows-12 h-full gap-[20px]">
           <div className="row-span-5 h-full">
@@ -69,12 +69,12 @@ const Header_2 = () => {
                 <HeaderCard
                   description={"Power your journey, your way."}
                   items={fuelTypes}
-                  duration={1.5}
+                  duration={0.8}
                 />
               </div>
             </div>
           </div>
-          <div className="row-span-2 flex items-center">
+          <div className="row-span-2 flex items-center text-center justify-center">
             <h3 className="text-[24px] font-light tracking-[4px] text-white">
               Discover the Drive That Defines You !
             </h3>
@@ -85,14 +85,14 @@ const Header_2 = () => {
                 <HeaderCard
                   description={"Precision in every shift."}
                   items={gearType}
-                  duration={2}
+                  duration={0.8}
                 />
               </div>
               <div className="col-span-6">
                 <HeaderCard
                   description={"Room for every story."}
                   items={seats}
-                  duration={2}
+                  duration={0.8}
                 />
               </div>
             </div>

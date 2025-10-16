@@ -26,7 +26,7 @@ const Header = () => {
             </p>
             <Link
               to={"/recommendations"}
-              className="text-[12px] px-[8px] py-[4px] border-[1.5px] rounded-full text-rmlk-red-light bg-rmlk-dark_green/20 hover:text-rmlk-red-lighter hover:shadow-sm hover:shadow-rmlk-red/20 duration-150"
+              className=" flex items-center justify-center text-[12px] px-[8px] py-[4px] border-[1.5px] rounded-full text-rmlk-red-light bg-rmlk-dark_green/20 hover:text-rmlk-red-lighter hover:shadow-sm hover:shadow-rmlk-red/20 duration-150"
             >
               Start Now !
             </Link>
