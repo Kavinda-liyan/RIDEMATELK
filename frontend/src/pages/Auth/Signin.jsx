@@ -1,21 +1,59 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import authbanner from "../../assets/Authbanner.jpg";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useLoginMutation } from "../../app/api/usersApiSlice.js";
+import { setCredentials } from "../../app/slices/authSlice.js";
 
 const Signin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [login, { isLoading, error }] = useLoginMutation();
+  const { userInfo } = useSelector((state) => state.auth);
+
+  const { search } = useLocation();
+  const searchParams = new URLSearchParams(search);
+  const redirect = searchParams.get("redirect") || "/";
+
+  useEffect(() => {
+    if (userInfo) {
+      navigate(redirect);
+    }
+  }, [navigate, userInfo, redirect]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!password || !email) {
       throw new Error("Email or password field is empty ");
     }
-    
+
     try {
-      
-    } catch (error) {}
+      const res = await login({ email, password }).unwrap();
+      dispatch(setCredentials({ ...res }));
+      navigate(redirect);
+    } catch (error) {
+      console.error(error);
+      alert(error?.data?.message || error.error);
+    }
   };
+  if (isLoading) {
+    return (
+      <div className="h-dvh pt-[45px] pl-[60px] pr-[60px] bg-rmlk-dark font-rmlk-secondary flex justify-center items-center text-white">
+        Loading...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="h-dvh pt-[45px] pl-[60px] pr-[60px] bg-rmlk-dark font-rmlk-secondary flex justify-center items-center text-white">
+        Error: {error?.data?.message || error.error}
+      </div>
+    );
+  }
 
   return (
     <div className="h-dvh pt-[45px] pl-[60px] pr-[60px] bg-rmlk-dark font-rmlk-secondary">
@@ -26,7 +64,7 @@ const Signin = () => {
             <p>To access more features.</p>
             <hr className="w-full"></hr>
             <div className="mt-[16px] ">
-              <form className="">
+              <form className="" onSubmit={handleSubmit}>
                 <div className="flex flex-col mb-[8px]">
                   <label className="my-[2px]">Email</label>
                   <input
@@ -55,6 +93,7 @@ const Signin = () => {
                 </div>
                 <div className="flex flex-col mt-[24px] ">
                   <button
+                    disabled={isLoading}
                     type="submit"
                     className="bg-blue-500 hover:bg-blue-400 hover:cursor-pointer duration-200 py-[4px] rounded-md shadow-md"
                   >

@@ -3,12 +3,15 @@ import NavLinks from "./Assets/NavLinks";
 import rmlk_logo_dark from "../assets/rmlk_logo_dark.svg";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faUserAlt } from "@fortawesome/free-solid-svg-icons";
+import { faCaretDown, faUserAlt } from "@fortawesome/free-solid-svg-icons";
+import { useSelector, useDispatch } from "react-redux";
 
 const Navigation = () => {
   const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
 
+  const dispatch = useDispatch();
+  const { userInfo } = useSelector((state) => state.auth);
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 150);
@@ -47,9 +50,22 @@ const Navigation = () => {
           </div>
           <div className="col-span-2 flex justify-end items-center">
             <div className="">
-              <Link to={"/signin"} className="h-full hover:cursor-pointer text-white font-light text-[12px] px-[16px] py-[6px] border-[1.5px] rounded-full hover:text-white/50 duration-200">
-                <FontAwesomeIcon icon={faUserAlt} /> Sign In
-              </Link>
+              {userInfo ? (
+                <>
+                  <div>
+                    <button className="text-white text-[12px]">
+                      {userInfo.username} <FontAwesomeIcon icon={faCaretDown} />
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <Link
+                  to={"/signin"}
+                  className="h-full hover:cursor-pointer text-white font-light text-[12px] px-[16px] py-[6px] border-[1.5px] rounded-full hover:text-white/50 duration-200"
+                >
+                  <FontAwesomeIcon icon={faUserAlt} /> Sign In
+                </Link>
+              )}
             </div>
           </div>
         </div>
