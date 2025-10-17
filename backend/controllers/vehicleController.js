@@ -3,7 +3,32 @@ import asyncHandler from "../middlewares/asyncHandler.js";
 import { Vehicle } from "../models/vehicleModel.js";
 import triggerRetraining from "../middlewares/automationService.js";
 import vehicleLogicCreator from "../middlewares/vehicleLogicCreator.js";
+import { bodyType } from "../models/bodyTypesModel.js";
 
+//#------------------BodyTypes------------------#//
+//@route GET/api/vehicles/bodytypes
+//@access Public
+const getBodyTypes = asyncHandler(async (req, res) => {
+  try {
+    const bodyTypes = await bodyType.find({});
+    res.status(200).json(bodyTypes);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+//@route POST/api/vehicles/bodytypes
+const createBodyType = asyncHandler(async (req, res) => {
+  try {
+    const newBodyType = new bodyType(req.body);
+    const createdBodyType = await newBodyType.save();
+    res.status(201).json(createdBodyType);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+export { getBodyTypes, createBodyType };
+
+//#------------------Vehicles------------------#//
 // @route   GET /api/vehicles
 // @access  Private/Admin
 const getAllVehicles = asyncHandler(async (req, res) => {
@@ -52,11 +77,10 @@ const updateVehicle = async (req, res) => {
     return res.status(404).json({ message: `No vehicle found with id: ${id}` });
 
   try {
-
     // Use $set to update only provided fields
     const updatedVehicle = await Vehicle.findByIdAndUpdate(
       id,
-      { $set:req.body },
+      { $set: req.body },
       { new: true, runValidators: true }
     );
 

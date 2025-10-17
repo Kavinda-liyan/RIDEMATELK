@@ -1,16 +1,20 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import NavLinks from "./Assets/NavLinks";
 import rmlk_logo_dark from "../assets/rmlk_logo_dark.svg";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown, faUserAlt } from "@fortawesome/free-solid-svg-icons";
 import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../app/slices/authSlice.js";
+import { useLogoutMutation } from "../app/api/usersApiSlice.js";
 
 const Navigation = () => {
-  const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+  const [LogoutApi] = useLogoutMutation();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { userInfo } = useSelector((state) => state.auth);
   useEffect(() => {
     const handleScroll = () => {
@@ -20,11 +24,34 @@ const Navigation = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const handleDropdown = () => {
+    setIsDropdownOpen((prev) => !prev);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await LogoutApi().unwrap();
+      dispatch(logout());
+      navigate("/signin");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
+  const handleLinkClick = () => {
+    setIsDropdownOpen(false);
+  };
+
   const navLinks = [
-    { path: "/", link_des: "Home" },
+    { path: "/home", link_des: "Home" },
     { path: "/recommendations", link_des: "Recommendations" },
     { path: "/about", link_des: "About Us" },
     { path: "/contact", link_des: "Contact Us" },
+  ];
+
+  const userLinks = [
+    { path: "/profile", link_des: "Profile" },
+    { path: "/favourite", link_des: "Favourite" },
   ];
   return (
     <>
@@ -53,7 +80,10 @@ const Navigation = () => {
               {userInfo ? (
                 <>
                   <div>
-                    <button className="text-white text-[12px]">
+                    <button
+                      onClick={handleDropdown}
+                      className="text-white text-[12px] hover:cursor-pointer hover:text-white/50 duration-200 "
+                    >
                       {userInfo.username} <FontAwesomeIcon icon={faCaretDown} />
                     </button>
                   </div>
@@ -68,6 +98,38 @@ const Navigation = () => {
               )}
             </div>
           </div>
+        </div>
+        <div
+          className={`${
+            isDropdownOpen ? "" : "hidden"
+          } absolute top-[40px] right-[65px] bg-rmlk-dark-lighter  rounded-md shadow-md overflow-hidden border-[1.5px] border-rmlk-dark-lighter`}
+        >
+          <ul className=" text-[16px] text-white">
+            {userLinks.map(({ path, link_des }) => (
+              <li>
+                <Link
+                  className=" px-[18px] py-[10px] hover:cursor-pointer hover:bg-rmlk-dark-light duration-200 w-full block"
+                  key={path}
+                  to={path}
+                  onClick={handleLinkClick}
+                >
+                  {link_des}
+                </Link>
+              </li>
+            ))}
+
+            <li>
+              <button
+                className="px-[18px] py-[10px] hover:cursor-pointer hover:bg-rmlk-dark-light duration-200 w-full"
+                onClick={() => {
+                  handleLogout();
+                  handleLinkClick();
+                }}
+              >
+                Sign out
+              </button>
+            </li>
+          </ul>
         </div>
       </nav>
     </>

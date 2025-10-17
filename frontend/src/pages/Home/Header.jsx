@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import rmlk_l_dark from "../../assets/rmlk_logo_dark.svg";
 const Header = () => {
   return (
-    <div
+    <section
       className="Header h-dvh bg-rmlk-dark_green pl-[60px] pr-[60px]"
       id="Home"
     >
@@ -33,7 +33,7 @@ const Header = () => {
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

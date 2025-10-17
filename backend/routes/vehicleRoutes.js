@@ -12,11 +12,21 @@ import {
 } from "../controllers/vehicleController.js";
 import vehicleLogicCreator from "../middlewares/vehicleLogicCreator.js";
 import { authAdmin, authenticate } from "../middlewares/authMiddleware.js";
+import {
+  getBodyTypes,
+  createBodyType,
+} from "../controllers/vehicleController.js";
+
+//---------------Body Types---------------
+//GET /api/vehicles/bodytypes
+router.get("/bodytypes", getBodyTypes);
+//POST /api/vehicles/bodytypes
+router.post("/bodytypes", authenticate, authAdmin, createBodyType);
 
 //---------------View Vehicles---------------
 
 //GET /api/vehicles
-router.get("/",authenticate,authAdmin, getAllVehicles);
+router.get("/", authenticate, authAdmin, getAllVehicles);
 //GET /api/vehicles/:id
 router.get("/:id", getVehicle);
 //POST /api/vehicles
@@ -41,5 +51,7 @@ router.patch(
 );
 //DELETE /api/vehicles/:id
 router.delete("/:id", authenticate, authAdmin, deleteVehicle);
+
+
 
 export default router;

@@ -53,7 +53,7 @@ const Header_2 = () => {
     },
   ];
   return (
-    <div className="h-dvh bg-rmlk-dark grid grid-cols-12 pl-[60px] pr-[60px] pt-[45px] pb-[45px] gap-[20px]" id="Specifications">
+    <section className="h-dvh bg-rmlk-dark grid grid-cols-12 pl-[60px] pr-[60px] pt-[45px] pb-[45px] gap-[20px]" id="Specifications">
       <div className="col-span-6 h-full">
         <div className=" grid grid-rows-12 h-full gap-[20px]">
           <div className="row-span-5 h-full">
@@ -107,7 +107,7 @@ const Header_2 = () => {
           alt="header_img_2"
         />
       </div>
-    </div>
+    </section>
   );
 };
 

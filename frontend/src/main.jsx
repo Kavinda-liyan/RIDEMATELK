@@ -14,13 +14,36 @@ import Home from "./pages/Home/Home.jsx";
 import Recommendation from "./pages/Recommendation/Recommendation.jsx";
 import Signin from "./pages/Auth/Signin.jsx";
 import Signup from "./pages/Auth/Signup.jsx";
+import { useSelector } from "react-redux";
+import AdminRoute from "./components/Routes/AdminRoute.jsx";
+import AllVehicles from "./pages/Admin/AllVehicles.jsx";
+import IndexRoute from "./components/Routes/IndexRoute.jsx";
+import Dashboard from "./pages/Admin/Dashboard.jsx";
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
-      <Route path="/" index={true} element={<Home />}></Route>
+      <Route path="/" index={true} element={<IndexRoute />}></Route>
+      <Route path="/home" element={<Home />} />
+      <Route
+        path="/admin/dashboard"
+        element={
+          <AdminRoute>
+            <Dashboard />
+          </AdminRoute>
+        }
+      />
       <Route path="/recommendations" element={<Recommendation />} />
       <Route path="/signin" element={<Signin />} />
       <Route path="/signup" element={<Signup />} />
+      <Route
+        path="/admin/allvehicles"
+        element={
+          <AdminRoute>
+            <AllVehicles />
+          </AdminRoute>
+        }
+      />
     </Route>
   )
 );

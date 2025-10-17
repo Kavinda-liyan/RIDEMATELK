@@ -37,7 +37,7 @@
   content: '';
   position: absolute;
   left: 0;
-  bottom: -2px; /* distance from text */
+  bottom: -1px; /* distance from text */
   width: 0%;
   height: 2px;
   background-color: var(--color-rmlk-red); /* samurai red */

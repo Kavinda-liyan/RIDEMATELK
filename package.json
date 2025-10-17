@@ -1,15 +1,15 @@
 {
   "scripts": {
-  "start": "node backend/server.js",
-  "server": "npm run server --prefix backend",
-  "client": "npm run dev --prefix frontend",
-  "dev": "concurrently \"npm run server\" \"npm run client\""
-}
-,
+    "start": "node backend/server.js",
+    "server": "npm run server --prefix backend",
+    "client": "npm run dev --prefix frontend",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.1.0",
     "@fortawesome/free-solid-svg-icons": "^7.1.0",
-    "@fortawesome/react-fontawesome": "^3.1.0"
+    "@fortawesome/react-fontawesome": "^3.1.0",
+    "recharts": "^3.3.0"
   },
   "devDependencies": {
     "concurrently": "^9.2.1",
