@@ -50,7 +50,7 @@ const Navigation = () => {
   ];
 
   const userLinks = [
-    { path: "/profile", link_des: "Profile" },
+    { path: "/profile", user_link_des: "Profile" },
     { path: "/favourite", link_des: "Favourite" },
   ];
   return (
