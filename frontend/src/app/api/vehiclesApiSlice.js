@@ -4,10 +4,28 @@ import { VEHICLES_URL } from "../constants";
 export const vehiclesApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getVehicles: builder.query({
-      query: ({page=1,limit=50}) => ({
-        url: `${VEHICLES_URL}?page=${page}&limit=${limit}`,
-        method: "GET",
-      }),
+      query: ({
+        page = 1,
+        limit = 50,
+        Manufacturer,
+        Model,
+        fuelType,
+        bodyType,
+        seatingCapacity,
+      }) => {
+        const params = new URLSearchParams({ page, limit });
+
+        if (Manufacturer) params.append("Manufacturer", Manufacturer);
+        if (Model) params.append("Model", Model);
+        if (fuelType) params.append("fuelType", fuelType);
+        if (bodyType) params.append("bodyType", bodyType);
+        if (seatingCapacity) params.append("seatingCapacity", seatingCapacity);
+
+        return {
+          url: `${VEHICLES_URL}?${params.toString()}`,
+          method: "GET",
+        };
+      },
       providesTags: ["Vehicle"],
       keepUnusedDataFor: 5,
     }),

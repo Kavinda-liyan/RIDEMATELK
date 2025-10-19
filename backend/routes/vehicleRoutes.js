@@ -15,6 +15,7 @@ import { authAdmin, authenticate } from "../middlewares/authMiddleware.js";
 import {
   getBodyTypes,
   createBodyType,
+  deleteBodyType,
 } from "../controllers/vehicleController.js";
 
 //---------------Body Types---------------
@@ -22,6 +23,8 @@ import {
 router.get("/bodytypes", getBodyTypes);
 //POST /api/vehicles/bodytypes
 router.post("/bodytypes", authenticate, authAdmin, createBodyType);
+//DELETE /api/vehicles/bodytypes/:id
+router.delete("/bodytypes/:id", authenticate, authAdmin, deleteBodyType);
 
 //---------------View Vehicles---------------
 
@@ -51,7 +54,5 @@ router.patch(
 );
 //DELETE /api/vehicles/:id
 router.delete("/:id", authenticate, authAdmin, deleteVehicle);
-
-
 
 export default router;

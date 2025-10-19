@@ -11,7 +11,26 @@ export const bodyTypesApiSlice = apiSlice.injectEndpoints({
       providesTags: ["BodyType"],
       keepUnusedDataFor: 5,
     }),
+    addBodyTypes: builder.mutation({
+      query: (data) => ({
+        url: `${BODY_TYPES_URL}`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["BodyType"],
+    }),
+    deleteBodyType: builder.mutation({
+      query: (id) => ({
+        url: `${BODY_TYPES_URL}/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["BodyType"],
+    }),
   }),
 });
 
-export const { useGetBodyTypesQuery } = bodyTypesApiSlice;
+export const {
+  useGetBodyTypesQuery,
+  useAddBodyTypesMutation,
+  useDeleteBodyTypeMutation,
+} = bodyTypesApiSlice;

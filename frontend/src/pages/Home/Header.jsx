@@ -4,7 +4,7 @@ import rmlk_l_dark from "../../assets/rmlk_logo_dark.svg";
 const Header = () => {
   return (
     <section
-      className={` Header h-dvh bg-rmlk-dark_green pl-[60px] pr-[60px]`}
+      className={` Header h-dvh bg-rmlk-dark_green pl-[60px] pr-[60px] relative`}
       id="Home"
     >
       <div className="h-auto pt-[45px] absolute top-[50%] left-[50%] transform translate-x-[-50%] translate-y-[-60%]">

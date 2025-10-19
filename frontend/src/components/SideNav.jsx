@@ -27,9 +27,9 @@ const SideNav = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
   return (
-    <nav>
-      <div className={`h-[calc(100vh-45px)] mt-[45px] w-[180px] fixed z-30  `}>
-        <div className="  relative top-2 pl-[60px] text-[12px]">
+    <nav className="fixed">
+      <div className={`h-[100dvh] w-[200px] z-30  `}>
+        {/* <div className="  relative top-2 pl-[60px] text-[12px]">
           <button
             onClick={handleSidenav}
             className="group hover:cursor-pointer flex items-center gap-2 bg-rmlk-dark-light border-[1.5px] border-rmlk-dark-lighter text-white w-[40px] hover:w-[140px] px-[8px] py-[4px] rounded-md shadow-md overflow-hidden duration-300 hover:bg-rmlk-dark-lighter/80"
@@ -40,21 +40,17 @@ const SideNav = () => {
               <FontAwesomeIcon icon={faCaretRight} />
             </span>
           </button>
-        </div>
+        </div> */}
         <div
-          className={`relative top-[-34px] h-full ${
-            isSidenavOpen ? "left-[0px] opacity-100" : "left-[-200px] opacity-0"
-          } duration-300 transition-all ease-in-out`}
+          className={`relative h-full 
+             left-[0px] opacity-100
+           duration-300 transition-all ease-in-out`}
         >
-          <div className="flex  justify-start  h-full bg-rmlk-dark-light ">
-            <ul className="text-[12px] flex flex-col gap-[16px] pl-[24px] py-[8px] w-full text-white">
-              <li
-                onClick={() => handleSidenav()}
-                className=" text-white px-[4px] py-[4px]  rounded-md  duration-200 hover:cursor-pointer group"
-              >
+          <div className="flex  justify-start  h-full bg-rmlk-dark ">
+            <ul className="text-[12px] flex flex-col gap-[16px] pl-[56px] py-[8px] w-full text-white pt-[60px]">
+              <li className=" text-white px-[4px] py-[4px]  rounded-md  duration-200 hover:cursor-pointer group">
                 <FontAwesomeIcon className="pr-[4px]" icon={faBars} /> Admin
                 Panel
-                
               </li>
 
               <NavLinks path={"/admin/dashboard"} navlink={"Dashboard"}>

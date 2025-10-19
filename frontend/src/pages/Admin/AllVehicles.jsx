@@ -1,11 +1,27 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useGetVehiclesQuery } from "../../app/api/vehiclesApiSlice";
 import { setPage } from "../../app/slices/paginationSlice";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import PageWrapper from "../../components/Assets/PageWrapper";
 
 const AllVehicles = () => {
   const dispatch = useDispatch();
   const { page, limit } = useSelector((state) => state.pagination);
-  const { data, isLoading, isError } = useGetVehiclesQuery({ page, limit });
+  const [filters, setFilters] = useState({
+    Manufacturer: "",
+    Model: "",
+    fuelType: "",
+    bodyType: "",
+    seatingCapacity: "",
+  });
+
+  const { data, isLoading, isError } = useGetVehiclesQuery(
+    { page, limit, ...filters },
+    { refetchOnMountOrArgChange: true }
+  );
 
   const visiblePages = 5;
 
@@ -26,15 +42,43 @@ const AllVehicles = () => {
     "Year",
   ];
 
-  const roadCondition = [{ type: "city/urban", color: "bg-red-500" }];
-  const handleVehicleClick=()=>{
+  console.log("Vehicles Data:", data);
 
-  }
+  const roadCondition = [
+    { type: "City/Urban", color: "bg-green-400" },
+    { type: "Suburban/Normal", color: "bg-amber-400" },
+    { type: "Mid Off-Road", color: "bg-orange-500" },
+    { type: "Off-Road/Hilly Terrain", color: "bg-red-600" },
+  ];
+  const handleVehicleClick = () => {};
+
+  useEffect(() => {
+    dispatch(setPage(1));
+  }, [filters, dispatch]);
 
   return (
-    <div className="min-h-dvh bg-rmlk-dark pl-[60px] pr-[60px] pt-[96px] text-white">
-      <div className="bg-rmlk-dark-light p-[16px] rounded-md shadow-md"></div>
-      <div className="mt-[20px] bg-rmlk-dark-light rounded-md">
+    <PageWrapper>
+      
+      <div className="bg-rmlk-dark-light p-[16px] rounded-md shadow-md flex flex-wrap gap-[20px] items-center font-rmlk-secondary text-[12px] text-white">
+        
+        <div className="flex items-center">
+          <Link
+            to="/admin/addvehicle"
+            className="w-fit h-fit px-[8px] py-[4px] rounded-md bg-rmlk-red text-white font-semibold shadow-md hover:bg-rmlk-red-light duration-200"
+          >
+            <FontAwesomeIcon icon={faPlus} /> Add new vehicle
+          </Link>
+        </div>
+        <input
+          type="text"
+          placeholder="manufacturer"
+          value={filters.Manufacturer}
+          onChange={(e) =>
+            setFilters({ ...filters, Manufacturer: e.target.value })
+          }
+        />
+      </div>
+      <div className="mt-[20px] bg-rmlk-dark-light rounded-md text-white">
         <table className="table-auto w-full border-collapse">
           <thead>
             <tr className="bg-rmlk-dark-lighter border-b border-gray-600 font-rmlk-secondary font-light text-[12px]">
@@ -62,8 +106,8 @@ const AllVehicles = () => {
               data.vehicles.map((vehicle) => (
                 <tr
                   key={vehicle._id}
-                  className="text-[12px] font-rmlk-secondary hover:bg-rmlk-dark-lighter transition-all duration-200 hover:cursor-pointer"
-                  onClick={()=>handleVehicleClick( )}
+                  className="text-[12px] font-rmlk-secondary transition-all duration-200 hover:cursor-pointer"
+                  onClick={() => handleVehicleClick()}
                 >
                   <td className="p-2">{vehicle["Manufacturer"]}</td>
                   <td className="p-2">{vehicle["Model"]}</td>
@@ -102,34 +146,16 @@ const AllVehicles = () => {
                   <td className="p-2">{vehicle["Ground Clearance (range)"]}</td>
                   <td className="p-2">
                     <div className="flex items-center gap-2 justify-start">
-                      <div
-                        className={`w-[8px] h-[8px] rounded-full ${
-                          vehicle["City/Urban"] === 1
-                            ? "bg-green-400"
-                            : "bg-rmlk-dark-lighter"
-                        }`}
-                      ></div>
-                      <div
-                        className={`w-[8px] h-[8px] rounded-full ${
-                          vehicle["Suburban/Normal"] === 1
-                            ? "bg-amber-400"
-                            : "bg-rmlk-dark-lighter"
-                        }`}
-                      ></div>
-                      <div
-                        className={`w-[8px] h-[8px] rounded-full ${
-                          vehicle["Mid Off-Road"] === 1
-                            ? "bg-orange-500"
-                            : "bg-rmlk-dark-lighter"
-                        }`}
-                      ></div>
-                      <div
-                        className={`w-[8px] h-[8px] rounded-full ${
-                          vehicle["Off-Road/Hilly Terrain"] === 1
-                            ? "bg-red-600"
-                            : "bg-rmlk-dark-lighter"
-                        }`}
-                      ></div>
+                      {roadCondition.map((condition) => (
+                        <div
+                          key={condition.type}
+                          className={`w-[8px] h-[8px] rounded-full ${
+                            vehicle[condition.type] === 1
+                              ? `${condition.color}`
+                              : "bg-rmlk-dark-lighter"
+                          }`}
+                        ></div>
+                      ))}
                     </div>
                   </td>
                   <td className="p-2">{vehicle["Year"]}</td>
@@ -148,7 +174,7 @@ const AllVehicles = () => {
 
       {/* Pagination */}
       {data && totalPages > 1 && (
-        <div className="flex justify-center py-4 gap-2 font-rmlk-secondary text-[12px]">
+        <div className="flex justify-center py-4 gap-2 font-rmlk-secondary text-[12px] text-white">
           {/* Prev / Next controls */}
           <button
             className="px-3 py-1 bg-rmlk-dark-lighter rounded disabled:opacity-50 hover:cursor-pointer"
@@ -175,7 +201,9 @@ const AllVehicles = () => {
             <button
               key={p}
               className={`px-3 py-1 rounded ${
-                page === p ? "border border-rmlk-red bg-rmlk-dark-lighter hover:cursor-pointer" : "bg-rmlk-dark-lighter hover:cursor-pointer"
+                page === p
+                  ? "border border-rmlk-red bg-rmlk-dark-lighter hover:cursor-pointer"
+                  : "bg-rmlk-dark-lighter hover:cursor-pointer"
               }`}
               onClick={() => dispatch(setPage(p))}
             >
@@ -202,7 +230,7 @@ const AllVehicles = () => {
           </button>
         </div>
       )}
-    </div>
+    </PageWrapper>
   );
 };
 

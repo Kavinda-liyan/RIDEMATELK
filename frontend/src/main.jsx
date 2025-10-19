@@ -19,6 +19,7 @@ import AdminRoute from "./components/Routes/AdminRoute.jsx";
 import AllVehicles from "./pages/Admin/AllVehicles.jsx";
 import IndexRoute from "./components/Routes/IndexRoute.jsx";
 import Dashboard from "./pages/Admin/Dashboard.jsx";
+import AddVehicles from "./pages/Admin/AddVehicles.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -41,6 +42,14 @@ const router = createBrowserRouter(
         element={
           <AdminRoute>
             <AllVehicles />
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/admin/addvehicle"
+        element={
+          <AdminRoute>
+            <AddVehicles />
           </AdminRoute>
         }
       />
