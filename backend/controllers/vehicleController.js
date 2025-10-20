@@ -4,6 +4,7 @@ import { Vehicle } from "../models/vehicleModel.js";
 import triggerRetraining from "../middlewares/automationService.js";
 import vehicleLogicCreator from "../middlewares/vehicleLogicCreator.js";
 import { bodyType } from "../models/bodyTypesModel.js";
+import { Manufacturer } from "../models/manufactureModel.js";
 
 //#------------------BodyTypes------------------#//
 //@route GET/api/vehicles/bodytypes
@@ -52,12 +53,59 @@ const deleteBodyType = asyncHandler(async (req, res) => {
   }
   try {
     await bodyType.findByIdAndDelete(id);
-    res.json({ message: "Body type deleted successfully" });
+    res.status(200).json({ message: "Body type deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
-export { getBodyTypes, createBodyType, deleteBodyType };
+
+//#------------------Manufacturer--------------#
+
+//@route POST/api/vehicles/manufacturer
+//@access Private/Admin
+
+const createManufacturer = asyncHandler(async (req, res) => {
+  const { manufacturer, country } = req.body;
+
+  if (!manufacturer || !country) {
+    res.status(400).json({ message: "Manufacturer and Country required" });
+  }
+
+  try {
+    const newManufacturer = new Manufacturer(req.body);
+    const createManufacturer = await newManufacturer.save();
+    res.status(201).json(createManufacturer);
+  } catch {
+    return res.status(400).json({ message: error.message });
+  }
+});
+
+//@route GET/api/vehicles/manufacturer
+
+const getManufacturer = asyncHandler(async (req, res) => {
+  try {
+    const manufacturers = await Manufacturer.find({});
+    res.status(200).json(manufacturers);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+const deleteManufacturer = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res
+      .status(404)
+      .json({ message: `No manufacturer found with id ${id}` });
+  }
+
+  try {
+    await Manufacturer.findByIdAndDelete(id);
+    res.status(200).json({ message: "Manufacturer deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
 //#------------------Vehicles------------------#//
 // @route   GET /api/vehicles
@@ -173,7 +221,7 @@ const updateVehicle = async (req, res) => {
 
 // @route   DELETE /api/vehicles/:id
 // @access  Private/Admin
-const deleteVehicle = async (req, res, next) => {
+const deleteVehicle = async (req, res) => {
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -190,6 +238,9 @@ const deleteVehicle = async (req, res, next) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export { getBodyTypes, createBodyType, deleteBodyType };
+export { createManufacturer, getManufacturer, deleteManufacturer };
 
 export {
   getAllVehicles,

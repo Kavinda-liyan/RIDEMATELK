@@ -18,6 +18,8 @@
 :root{
     --color-rmlk-red:#DE3031;
     --color-rmlk-dark_green:#0F2E37;
+    --color-rmlk-dark-lghter:#797474;
+    --color-rmlk-dark-lght:#2A2A2B;
     --font-rmlk-secondary:"Golos Text", sans-serif;
     --default-font-family: "Anybody", sans-serif;
 }
@@ -26,8 +28,23 @@
     box-sizing: border-box;
     scroll-behavior: smooth;
     animation-duration: 200ms;
+    
    
 }
+*::-webkit-scrollbar-button {
+  display: none; 
+}
+::-webkit-scrollbar {
+  width: 8px; 
+  height: 8px;
+  background-color: var(--color-rmlk-dark-lghter);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-rmlk-dark-lght); 
+  border-radius: 10px;
+}
+
 .nav-link .tracking-widest{
     position: relative;
     text-decoration: none;

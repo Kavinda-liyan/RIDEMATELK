@@ -9,6 +9,9 @@ import {
   createVehicle,
   updateVehicle,
   deleteVehicle,
+  createManufacturer,
+  getManufacturer,
+  deleteManufacturer,
 } from "../controllers/vehicleController.js";
 import vehicleLogicCreator from "../middlewares/vehicleLogicCreator.js";
 import { authAdmin, authenticate } from "../middlewares/authMiddleware.js";
@@ -25,6 +28,11 @@ router.get("/bodytypes", getBodyTypes);
 router.post("/bodytypes", authenticate, authAdmin, createBodyType);
 //DELETE /api/vehicles/bodytypes/:id
 router.delete("/bodytypes/:id", authenticate, authAdmin, deleteBodyType);
+
+//---------------Manufacturer---------------
+router.get("/manufacturer", authenticate, authAdmin, getManufacturer);
+router.post("/manufacturer", authenticate, authAdmin, createManufacturer);
+router.delete("/manufacturer/:id", authenticate, authAdmin, deleteManufacturer);
 
 //---------------View Vehicles---------------
 

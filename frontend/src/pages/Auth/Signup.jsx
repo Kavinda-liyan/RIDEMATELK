@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import authbanner from "../../assets/Authbanner.jpg";
 const Signup = () => {
-  return <div className="h-dvh pt-[45px] pl-[60px] pr-[60px] bg-rmlk-dark font-rmlk-secondary">
+  return (
+    <div className="h-dvh pt-[45px] pl-[60px] pr-[60px] bg-rmlk-dark font-rmlk-secondary">
       <div className="grid grid-cols-12 h-full py-[24px] px-[120px]  ">
         <div className="col-span-7 h-full w-full bg-rmlk-dark-light rounded-tl-xl rounded-bl-xl shadow-md">
           <div className="flex justify-center h-full w-full flex-col py-[16px] px-[60px] text-white text-left">
@@ -42,12 +43,23 @@ const Signup = () => {
                     className="bg-rmlk-dark-lighter text-[12px] p-[6px] rounded-md"
                   ></input>
                 </div>
+                <div className="flex flex-col mt-[24px] ">
+                  <button
+                    
+                    type="submit"
+                    className="bg-blue-500 hover:bg-blue-400 hover:cursor-pointer duration-200 py-[4px] rounded-md shadow-md"
+                  >
+                    Login
+                  </button>
+                </div>
               </form>
             </div>
             <div className="mt-[16px] flex ">
               <p className="text-[12px] text-white/50">
                 Already have an Account?{" "}
-                <Link to={"/signin"} className="text-white underline">Sign in</Link>
+                <Link to={"/signin"} className="text-white underline">
+                  Sign in
+                </Link>
               </p>
             </div>
           </div>
@@ -56,7 +68,8 @@ const Signup = () => {
           <img src={authbanner} alt="authbanner" />
         </div>
       </div>
-    </div>;
+    </div>
+  );
 };
 
 export default Signup;
