@@ -16,10 +16,10 @@ import Signin from "./pages/Auth/Signin.jsx";
 import Signup from "./pages/Auth/Signup.jsx";
 import { useSelector } from "react-redux";
 import AdminRoute from "./components/Routes/AdminRoute.jsx";
-import AllVehicles from "./pages/Admin/AllVehicles.jsx";
+import AllVehicles from "./pages/Admin/Vehicles/AllVehicles.jsx";
 import IndexRoute from "./components/Routes/IndexRoute.jsx";
 import Dashboard from "./pages/Admin/Dashboard.jsx";
-import AddVehicles from "./pages/Admin/AddVehicles.jsx";
+import AddVehicles from "./pages/Admin/Vehicles/Add/AddVehicles.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(

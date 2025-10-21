@@ -1,11 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useGetVehiclesQuery } from "../../app/api/vehiclesApiSlice";
-import { setPage } from "../../app/slices/paginationSlice";
+import { useGetVehiclesQuery } from "../../../app/api/vehiclesApiSlice";
+import { setPage } from "../../../app/slices/paginationSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import PageWrapper from "../../components/Assets/PageWrapper";
+import PageWrapper from "../../../components/Assets/PageWrapper";
 
 const AllVehicles = () => {
   const dispatch = useDispatch();
@@ -58,9 +58,7 @@ const AllVehicles = () => {
 
   return (
     <PageWrapper>
-      
       <div className="bg-rmlk-dark-light p-[16px] rounded-md shadow-md flex flex-wrap gap-[20px] items-center font-rmlk-secondary text-[12px] text-white">
-        
         <div className="flex items-center">
           <Link
             to="/admin/addvehicle"
