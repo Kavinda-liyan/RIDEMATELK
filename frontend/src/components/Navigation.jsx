@@ -70,8 +70,8 @@ const Navigation = () => {
           </div>
           <div className="col-span-8 flex justify-center items-center">
             <ul className="navs flex gap-[32px] text-[12px] font-light">
-              {navLinks.map(({ path, link_des }) => (
-                <NavLinks key={path} path={path} navlink={link_des} />
+              {navLinks.map(({ path, link_des }, index) => (
+                <NavLinks key={index} path={path} navlink={link_des} />
               ))}
             </ul>
           </div>
@@ -105,11 +105,10 @@ const Navigation = () => {
           } absolute top-[40px] right-[65px] bg-rmlk-dark-lighter  rounded-md shadow-md overflow-hidden border-[1.5px] border-rmlk-dark-lighter`}
         >
           <ul className=" text-[16px] text-white">
-            {userLinks.map(({ path, link_des }) => (
-              <li>
+            {userLinks.map(({ path, link_des }, index) => (
+              <li key={index}>
                 <Link
                   className=" px-[18px] py-[10px] hover:cursor-pointer hover:bg-rmlk-dark-light duration-200 w-full block"
-                  key={path}
                   to={path}
                   onClick={handleLinkClick}
                 >

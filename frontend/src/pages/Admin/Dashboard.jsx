@@ -8,6 +8,7 @@ import {
 } from "recharts";
 import { motion } from "framer-motion";
 import PageWrapper from "../../components/Assets/PageWrapper";
+import BreadCrumb from "../../components/BreadCrumb";
 
 const Dashboard = () => {
   const pieData = [
@@ -21,6 +22,7 @@ const Dashboard = () => {
 
   return (
     <PageWrapper>
+      <BreadCrumb links={[{ label: "Dashboard", to: "/admin/dashboard" }]} />
       <div className="">
         <motion.div
           initial={{ opacity: 0, y: 40 }}

@@ -6,6 +6,7 @@ import { faEdit, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import PageWrapper from "../../../components/Assets/PageWrapper";
+import BreadCrumb from "../../../components/BreadCrumb";
 
 const AllVehicles = () => {
   const dispatch = useDispatch();
@@ -58,6 +59,9 @@ const AllVehicles = () => {
 
   return (
     <PageWrapper>
+      <BreadCrumb
+        links={[{ label: "Vehicles", to: "/admin/allvehicles" }, ]}
+      />
       <div className="bg-rmlk-dark-light p-[16px] rounded-md shadow-md flex flex-wrap gap-[20px] items-center font-rmlk-secondary text-[12px] text-white">
         <div className="flex items-center">
           <Link

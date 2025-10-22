@@ -48,6 +48,8 @@ const vehicleSchema = new mongoose.Schema(
     "Ground Clearance (range)": { type: Number, required: true, default: 0 },
     ...bodyTypeFields,
     ...roadFields,
+    transmission: [{ type: String, required: true }],
+    years: [{ type: Number, required: true }],
     info_links: [
       { link: { type: String, trim: true }, tag: { type: String, trim: true } },
     ],

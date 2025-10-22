@@ -1,48 +1,52 @@
-import { useBodyTypes } from "../../../../hooks/useBodyTypes";
+import { useManufacturer } from "../../../../hooks/useManufacturer";
 import PopupModal from "../../../../components/PopupModal";
 import WarningIcon from "../../../../components/Assets/WarningIcon";
 import QuestionIcon from "../../../../components/Assets/QuestionIcon";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
-const BodyTypes = () => {
-  const bodyTypeHook = useBodyTypes();
-  const BodyTypeModals = (
+const AddManufacturerForm = () => {
+  const manufaturerHook = useManufacturer();
+
+  //Add manufacturer modal
+  const ManufacturerModals = (
     <>
-      {/*Add Body Type Modal */}
       <PopupModal
         actionName={"Add"}
-        action={bodyTypeHook.confirmAddBodyType}
-        isOpen={bodyTypeHook.showAddBodyTypeModal}
-        onClose={() => bodyTypeHook.setShowAddBodyTypeModal((prev) => !prev)}
+        action={manufaturerHook.confirmAddManufacturer}
+        isOpen={manufaturerHook.showManufacturerModal}
+        onClose={() => manufaturerHook.setShowManufaturerModal((prev) => !prev)}
       >
         <div className="text-center p-[8px]">
           <QuestionIcon />
           <p className="text-white">
             Do you want to add<br></br>
             <span className="font-rmlk-secondary text-[12px]">
-              Body Type: "{bodyTypeHook.bodyType}"
+              Manufacturer: "{manufaturerHook.Manufacturer}"
             </span>
             <br></br>{" "}
             <span className="font-rmlk-secondary text-[12px]">
-              Description: {bodyTypeHook.bodyDescription}
+              Country/Orgin: {manufaturerHook.Country}
             </span>{" "}
-            <br></br>to Body Type Collection{" "}
+            <br></br>to Manufacturer Type Collection{" "}
           </p>
         </div>
       </PopupModal>
-      {/* Delete Body Type Modal */}
+
+      {/* Delete Manufacturer Modal */}
       <PopupModal
         actionName={"Delete"}
-        action={bodyTypeHook.confirmDeleteBodyType}
-        isOpen={bodyTypeHook.showDeleteBodyTypeModal}
-        onClose={() => bodyTypeHook.setShowDeleteBodyTypeModal((prev) => !prev)}
+        action={manufaturerHook.confirmDeleteManufacturer}
+        isOpen={manufaturerHook.showDeleteManufacturerModal}
+        onClose={() =>
+          manufaturerHook.setShowDeleteManufacturerModal((prev) => !prev)
+        }
       >
         <div className="text-center p-[8px]">
           <WarningIcon />
           <p className="text-white">
-            Do you want to delete "{bodyTypeHook.BodyTypeToDelete}" Body Type ?
-            from Body Type Collection{" "}
+            Do you want to delete "{manufaturerHook.ManufacturerToDelete}"
+            Manufaturer ? from Manufaturer Collection{" "}
           </p>
         </div>
       </PopupModal>
@@ -50,26 +54,29 @@ const BodyTypes = () => {
   );
   return (
     <>
-      <>{BodyTypeModals}</>
+    <>{ManufacturerModals}</>
       <div className="row-span-6">
         <div className="bg-rmlk-dark-light rounded-md shadow-md p-[8px]">
           <div className="flex flex-col font-rmlk-secondary">
-            {bodyTypeHook.loadingBodyTypes ? (
+            {manufaturerHook.loadingManufaturer ? (
               <div>Loading...</div>
-            ) : bodyTypeHook.errorBodyTypes ? (
+            ) : manufaturerHook.errorManufacturer ? (
               <div>Error</div>
             ) : (
               <div className="flex flex-wrap gap-[4px] p-[8px]">
-                {bodyTypeHook.bodyTypesData.map((bt) => (
+                {manufaturerHook.manufaturerData.map((m) => (
                   <div
                     onClick={() =>
-                      bodyTypeHook.handleDeleteBodyType(bt._id, bt.bodytype)
+                      manufaturerHook.handleDeleteManufacturer(
+                        m._id,
+                        m.manufacturer
+                      )
                     }
-                    key={bt._id}
+                    key={m._id}
                     className="flex items-center px-[6px] py-[2px] bg-amber-600 text-[8px] text-white font-semibold rounded-md shadow-md hover:cursor-pointer hover:bg-amber-500 duration-200 "
                   >
                     <span className="">
-                      {bt.bodytype.trim().toUpperCase()}{" "}
+                      {m.manufacturer.trim().toUpperCase()}{" "}
                     </span>
 
                     <FontAwesomeIcon className="font-bold" icon={faTimes} />
@@ -78,36 +85,37 @@ const BodyTypes = () => {
               </div>
             )}
             <div className="text-white font-rmlk-secondary text-[12px] p-[8px]">
-              <form onSubmit={bodyTypeHook.handleAddBodyType}>
+              <form onSubmit={manufaturerHook.handleAddManufacturer}>
                 <div className="flex flex-col gap-[8px] ">
                   <div className="flex flex-col gap-[8px] border p-[8px] rounded-md border-rmlk-dark-lighter">
-                    <label htmlFor="bodyType" className="">
-                      Body Type :
+                    <label htmlFor="manufacturer" className="">
+                      Manufacturer :
                     </label>
                     <input
-                      id="bodyType"
-                      name="bodyType"
+                      id="manufacturer"
+                      name="manufacturer"
                       type="text"
-                      placeholder="Add body type..."
-                      value={bodyTypeHook.bodyType.toLowerCase()}
-                      onChange={(e) => bodyTypeHook.setBodyType(e.target.value)}
+                      placeholder="Add manufacturer..."
+                      value={manufaturerHook.Manufacturer}
+                      onChange={(e) =>
+                        manufaturerHook.setManufacturer(e.target.value)
+                      }
                       className="p-[4px] bg-rmlk-dark-lighter rounded-md w-full"
                     />
                   </div>
                   <div className="flex flex-col gap-[8px] border p-[8px] rounded-md border-rmlk-dark-lighter">
-                    <label htmlFor="bodyDes" className="">
-                      Body Description :
+                    <label htmlFor="country" className="">
+                      Country/Origin :
                     </label>
-                    <textarea
-                      rows={3}
-                      id="bodyDes"
-                      name="bodyDes"
+                    <input
+                      id="country"
+                      name="country"
                       type="text"
-                      value={bodyTypeHook.bodyDescription}
+                      placeholder="Add country/orgin..."
+                      value={manufaturerHook.Country}
                       onChange={(e) =>
-                        bodyTypeHook.setBodyDescription(e.target.value)
+                        manufaturerHook.setCountry(e.target.value)
                       }
-                      placeholder="Description..."
                       className="p-[4px] bg-rmlk-dark-lighter rounded-md w-full"
                     />
                   </div>
@@ -116,7 +124,7 @@ const BodyTypes = () => {
                       className="px-[8px] py-[4px] bg-blue-600 w-full rounded-md shadow-md hover:bg-blue-500 hover:cursor-pointer duration-200"
                       type="submit"
                     >
-                      Add body type
+                      Add
                     </button>
                   </div>
                 </div>
@@ -129,4 +137,4 @@ const BodyTypes = () => {
   );
 };
 
-export default BodyTypes;
+export default AddManufacturerForm;

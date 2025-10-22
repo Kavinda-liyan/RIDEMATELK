@@ -29,7 +29,15 @@ export const vehiclesApiSlice = apiSlice.injectEndpoints({
       providesTags: ["Vehicle"],
       keepUnusedDataFor: 5,
     }),
+    addVehicles: builder.mutation({
+      query: (data) => ({
+        url: `${VEHICLES_URL}`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Vehicle"],
+    }),
   }),
 });
 
-export const { useGetVehiclesQuery } = vehiclesApiSlice;
+export const { useGetVehiclesQuery, useAddVehiclesMutation } = vehiclesApiSlice;

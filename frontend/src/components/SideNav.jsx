@@ -61,6 +61,7 @@ const SideNav = () => {
               </NavLinks>
               <NavLinks path={"/admin/allvehicles"} navlink={"All Vehicles"}>
                 <FontAwesomeIcon className="pr-[4px]" icon={faCarSide} />{" "}
+                
               </NavLinks>
               <NavLinks path={""} navlink={"All Users"}>
                 <FontAwesomeIcon className="pr-[4px]" icon={faUsers} />{" "}
