@@ -18,7 +18,7 @@ const Navigation = () => {
   const { userInfo } = useSelector((state) => state.auth);
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 150);
+      setIsScrolled(window.scrollY > 250);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);

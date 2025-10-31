@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Navigation from "./components/Navigation";
 import SideNav from "./components/SideNav";
 import Footer from "./components/Footer";
@@ -8,9 +8,14 @@ import { ToastContainer } from "react-toastify";
 function App() {
   const { userInfo } = useSelector((state) => state.auth);
 
+  const location = useLocation();
+
   return (
     <>
-      <Navigation />
+      {location.pathname !== "/signin" && location.pathname !== "/signup" && (
+        <Navigation />
+      )}
+
       <ToastContainer position="top-right" autoClose={3000} />
 
       <div className="flex min-h-screen bg-gray-100 relative">
@@ -29,7 +34,8 @@ function App() {
           <div className="flex-grow">
             <Outlet />
           </div>
-          <Footer />
+          {location.pathname !== "/signin" &&
+            location.pathname !== "/signup" && <Footer />}
         </main>
       </div>
     </>

@@ -3,8 +3,6 @@ import NavLinks from "./Assets/NavLinks";
 import { useState, useEffect } from "react";
 import {
   faBars,
-  faCaretLeft,
-  faCaretRight,
   faCarSide,
   faDashboard,
   faHomeAlt,
@@ -61,7 +59,6 @@ const SideNav = () => {
               </NavLinks>
               <NavLinks path={"/admin/allvehicles"} navlink={"All Vehicles"}>
                 <FontAwesomeIcon className="pr-[4px]" icon={faCarSide} />{" "}
-                
               </NavLinks>
               <NavLinks path={""} navlink={"All Users"}>
                 <FontAwesomeIcon className="pr-[4px]" icon={faUsers} />{" "}
