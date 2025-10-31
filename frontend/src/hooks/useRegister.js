@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useRegisterMutation } from "../app/api/usersApiSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { setCredentials } from "../app/slices/authSlice";
 
 export const useRegister = () => {
   //Form states
@@ -16,7 +15,6 @@ export const useRegister = () => {
 
   const [register, { isLoading, isError, error }] = useRegisterMutation();
   const { userInfo } = useSelector((state) => state.auth);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const { search } = useLocation();

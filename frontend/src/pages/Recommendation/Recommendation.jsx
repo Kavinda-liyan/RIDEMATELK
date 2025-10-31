@@ -1,17 +1,6 @@
-import { useGetBodyTypesQuery } from "../../app/api/bodyTypesApiSlice";
-
+import { useSetRecommendations } from "../../hooks/useSetRecommendations";
 const Recommendation = () => {
-  const { data: bodyTypes, isLoading, isError } = useGetBodyTypesQuery();
-
-  const seating = ["2", "4", "5", "6", "7", "8"];
-  const roadCondition = [
-    "urban/highway",
-    "suburban",
-    "mid-offroad",
-    "offroad/hilly",
-  ];
-  const fuelType = ["petrol", "diesel", "electric", "hybrid"];
-  const trafficCondition = ["low", "medium", "high", "mixed"];
+  const setRecommendationsHook = useSetRecommendations();
   return (
     <section
       className="min-h-dvh bg-rmlk-dark pl-[60px] pr-[60px]"
@@ -22,24 +11,30 @@ const Recommendation = () => {
           <h3>Select factors that match your intrest</h3>
         </div>
         <div className="bg-rmlk-dark-light p-[16px] rounded-md shadow-md">
-          <form className="flex justify-center">
+          <form
+            className="flex justify-center"
+            onSubmit={setRecommendationsHook.handleSubmit}
+          >
             <div className="flex  justify-start gap-[48px]">
-              <div className="text-white text-[12px] flex gap-[16px]  w-fit items-center">
-                <label className="" htmlFor="bodyTypes">
-                  Body Types :
-                </label>
-
-                {isLoading ? (
+              <div className="text-white text-[12px] flex gap-[8px]  w-fit items-center">
+                {setRecommendationsHook.isLoading ? (
                   <p>Loading body types...</p>
-                ) : isError ? (
+                ) : setRecommendationsHook.isError ? (
                   <p>Error loading body types!</p>
                 ) : (
                   <select
                     id="bodyTypes"
                     name="bodyTypes"
-                    className="px-[8px] py-[4px] focus-visible:outline-0 hover:cursor-pointer"
+                    value={setRecommendationsHook.bodyType}
+                    onChange={(e) => {
+                      setRecommendationsHook.setBodyType(e.target.value);
+                    }}
+                    className="p-[8px] focus-visible:outline-0 hover:cursor-pointer bg-rmlk-dark-lighter rounded-md "
                   >
-                    {bodyTypes.map((bt) => (
+                    <option disabled={true} value={""}>
+                      Body Type
+                    </option>
+                    {setRecommendationsHook.bodyTypes.map((bt) => (
                       <option
                         key={bt._id}
                         value={bt.bodytype}
@@ -52,16 +47,20 @@ const Recommendation = () => {
                   </select>
                 )}
               </div>
-              <div className="text-white text-[12px] flex gap-[16px] w-fit items-center">
-                <label className="" htmlFor="seating">
-                  Seating Capacity :
-                </label>
+              <div className="text-white text-[12px] flex gap-[8px] w-fit items-center">
                 <select
                   id="seating"
                   name="seating"
-                  className="px-[4px] py-[4px] border-[1.5px] border-rmlk-red rounded-md focus-visible:outline-0"
+                  value={setRecommendationsHook.seatingCapacity}
+                  onChange={(e) => {
+                    setRecommendationsHook.setSeatingCapacity(e.target.value);
+                  }}
+                  className="p-[8px] focus-visible:outline-0 hover:cursor-pointer bg-rmlk-dark-lighter rounded-md"
                 >
-                  {seating.map((seat) => (
+                  <option disabled={true} value={""}>
+                    Seating Capacity
+                  </option>
+                  {setRecommendationsHook.seatingList.map((seat) => (
                     <option
                       className="bg-rmlk-dark-light p-10"
                       key={seat}
@@ -72,16 +71,20 @@ const Recommendation = () => {
                   ))}
                 </select>
               </div>
-              <div className="text-white text-[12px] flex gap-[16px] w-fit items-center">
-                <label className="" htmlFor="seating">
-                  Road Condition :
-                </label>
+              <div className="text-white text-[12px] flex gap-[8px] w-fit items-center">
                 <select
                   id="seating"
                   name="seating"
-                  className="px-[4px] py-[4px] border-[1.5px] border-rmlk-red rounded-md focus-visible:outline-0"
+                  value={setRecommendationsHook.roadCondition}
+                  onChange={(e) => {
+                    setRecommendationsHook.setRoadCondition(e.target.value);
+                  }}
+                  className="p-[8px] focus-visible:outline-0 hover:cursor-pointer bg-rmlk-dark-lighter rounded-md"
                 >
-                  {roadCondition.map((road) => (
+                  <option disabled={true} value={""}>
+                    Road Condition
+                  </option>
+                  {setRecommendationsHook.roadConditionList.map((road) => (
                     <option
                       className="bg-rmlk-dark-light p-10"
                       key={road}
@@ -92,16 +95,20 @@ const Recommendation = () => {
                   ))}
                 </select>
               </div>
-              <div className="text-white text-[12px] flex gap-[16px] w-fit items-center">
-                <label className="" htmlFor="seating">
-                  Fuel Type :
-                </label>
+              <div className="text-white text-[12px] flex gap-[8px] w-fit items-center">
                 <select
                   id="seating"
                   name="seating"
-                  className="px-[4px] py-[4px] border-[1.5px] border-rmlk-red rounded-md focus-visible:outline-0"
+                  value={setRecommendationsHook.fuelType}
+                  onChange={(e) => {
+                    setRecommendationsHook.setFuelType(e.target.value);
+                  }}
+                  className="p-[8px] focus-visible:outline-0 hover:cursor-pointer bg-rmlk-dark-lighter rounded-md"
                 >
-                  {fuelType.map((fuel) => (
+                  <option disabled={true} value={""}>
+                    Fuel Type
+                  </option>
+                  {setRecommendationsHook.fuelTypeList.map((fuel) => (
                     <option
                       className="bg-rmlk-dark-light p-10"
                       key={fuel}
@@ -112,25 +119,39 @@ const Recommendation = () => {
                   ))}
                 </select>
               </div>
-              <div className="text-white text-[12px] flex gap-[16px] w-fit items-center">
-                <label className="" htmlFor="seating">
-                  Traffic Condition :
-                </label>
+              <div className="text-white text-[12px] flex gap-[8px] w-fit items-center">
                 <select
                   id="seating"
                   name="seating"
-                  className="px-[4px] py-[4px] border-[1.5px] border-rmlk-red rounded-md focus-visible:outline-0"
+                  value={setRecommendationsHook.trafficCondition}
+                  onChange={(e) => {
+                    setRecommendationsHook.setTrafficCondition(e.target.value);
+                  }}
+                  className="p-[8px] focus-visible:outline-0 hover:cursor-pointer bg-rmlk-dark-lighter rounded-md"
                 >
-                  {trafficCondition.map((traffic) => (
-                    <option
-                      className="bg-rmlk-dark-light p-10"
-                      key={traffic}
-                      value={traffic}
-                    >
-                      {traffic}
-                    </option>
-                  ))}
+                  <option disabled={true} value={""}>
+                    Traffic Condition
+                  </option>
+                  {setRecommendationsHook.trafficConditionList.map(
+                    (traffic) => (
+                      <option
+                        className="bg-rmlk-dark-light p-10"
+                        key={traffic}
+                        value={traffic}
+                      >
+                        {traffic}
+                      </option>
+                    )
+                  )}
                 </select>
+              </div>
+              <div className="text-white text-[12px] flex gap-[8px] w-fit items-center">
+                <button
+                  className="px-[8px] py-[4px] bg-rmlk-red rounded-md shadow-md cursor-pointer hover:bg-rmlk-red-light duration-200"
+                  type="submit"
+                >
+                  Recommend
+                </button>
               </div>
             </div>
           </form>
