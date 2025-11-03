@@ -16,7 +16,7 @@ export const useAddnewVehicle = () => {
   const [groundClearance, setGroundClearance] = useState();
   const [fuelType, setFuelType] = useState("");
   const [fuelEfficiency, setFuelEfficiency] = useState("");
-  const [year, setYear] = useState();
+  const [year, setYear] = useState(null);
   const [transmissionType, setTransmissionType] = useState("");
   const [infoLink, setInfoLink] = useState("");
   const [infoTag, setInfoTag] = useState("");
@@ -28,6 +28,7 @@ export const useAddnewVehicle = () => {
 
   //Popup modal states
   const [showAddVehicleModal, setShowAddVehicleModal] = useState(false);
+  const [showAddImageModal, setShowAddImageModal] = useState(false);
 
   const {
     data: manufacturersData,
@@ -205,5 +206,7 @@ export const useAddnewVehicle = () => {
     showAddVehicleModal,
     setShowAddVehicleModal,
     handleAddVehicleModal,
+    showAddImageModal,
+    setShowAddImageModal,
   };
 };

@@ -1,9 +1,10 @@
 import { useAddnewVehicle } from "../../../../hooks/useAddnewVehicle";
 import InputWrapper from "../../../../components/Assets/InputWrapper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faImage, faTimes } from "@fortawesome/free-solid-svg-icons";
 import PopupModal from "../../../../components/PopupModal";
 import QuestionIcon from "../../../../components/Assets/QuestionIcon";
+import ImageModal from "../../../../components/ImageModal";
 
 const AddVehiclesForm = () => {
   const addNewVehicleHook = useAddnewVehicle();
@@ -20,34 +21,48 @@ const AddVehiclesForm = () => {
           <QuestionIcon />
           <p className=" text-[14px]">Do you want to add</p>
 
-          <p className="text-[12px] flex flex-col">
-            <span>
-              Manufacture :{addNewVehicleHook.Manufacturer} | Model :
-              {addNewVehicleHook.VehicleModel} | Year :
-              {addNewVehicleHook.yearList.join(", ")}
-            </span>
-            <span>
-              Body Type :{addNewVehicleHook.bodyType} | Seating Capacity :
-              {addNewVehicleHook.seatingCapacity} | Ground Clearance :
-              {addNewVehicleHook.groundClearance}
-            </span>
-            <span>
-              Fuel Type :{addNewVehicleHook.fuelType} | Fuel Efficiency :
-              {addNewVehicleHook.fuelEfficiency} | Trasmission :
-              {addNewVehicleHook.transmmissionList.join(",")}
-            </span>
-            <span>
-              Information Link :{addNewVehicleHook.infoLinkList.join(", ")}
-            </span>
+          <p className="text-[12px] leading-5 text-center mt-2">
+            <strong>Manufacturer:</strong> {addNewVehicleHook.Manufacturer} |{" "}
+            <strong>Model:</strong> {addNewVehicleHook.VehicleModel}
+            <br />
+            <strong>Year:</strong> {addNewVehicleHook.yearList.join(", ")}
+            <br />
+            <strong>Body Type:</strong> {addNewVehicleHook.bodyType} |{" "}
+            <strong>Seats:</strong> {addNewVehicleHook.seatingCapacity}
+            <br />
+            <strong>Ground Clearance:</strong>{" "}
+            {addNewVehicleHook.groundClearance}
+            <br />
+            <strong>Fuel Type:</strong> {addNewVehicleHook.fuelType} |{" "}
+            <strong>Efficiency:</strong> {addNewVehicleHook.fuelEfficiency}
+            <br />
+            <strong>Transmission:</strong>{" "}
+            {addNewVehicleHook.transmmissionList.join(", ")}
+            <br />
+            <strong>Info Links:</strong>{" "}
+            {addNewVehicleHook.infoLinkList
+              .map(({ link, tag }) => `${tag}: ${link}`)
+              .join(", ")}
           </p>
         </div>
       </PopupModal>
     </>
   );
 
+  const addImageModal = (
+    <>
+      <ImageModal
+        isOpen={addNewVehicleHook.showAddImageModal}
+        onClose={() => addNewVehicleHook.setShowAddImageModal(false)}
+      ></ImageModal>
+    </>
+  );
+
   return (
     <div className="bg-rmlk-dark-light h-full rounded-md shadow-md">
       <>{addVehicleModal}</>
+      <>{addImageModal}</>
+
       <div className="p-[8px] font-rmlk-secondary text-white text-[12px]">
         <h3 className="text-[16px] px-[16px]">Add Vehicles</h3>
         <form
@@ -111,7 +126,7 @@ const AddVehiclesForm = () => {
                     }}
                     className="w-full h-[30px] p-[4px] bg-rmlk-dark-lighter rounded-md"
                   >
-                    <option disabled value={""}>
+                    <option disabled value={null}>
                       -- Select --
                     </option>
                     {addNewVehicleHook.yearsArr?.map((year) => (
@@ -354,65 +369,22 @@ const AddVehiclesForm = () => {
               </div>
             </div>
           </InputWrapper>
-          {/* <InputWrapper title={"Gallery Images"}>
-            <div className="p-[8px] flex flex-col w-[50%]">
-              <label htmlFor="link">Image:</label>
-              <input
-                id="link"
-                name="link"
-                type="link"
-                value={infoLink}
-                onChange={(e) => setInfoLink(e.target.value)}
-                className="bg-rmlk-dark-lighter p-[4px] rounded-md h-[30px]"
-              />
+          <InputWrapper title={"Add images"}>
+            <div className="p-[8px] flex flex-col w-full">
+              <button
+                type="button"
+                onClick={() => addNewVehicleHook.setShowAddImageModal(true)}
+                className="py-[8px] px-[8px] border-2 border-rmlk-dark-lighter border-dashed rounded-md shadow-md hover:cursor-pointe text-rmlk-dark-lighter  font-semibold text-[16px] flex items-center justify-center gap-[8px] cursor-pointer"
+              >
+                <FontAwesomeIcon icon={faImage} className="text-[24px]" /> Add
+                image
+              </button>
             </div>
-            <div className="p-[8px] flex flex-col w-[50%]">
-              <div className="">
-                <label htmlFor="infotag">Tags:</label>
-                <div className="flex">
-                  <select
-                    id="infotag"
-                    name="infotag"
-                    value={infoTag}
-                    className="w-full h-[30px] p-[4px] bg-rmlk-dark-lighter rounded-md"
-                    onChange={(e) => setInfoTag(e.target.value)}
-                  >
-                    <option disabled value={""}>
-                      -- Select --
-                    </option>
-                    {linkTags?.map((tag, index) => (
-                      <option key={index} value={tag}>
-                        {tag}
-                      </option>
-                    ))}
-                  </select>
+          </InputWrapper>
 
-                  <button
-                    onClick={addInfoLinkToList}
-                    className="p-[2px] bg-blue-600 rounded-md shadow-md hover:cursor-pointer hover:bg-blue-500 mx-[4px] w-[30px] duration-200 text-[16px] h-[30px]"
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-
-              <div className="flex flex-wrap gap-[2px] py-[4px]">
-                {infoLinkList?.map(({ link, tag }, index) => (
-                  <div key={index}>
-                    <span
-                      className="px-[6px] py-[2px] bg-amber-600 text-[8px] text-white font-semibold rounded-md shadow-md hover:cursor-pointer hover:bg-amber-500 duration-200"
-                      onClick={removeInfoLinkFromList}
-                    >
-                      {link} - {tag} <FontAwesomeIcon icon={faTimes} />
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </InputWrapper> */}
           <div className="p-[8px] w-full">
             <button
-              className="p-[4px] bg-blue-600 w-full rounded-md shadow-md hover:cursor-pointer hover:bg-blue-500 duration-200 text-white font-semibold"
+              className="p-[4px] bg-blue-600 rounded-md shadow-md hover:cursor-pointer hover:bg-blue-500 duration-200 text-white font-semibold w-full"
               type="submit"
             >
               Add Vehicle

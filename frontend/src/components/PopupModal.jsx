@@ -1,7 +1,6 @@
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
 
 const PopupModal = ({ children, action, actionName, isOpen, onClose }) => {
   if (!isOpen) return null;

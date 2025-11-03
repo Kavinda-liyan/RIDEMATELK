@@ -1,4 +1,5 @@
 import { StrictMode } from "react";
+import ReactCrop from "react-image-crop";
 import { createRoot } from "react-dom/client";
 import {
   createBrowserRouter,

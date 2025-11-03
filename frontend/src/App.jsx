@@ -1,3 +1,4 @@
+import 'react-image-crop/dist/ReactCrop.css'
 import { Outlet, useLocation } from "react-router-dom";
 import Navigation from "./components/Navigation";
 import SideNav from "./components/SideNav";
