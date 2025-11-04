@@ -1,9 +1,14 @@
 import { faImage, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
-import ReactCrop, { centerCrop, makeAspectCrop } from "react-image-crop";
+import { useRef, useState } from "react";
+import ReactCrop, {
+  centerCrop,
+  convertToPixelCrop,
+  makeAspectCrop,
+} from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 import { toast } from "react-toastify";
+import drawCanvasPreview from "../hooks/drawCanvasPreview";
 
 const ImageModal = ({ onClose, isOpen, onFileSelect }) => {
   if (!isOpen) return null;
@@ -12,6 +17,8 @@ const ImageModal = ({ onClose, isOpen, onFileSelect }) => {
   const MIN_HEIGHT = 225;
   const ASPECT_RATIO = 16 / 9;
 
+  const ImgRef = useRef(null);
+  const previewCanvasRef = useRef(null);
   const [ImgSrc, setImgSrc] = useState("");
   const [crop, setCrop] = useState();
   const [error, setError] = useState("");
@@ -96,7 +103,7 @@ const ImageModal = ({ onClose, isOpen, onFileSelect }) => {
           </div>
 
           <div className="grid grid-cols-12">
-            <div className="col-span-8">
+            <div className="col-span-7">
               {/* Error Message */}
               {error && (
                 <div className="p-2 text-red-500 text-sm">
@@ -112,9 +119,10 @@ const ImageModal = ({ onClose, isOpen, onFileSelect }) => {
                     aspect={ASPECT_RATIO}
                     keepSelection
                     onChange={(c) => setCrop(c)}
-                    className="max-h-[300px]"
+                    className="max-h-[280px]"
                   >
                     <img
+                      ref={ImgRef}
                       src={ImgSrc}
                       alt="Selected Vehicle"
                       onLoad={onImageLoad}
@@ -133,12 +141,32 @@ const ImageModal = ({ onClose, isOpen, onFileSelect }) => {
                 </div>
               )}
               <div className="w-full p-[8px] flex items-center justify-center">
-                <button className="bg-blue-600 px-[8px] py-[4px] rounded-md shadow-md cursor-pointer">
+                <button
+                  onClick={() => {
+                    drawCanvasPreview(
+                      ImgRef.current,
+                      previewCanvasRef.current,
+                      convertToPixelCrop(
+                        crop,
+                        ImgRef.current.width,
+                        ImgRef.current.Height
+                      )
+                    );
+                  }}
+                  className="bg-blue-600 px-[8px] py-[4px] rounded-md shadow-md cursor-pointer"
+                >
                   Crop
                 </button>
               </div>
             </div>
-            <div className="col-span-4">
+
+            <div className="col-span-5">
+              {crop && (
+                <div className="p-2">
+                  <canvas ref={previewCanvasRef} className="w-full" />
+                </div>
+              )}
+
               <div className="p-2 text-white flex">
                 <label className="block p-[4px]">Tag:</label>
                 <select className="w-full p-[4px] bg-rmlk-dark-light rounded-md text-white">

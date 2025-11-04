@@ -1,4 +1,15 @@
 import express from "express";
+import multer from "multer";
+import { S3Client, AbortMultipartUploadCommand } from "@aws-sdk/client-s3";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const BUCKET_NAME = process.env.BUCKET_NAME;
+const BUCKET_REGION = process.env.BUCKET_REGION;
+const ACCESS_KEY = process.env.ACCESS_KEY;
+const SECRET_ACCESS_KEY = process.env.SECRET_ACCESS_KEY;
+
 const router = express.Router();
 
 import validateVehicleInput from "../middlewares/vehicleValidator.js";
@@ -20,6 +31,9 @@ import {
   createBodyType,
   deleteBodyType,
 } from "../controllers/vehicleController.js";
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 //---------------Body Types---------------
 //GET /api/vehicles/bodytypes
@@ -43,6 +57,7 @@ router.get("/:id", getVehicle);
 //POST /api/vehicles
 router.post(
   "/",
+  upload.single("image"),
   authenticate,
   authAdmin,
   validateVehicleInput,

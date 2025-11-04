@@ -5,6 +5,9 @@ import triggerRetraining from "../middlewares/automationService.js";
 import vehicleLogicCreator from "../middlewares/vehicleLogicCreator.js";
 import { bodyType } from "../models/bodyTypesModel.js";
 import { Manufacturer } from "../models/manufactureModel.js";
+import s3 from "../config/S3Client.js";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { v4 as uuidv4 } from "uuid";
 
 //#------------------BodyTypes------------------#//
 //@route GET/api/vehicles/bodytypes
@@ -180,6 +183,35 @@ const getVehicle = asyncHandler(async (req, res) => {
 // @access  Private/Admin
 const createVehicle = async (req, res) => {
   try {
+    const file = req.file;
+    const { tag, year, ...vehicleData } = req.body;
+    let imageUrl = null;
+
+    if (file) {
+      const fileName = `vehicles/${uuidv4()}=${file.originalname}`;
+
+      const uploadParams = {
+        Bucket: process.env.BUCKET_NAME,
+        Key: fileName,
+        Body: file.buffer,
+        ContentType: file.mimetype,
+        ACL: "public-read",
+      };
+
+      await s3.send(new PutObjectCommand(uploadParams));
+      imageUrl = `https://${process.env.BUCKET_NAME}.s3.${process.env.BUCKET_REGION}.amazonaws.com/${fileName}`;
+    }
+
+    if (imageUrl) {
+      vehicleData.gallery_img = [
+        {
+          url: imageUrl,
+          tag: tag || "default",
+          year: year || new Date().getFullYear(),
+        },
+      ];
+    }
+
     const vehicle = new Vehicle(req.body);
     const createdVehicle = await vehicle.save();
     triggerRetraining();
