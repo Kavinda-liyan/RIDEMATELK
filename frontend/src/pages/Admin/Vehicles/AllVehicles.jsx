@@ -7,6 +7,8 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import PageWrapper from "../../../components/Assets/PageWrapper";
 import BreadCrumb from "../../../components/BreadCrumb";
+import PopupModal from "../../../components/PopupModal";
+import { useDeleteVehicle } from "../../../hooks/useDeleteVehicle";
 
 const AllVehicles = () => {
   const dispatch = useDispatch();
@@ -39,7 +41,7 @@ const AllVehicles = () => {
     "Delete",
   ];
 
-  console.log("Vehicles Data:", data);
+  const useDeleteVehicleHook = useDeleteVehicle();
 
   const roadCondition = [
     { type: "City/Urban", color: "bg-green-400" },
@@ -53,8 +55,19 @@ const AllVehicles = () => {
     dispatch(setPage(1));
   }, [filters, dispatch]);
 
+  const deleteModel = (
+    <PopupModal
+      actionName={"Delete"}
+      action={() => {}}
+      isOpen={useDeleteVehicleHook.showDeleteVehicleModal}
+      onClose={() => useDeleteVehicleHook.setShowDeleteVehicleModal(false)}
+      children={<></>}
+    />
+  );
+
   return (
     <PageWrapper>
+      <>{deleteModel}</>
       <BreadCrumb links={[{ label: "Vehicles", to: "/admin/allvehicles" }]} />
       <div className="bg-rmlk-dark-light p-[16px] rounded-md shadow-md flex flex-wrap gap-[20px] items-center font-rmlk-secondary text-[12px] text-white">
         <div className="flex items-center">
@@ -102,7 +115,7 @@ const AllVehicles = () => {
               data.vehicles.map((vehicle) => (
                 <tr
                   key={vehicle._id}
-                  className="text-[12px] font-rmlk-secondary transition-all duration-200 hover:cursor-pointer"
+                  className="text-[12px] font-rmlk-secondary transition-all duration-200 "
                   onClick={() => handleVehicleClick()}
                 >
                   <td className="p-2">{vehicle["Manufacturer"]}</td>
@@ -120,12 +133,14 @@ const AllVehicles = () => {
                   <td className="p-2">
                     <button
                       id="delete"
-                      className="bg-rmlk-dark-lighter p-[6px] rounded-md shadow-md mx-[2px]"
+                      onClick={() =>
+                        useDeleteVehicleHook.setShowDeleteVehicleModal(true)
+                      }
+                      className="bg-rmlk-dark-lighter p-[6px] rounded-md shadow-md mx-[2px] cursor-pointer hover:bg-rmlk-dark-lighter/50 duration-200"
                     >
                       <FontAwesomeIcon icon={faTrash} />
                     </button>
                   </td>
-                 
                 </tr>
               ))
             ) : (
