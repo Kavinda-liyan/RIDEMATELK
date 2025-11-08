@@ -10,7 +10,7 @@ import "react-image-crop/dist/ReactCrop.css";
 import { toast } from "react-toastify";
 import drawCanvasPreview from "../hooks/drawCanvasPreview";
 
-const ImageModal = ({ onClose, isOpen, onFileSelect }) => {
+const ImageModal = ({ onClose, isOpen, onFileSelect, existingFiles = [] }) => {
   if (!isOpen) return null;
 
   const MIN_WIDTH = 400;
@@ -22,11 +22,12 @@ const ImageModal = ({ onClose, isOpen, onFileSelect }) => {
   const [ImgSrc, setImgSrc] = useState("");
   const [crop, setCrop] = useState();
   const [error, setError] = useState("");
+  const [tag, setTag] = useState("");
+  const [year, setYear] = useState("");
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    if (onFileSelect) onFileSelect(file);
 
     const reader = new FileReader();
     reader.onload = () => {
@@ -39,7 +40,7 @@ const ImageModal = ({ onClose, isOpen, onFileSelect }) => {
   const onImageLoad = (e) => {
     const { naturalWidth, naturalHeight } = e.currentTarget;
 
-    // Validate size
+    // Validate image size
     if (naturalWidth < MIN_WIDTH || naturalHeight < MIN_HEIGHT) {
       toast.error(`Image must be at least ${MIN_WIDTH}x${MIN_HEIGHT}px.`);
       setError("Please choose a larger image.");
@@ -47,12 +48,11 @@ const ImageModal = ({ onClose, isOpen, onFileSelect }) => {
       return;
     }
 
-    // Fit crop within image, adjusting automatically for tall/wide images
-    let cropWidthPercent = 90; // Start with 90% width
+    // Auto-crop within bounds
+    let cropWidthPercent = 90;
     let cropHeightPercent =
       (cropWidthPercent / ASPECT_RATIO) * (naturalWidth / naturalHeight);
 
-    // If height overflows (portrait image), adjust
     if (cropHeightPercent > 90) {
       cropHeightPercent = 90;
       cropWidthPercent =
@@ -78,6 +78,57 @@ const ImageModal = ({ onClose, isOpen, onFileSelect }) => {
     (_, i) => startYear + i
   );
 
+  const canvasToFile = (canvas, fileName) => {
+    return new Promise((resolve) => {
+      canvas.toBlob((blob) => {
+        if (blob) {
+          const file = new File([blob], fileName, { type: "image/jpeg" });
+          resolve(file);
+        }
+      }, "image/jpeg");
+    });
+  };
+
+  const handleAddImage = async () => {
+    if (!crop || !ImgRef.current || !previewCanvasRef.current) {
+      toast.error("Please crop the image first!");
+      return;
+    }
+    if (!tag || !year) {
+      toast.error("Please select tag and year!");
+      return;
+    }
+
+    if (tag === "cover" && existingFiles.some((f) => f.tag === "cover")) {
+      toast.error(
+        "A cover image already exists. Please remove it before adding a new one."
+      );
+      return;
+    }
+
+    drawCanvasPreview(
+      ImgRef.current,
+      previewCanvasRef.current,
+      convertToPixelCrop(crop, ImgRef.current.width, ImgRef.current.height)
+    );
+
+    const croppedFile = await canvasToFile(
+      previewCanvasRef.current,
+      `vehicle-${tag}-${year}.jpg`
+    );
+
+    onFileSelect({
+      file: croppedFile,
+      tag,
+      year,
+    });
+
+    console.log(tag, year);
+
+    toast.success("Image added successfully!");
+    onClose();
+  };
+
   return (
     <div className="inset-0 bg-black/60 backdrop-blur-sm z-[1000] flex items-center justify-center fixed font-rmlk-secondary text-[12px] text-white">
       <div className="bg-rmlk-dark-lighter rounded-md shadow-md w-[90%] max-w-[400px] max-h-[80%] flex flex-col overflow-hidden">
@@ -91,6 +142,7 @@ const ImageModal = ({ onClose, isOpen, onFileSelect }) => {
             <FontAwesomeIcon icon={faTimes} />
           </button>
         </div>
+
         <div className="flex flex-col gap-2 p-2 overflow-auto">
           {/* File Input */}
           <div className="p-2 flex flex-col items-center justify-center text-[12px]">
@@ -103,15 +155,15 @@ const ImageModal = ({ onClose, isOpen, onFileSelect }) => {
           </div>
 
           <div className="grid grid-cols-12">
+            {/* Left Section */}
             <div className="col-span-7">
-              {/* Error Message */}
               {error && (
                 <div className="p-2 text-red-500 text-sm">
                   <p>{error}</p>
                 </div>
               )}
 
-              {/* Image Cropper */}
+              {/* Cropper */}
               {ImgSrc ? (
                 <div className="p-2 flex items-center justify-center overflow-auto">
                   <ReactCrop
@@ -140,26 +192,30 @@ const ImageModal = ({ onClose, isOpen, onFileSelect }) => {
                   </div>
                 </div>
               )}
-              <div className="w-full p-[8px] flex items-center justify-center">
-                <button
-                  onClick={() => {
-                    drawCanvasPreview(
-                      ImgRef.current,
-                      previewCanvasRef.current,
-                      convertToPixelCrop(
-                        crop,
-                        ImgRef.current.width,
-                        ImgRef.current.Height
+
+              {crop && (
+                <div className="w-full p-[8px] flex items-center justify-center">
+                  <button
+                    onClick={() =>
+                      drawCanvasPreview(
+                        ImgRef.current,
+                        previewCanvasRef.current,
+                        convertToPixelCrop(
+                          crop,
+                          ImgRef.current.width,
+                          ImgRef.current.height
+                        )
                       )
-                    );
-                  }}
-                  className="bg-blue-600 px-[8px] py-[4px] rounded-md shadow-md cursor-pointer"
-                >
-                  Crop
-                </button>
-              </div>
+                    }
+                    className="bg-blue-600 px-[8px] py-[4px] rounded-md shadow-md cursor-pointer"
+                  >
+                    Crop
+                  </button>
+                </div>
+              )}
             </div>
 
+            {/* Right Section */}
             <div className="col-span-5">
               {crop && (
                 <div className="p-2">
@@ -169,7 +225,11 @@ const ImageModal = ({ onClose, isOpen, onFileSelect }) => {
 
               <div className="p-2 text-white flex">
                 <label className="block p-[4px]">Tag:</label>
-                <select className="w-full p-[4px] bg-rmlk-dark-light rounded-md text-white">
+                <select
+                  className="w-full p-[4px] bg-rmlk-dark-light rounded-md text-white"
+                  value={tag}
+                  onChange={(e) => setTag(e.target.value)}
+                >
                   <option value="" disabled>
                     ---Tag---
                   </option>
@@ -180,9 +240,14 @@ const ImageModal = ({ onClose, isOpen, onFileSelect }) => {
                   ))}
                 </select>
               </div>
+
               <div className="p-2 text-white flex">
                 <label className="block p-[4px]">Year:</label>
-                <select className="w-full p-[4px] bg-rmlk-dark-light rounded-md text-white">
+                <select
+                  className="w-full p-[4px] bg-rmlk-dark-light rounded-md text-white"
+                  value={year}
+                  onChange={(e) => setYear(e.target.value)}
+                >
                   <option value="" disabled>
                     ---Year---
                   </option>
@@ -193,6 +258,14 @@ const ImageModal = ({ onClose, isOpen, onFileSelect }) => {
                   ))}
                 </select>
               </div>
+              {crop && tag && year && (
+                <button
+                  onClick={handleAddImage}
+                  className="w-full bg-green-600 mt-2 py-2 rounded-md hover:bg-green-700 duration-200"
+                >
+                  Add Image
+                </button>
+              )}
             </div>
           </div>
         </div>

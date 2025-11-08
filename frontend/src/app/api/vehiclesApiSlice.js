@@ -30,10 +30,10 @@ export const vehiclesApiSlice = apiSlice.injectEndpoints({
       keepUnusedDataFor: 5,
     }),
     addVehicles: builder.mutation({
-      query: (data) => ({
+      query: (formData) => ({
         url: `${VEHICLES_URL}`,
         method: "POST",
-        body: data,
+        body: formData,
       }),
       invalidatesTags: ["Vehicle"],
     }),

@@ -1,57 +1,54 @@
 @import "tailwindcss";
 
-
-@theme{
-    --color-rmlk-red:#DE3031;
-    --color-rmlk-dark_green:#0F2E37;
-    --color-rmlk-light_green:#184B59;
-    --color-rmlk-red-light:#E45959;
-    --color-rmlk-red-lighter:#FF7878;
-    --color-rmlk-dark:#1D1D1E;
-    --color-rmlk-dark-light:#2A2A2B;
-    --color-rmlk-dark-lighter:#4D4949;
-    --font-rmlk-secondary:"Golos Text", sans-serif;
-    --default-font-family: "Anybody", sans-serif;
-
-    
+@theme {
+  --color-rmlk-red: #de3031;
+  --color-rmlk-dark_green: #0f2e37;
+  --color-rmlk-light_green: #184b59;
+  --color-rmlk-red-light: #e45959;
+  --color-rmlk-red-lighter: #ff7878;
+  --color-rmlk-dark: #1d1d1e;
+  --color-rmlk-dark-light: #2a2a2b;
+  --color-rmlk-dark-lighter: #4d4949;
+  --font-rmlk-secondary: "Golos Text", sans-serif;
+  --default-font-family: "Anybody", sans-serif;
 }
-:root{
-    --color-rmlk-red:#DE3031;
-    --color-rmlk-dark_green:#0F2E37;
-    --color-rmlk-dark-lghter:#797474;
-    --color-rmlk-dark-lght:#2A2A2B;
-    --font-rmlk-secondary:"Golos Text", sans-serif;
-    --default-font-family: "Anybody", sans-serif;
+:root {
+  --color-rmlk-red: #de3031;
+  --color-rmlk-dark_green: #0f2e37;
+  --color-rmlk-dark-lghter: #797474;
+  --color-rmlk-dark-lght: #2a2a2b;
+  --font-rmlk-secondary: "Golos Text", sans-serif;
+  --default-font-family: "Anybody", sans-serif;
 }
 
-*{
-    box-sizing: border-box;
-    scroll-behavior: smooth;
-    animation-duration: 200ms;
-    
-   
+* {
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  animation-duration: 200ms;
 }
 *::-webkit-scrollbar-button {
-  display: none; 
+  display: none;
 }
 ::-webkit-scrollbar {
-  width: 8px; 
+  cursor: pointer;
+  width: 6px;
   height: 8px;
   background-color: var(--color-rmlk-dark-lghter);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--color-rmlk-dark-lght); 
   border-radius: 10px;
 }
 
-.nav-link .tracking-widest{
-    position: relative;
-    text-decoration: none;
-    
+::-webkit-scrollbar-thumb {
+  background: var(--color-rmlk-red);
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.nav-link .tracking-widest {
+  position: relative;
+  text-decoration: none;
 }
 .nav-link .tracking-widest::after {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   bottom: -1px; /* distance from text */
@@ -69,11 +66,9 @@
   width: 100%;
 }
 
-.Header{
-    background-image: url('./assets/Bg_dark.jpg');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: 0px -180px;
-   
-    
+.Header {
+  background-image: url("./assets/Bg_dark.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: 0px -180px;
 }

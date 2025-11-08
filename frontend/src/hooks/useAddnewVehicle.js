@@ -20,6 +20,7 @@ export const useAddnewVehicle = () => {
   const [transmissionType, setTransmissionType] = useState("");
   const [infoLink, setInfoLink] = useState("");
   const [infoTag, setInfoTag] = useState("");
+  const [gallery, setGallery] = useState([]);
 
   //List States
   const [yearList, setYearList] = useState([]);
@@ -52,6 +53,14 @@ export const useAddnewVehicle = () => {
     { length: currentYear - startYear + 1 },
     (_, i) => startYear + i
   );
+
+  const handleFileSelect = (data) => {
+    setGallery((prev) => [...prev, data]);
+  };
+
+  const removeGalleryItem = (index) => {
+    setGallery((prev) => prev.filter((_, i) => i !== index));
+  };
 
   //   Handle Add delete Information Link List
   const addInfoLinkToList = (e) => {
@@ -126,33 +135,43 @@ export const useAddnewVehicle = () => {
 
   const confirmAddVehicle = async () => {
     try {
-      const res = await addVehicles({
-        Manufacturer: Manufacturer,
-        Model: VehicleModel,
-        "Body Type": bodyType,
-        "Seating Capacity": seatingCapacity,
-        "Ground Clearance (range)": groundClearance,
-        "Fuel Type": fuelType,
-        "Fuel Efficiency": fuelEfficiency,
-        years: yearList,
-        transmission: transmmissionList,
-        info_links: infoLinkList,
-        gallery_img: [],
-      }).unwrap();
+      const formData = new FormData();
+
+      formData.append("Manufacturer", Manufacturer);
+      formData.append("Model", VehicleModel);
+      formData.append("Body Type", bodyType);
+      formData.append("Seating Capacity", seatingCapacity);
+      formData.append("Ground Clearance (range)", groundClearance);
+      formData.append("Fuel Type", fuelType);
+      formData.append("Fuel Efficiency", fuelEfficiency);
+
+      formData.append("years", JSON.stringify(yearList));
+      formData.append("transmission", JSON.stringify(transmmissionList));
+      formData.append("info_links", JSON.stringify(infoLinkList));
+
+      // add images
+      gallery.forEach((imgObj) => {
+        formData.append("gallery_img", imgObj.file); // must match multer key
+      });
+
+      const res = await addVehicles(formData).unwrap();
+
       toast.success("Vehicle added successfully");
+      // reset form
       setManufacturer("");
       setVehicleModel("");
       setBodyType("");
       setSeatingCapacity();
       setGroundClearance();
       setFuelType("");
-      setFuelEfficiency();
+      setFuelEfficiency("");
       setYearList([]);
       setTransmissionList([]);
       setInfoLinkList([]);
+      setGallery([]);
       setShowAddVehicleModal(false);
     } catch (error) {
-      console.error(error);
+      console.error("Add vehicle failed:", error);
       toast.error("Failed to add Vehicle");
     }
   };
@@ -208,5 +227,7 @@ export const useAddnewVehicle = () => {
     handleAddVehicleModal,
     showAddImageModal,
     setShowAddImageModal,
+    handleFileSelect,
+    gallery,
   };
 };

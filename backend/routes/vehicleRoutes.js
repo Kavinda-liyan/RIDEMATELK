@@ -57,7 +57,7 @@ router.get("/:id", getVehicle);
 //POST /api/vehicles
 router.post(
   "/",
-  upload.single("image"),
+  upload.array("gallery_img"),
   authenticate,
   authAdmin,
   validateVehicleInput,

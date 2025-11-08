@@ -8,7 +8,12 @@ import { Manufacturer } from "../models/manufactureModel.js";
 import s3 from "../config/S3Client.js";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { v4 as uuidv4 } from "uuid";
+import multer from "multer";
+import dotenv from "dotenv";
+dotenv.config();
+const { BUCKET_NAME, BUCKET_REGION } = process.env;
 
+const upload = multer();
 //#------------------BodyTypes------------------#//
 //@route GET/api/vehicles/bodytypes
 //@access Public
@@ -183,41 +188,54 @@ const getVehicle = asyncHandler(async (req, res) => {
 // @access  Private/Admin
 const createVehicle = async (req, res) => {
   try {
-    const file = req.file;
-    const { tag, year, ...vehicleData } = req.body;
-    let imageUrl = null;
+    const { tag, year, info_links, years, transmission, ...vehicleData } =
+      req.body;
 
-    if (file) {
-      const fileName = `vehicles/${uuidv4()}=${file.originalname}`;
-
-      const uploadParams = {
-        Bucket: process.env.BUCKET_NAME,
-        Key: fileName,
-        Body: file.buffer,
-        ContentType: file.mimetype,
-        ACL: "public-read",
-      };
-
-      await s3.send(new PutObjectCommand(uploadParams));
-      imageUrl = `https://${process.env.BUCKET_NAME}.s3.${process.env.BUCKET_REGION}.amazonaws.com/${fileName}`;
+    // Parse JSON strings into arrays
+    if (info_links && typeof info_links === "string") {
+      vehicleData.info_links = JSON.parse(info_links);
     }
 
-    if (imageUrl) {
-      vehicleData.gallery_img = [
-        {
-          url: imageUrl,
+    if (years && typeof years === "string") {
+      vehicleData.years = JSON.parse(years);
+    }
+    
+    if (transmission && typeof transmission === "string") {
+      vehicleData.transmission = JSON.parse(transmission);
+    }
+
+    // Handle multiple gallery files
+    let galleryImages = [];
+    if (req.files && req.files.length > 0) {
+      for (const file of req.files) {
+        const fileName = `vehicles/${uuidv4()}=${file.originalname}`;
+        await s3.send(
+          new PutObjectCommand({
+            Bucket: BUCKET_NAME,
+            Key: fileName,
+            Body: file.buffer,
+            ContentType: file.mimetype,
+          })
+        );
+
+        galleryImages.push({
+          url: `https://${BUCKET_NAME}.s3.${BUCKET_REGION}.amazonaws.com/${fileName}`,
           tag: tag || "default",
           year: year || new Date().getFullYear(),
-        },
-      ];
+        });
+      }
     }
 
-    const vehicle = new Vehicle(req.body);
+    vehicleData.gallery_img = galleryImages;
+
+    const vehicle = new Vehicle(vehicleData);
     const createdVehicle = await vehicle.save();
+
     triggerRetraining();
 
     res.status(201).json(createdVehicle);
   } catch (error) {
+    console.error(error);
     res.status(400).json({ message: error.message });
   }
 };

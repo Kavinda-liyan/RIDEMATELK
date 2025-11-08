@@ -5,9 +5,11 @@ import { faImage, faTimes } from "@fortawesome/free-solid-svg-icons";
 import PopupModal from "../../../../components/PopupModal";
 import QuestionIcon from "../../../../components/Assets/QuestionIcon";
 import ImageModal from "../../../../components/ImageModal";
+import PopupTableRow from "../../../../components/Assets/PopupTableRow";
 
 const AddVehiclesForm = () => {
   const addNewVehicleHook = useAddnewVehicle();
+  console.log("Gallery", addNewVehicleHook.gallery);
 
   const addVehicleModal = (
     <>
@@ -21,29 +23,50 @@ const AddVehiclesForm = () => {
           <QuestionIcon />
           <p className=" text-[14px]">Do you want to add</p>
 
-          <p className="text-[12px] leading-5 text-center mt-2">
-            <strong>Manufacturer:</strong> {addNewVehicleHook.Manufacturer} |{" "}
-            <strong>Model:</strong> {addNewVehicleHook.VehicleModel}
-            <br />
-            <strong>Year:</strong> {addNewVehicleHook.yearList.join(", ")}
-            <br />
-            <strong>Body Type:</strong> {addNewVehicleHook.bodyType} |{" "}
-            <strong>Seats:</strong> {addNewVehicleHook.seatingCapacity}
-            <br />
-            <strong>Ground Clearance:</strong>{" "}
-            {addNewVehicleHook.groundClearance}
-            <br />
-            <strong>Fuel Type:</strong> {addNewVehicleHook.fuelType} |{" "}
-            <strong>Efficiency:</strong> {addNewVehicleHook.fuelEfficiency}
-            <br />
-            <strong>Transmission:</strong>{" "}
-            {addNewVehicleHook.transmmissionList.join(", ")}
-            <br />
-            <strong>Info Links:</strong>{" "}
-            {addNewVehicleHook.infoLinkList
-              .map(({ link, tag }) => `${tag}: ${link}`)
-              .join(", ")}
-          </p>
+          <table className="table-auto w-full">
+            <PopupTableRow
+              tableHead={"Manufacturer"}
+              tableData={addNewVehicleHook.Manufacturer}
+            />
+            <PopupTableRow
+              tableHead={"Model"}
+              tableData={addNewVehicleHook.VehicleModel}
+            />
+            <PopupTableRow
+              tableHead={"Years"}
+              tableData={addNewVehicleHook.yearList.join(", ")}
+            />
+            <PopupTableRow
+              tableHead={"Body Type"}
+              tableData={addNewVehicleHook.bodyType}
+            />
+            <PopupTableRow
+              tableHead={"Seating Capacity"}
+              tableData={addNewVehicleHook.seatingCapacity}
+            />
+            <PopupTableRow
+              tableHead={"Ground Clearance"}
+              tableData={addNewVehicleHook.groundClearance}
+            />
+            <PopupTableRow
+              tableHead={"Fuel Type"}
+              tableData={addNewVehicleHook.fuelType}
+            />
+            <PopupTableRow
+              tableData={"Transmission(s)"}
+              tableHead={addNewVehicleHook.transmmissionList.join(", ")}
+            />
+            <PopupTableRow
+              tableHead={"Information Links"}
+              tableData={addNewVehicleHook.infoLinkList
+                .map(({ link, tag }) => `${tag}: ${link}`)
+                .join(", ")}
+            />
+            <PopupTableRow
+              tableHead={"Gallery Images"}
+              tableData={addNewVehicleHook.gallery.length}
+            />
+          </table>
         </div>
       </PopupModal>
     </>
@@ -54,12 +77,14 @@ const AddVehiclesForm = () => {
       <ImageModal
         isOpen={addNewVehicleHook.showAddImageModal}
         onClose={() => addNewVehicleHook.setShowAddImageModal(false)}
+        onFileSelect={addNewVehicleHook.handleFileSelect}
+        existingFiles={addNewVehicleHook.gallery}
       ></ImageModal>
     </>
   );
 
   return (
-    <div className="bg-rmlk-dark-light h-full rounded-md shadow-md">
+    <div className="bg-rmlk-dark-light rounded-md shadow-md">
       <>{addVehicleModal}</>
       <>{addImageModal}</>
 
@@ -69,6 +94,43 @@ const AddVehiclesForm = () => {
           className="p-[8px]"
           onSubmit={addNewVehicleHook.handleAddVehicleModal}
         >
+          <InputWrapper title={"Add images"}>
+            <div className="p-[8px] flex flex-col w-full">
+              <button
+                type="button"
+                onClick={() => addNewVehicleHook.setShowAddImageModal(true)}
+                className="py-[8px] px-[8px] border-2 border-rmlk-dark-lighter border-dashed rounded-md shadow-md hover:cursor-pointer text-rmlk-dark-lighter font-semibold text-[16px] flex items-center justify-center gap-[8px]"
+              >
+                <FontAwesomeIcon icon={faImage} className="text-[24px]" /> Add
+                image
+              </button>
+
+              <div className="flex flex-wrap gap-[8px] mt-[12px]">
+                {addNewVehicleHook.gallery?.map((img, index) => (
+                  <div
+                    key={index}
+                    className="relative w-[100px] h-[100px] rounded-md overflow-hidden"
+                  >
+                    <img
+                      src={URL.createObjectURL(img.file)}
+                      alt={`Preview-${index}`}
+                      className="w-full h-full object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => addNewVehicleHook.removeGalleryItem(index)}
+                      className="absolute top-1 right-1 bg-red-600 rounded-full w-[20px] h-[20px] text-[10px] text-white flex items-center justify-center"
+                    >
+                      <FontAwesomeIcon icon={faTimes} />
+                    </button>
+                    <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-[10px] text-center">
+                      {img.tag} - {img.year}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </InputWrapper>
           <InputWrapper title="Vehicle model and manufacturer information">
             <div className="p-[8px] w-[35%]">
               <label htmlFor="manufacturer" className="mb-[2px] pb-[4px]">
@@ -147,7 +209,7 @@ const AddVehiclesForm = () => {
                 <div className="flex flex-wrap gap-[2px] py-[4px]">
                   {addNewVehicleHook.yearList?.map((year, index) => (
                     <span
-                      className="flex items-center px-[4px] py-[2px] text-[10px] text-white/40 font-semibold  hover:cursor-pointer hover:text-white duration-200 "
+                      className="flex items-center px-[4px] py-[2px] text-[10px] text-amber-400 font-semibold  hover:cursor-pointer hover:text-white duration-200 "
                       key={index}
                       onClick={() =>
                         addNewVehicleHook.removeYearFromList(index)
@@ -367,18 +429,6 @@ const AddVehiclesForm = () => {
                   </div>
                 ))}
               </div>
-            </div>
-          </InputWrapper>
-          <InputWrapper title={"Add images"}>
-            <div className="p-[8px] flex flex-col w-full">
-              <button
-                type="button"
-                onClick={() => addNewVehicleHook.setShowAddImageModal(true)}
-                className="py-[8px] px-[8px] border-2 border-rmlk-dark-lighter border-dashed rounded-md shadow-md hover:cursor-pointe text-rmlk-dark-lighter  font-semibold text-[16px] flex items-center justify-center gap-[8px] cursor-pointer"
-              >
-                <FontAwesomeIcon icon={faImage} className="text-[24px]" /> Add
-                image
-              </button>
             </div>
           </InputWrapper>
 

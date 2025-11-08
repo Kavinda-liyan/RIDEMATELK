@@ -54,23 +54,26 @@ const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   const existingUser = await User.findOne({ email });
 
-  if (existingUser) {
-    const isPasswordValid = await bcrypt.compare(
-      password,
-      existingUser.password
-    );
-
-    if (isPasswordValid) {
-      generateToken(res, existingUser._id);
-      res.status(200).json({
-        _id: existingUser._id,
-        username: existingUser.username,
-        email: existingUser.email,
-        isAdmin: existingUser.isAdmin,
-      });
-      return;
-    }
+  if (!existingUser) {
+    res.status(401).json({ message: "Invalid email or password" });
+    return;
   }
+
+  const isPasswordValid = await bcrypt.compare(password, existingUser.password);
+
+  if (!isPasswordValid) {
+    res.status(401).json({ message: "Invalid email or password" });
+    return;
+  }
+
+  generateToken(res, existingUser._id);
+
+  res.status(200).json({
+    _id: existingUser._id,
+    username: existingUser.username,
+    email: existingUser.email,
+    isAdmin: existingUser.isAdmin,
+  });
 });
 
 // @desc    Logout user

@@ -9,10 +9,14 @@ export const useLogin = () => {
   //Form state
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState({
+    emailError: "",
+    passwordError: "",
+  });
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [login, { isLoading, isError }] = useLoginMutation();
+  const [login, { isLoading, isError, error: loginError }] = useLoginMutation();
   const { userInfo } = useSelector((state) => state.auth);
 
   const { search } = useLocation();
@@ -27,19 +31,32 @@ export const useLogin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!password || !email) {
-      toast.error("Email or password field is empty !");
-      return;
-    }
+    setError({
+      emailError: "",
+      passwordError: "",
+    });
 
     try {
+      if (!password || !email) {
+        toast.error("Email or password field is empty !");
+        setError({
+          emailError: "Email required",
+          passwordError: "Password required",
+        });
+        return;
+      }
+
       const res = await login({ email, password }).unwrap();
       dispatch(setCredentials({ ...res }));
       navigate(redirect);
       toast.success("Login Success !");
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to login");
+    } catch (err) {
+      const message =
+        err?.data?.message ||
+        err?.error ||
+        "Something went wrong. Please try again.";
+
+      toast.error(message);
     }
   };
 
@@ -51,5 +68,8 @@ export const useLogin = () => {
     isError,
     isLoading,
     handleSubmit,
+    error,
+    setError,
+    loginError,
   };
 };

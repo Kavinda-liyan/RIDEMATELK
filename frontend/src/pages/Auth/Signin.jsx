@@ -15,14 +15,6 @@ const Signin = () => {
     );
   }
 
-  if (useLoginHook.isError) {
-    return (
-      <div className="h-dvh pt-[45px] pl-[60px] pr-[60px] bg-rmlk-dark font-rmlk-secondary flex justify-center items-center text-white">
-        Error: {error?.data?.message || error.error}
-      </div>
-    );
-  }
-
   return (
     <div className="h-dvh pl-[60px] pr-[60px] bg-rmlk-dark font-rmlk-secondary flex justify-center items-center">
       <div className="grid grid-cols-12 h-[90%] py-[24px] px-[120px] w-[80%] ">
@@ -52,10 +44,19 @@ const Signin = () => {
                     value={useLoginHook.email}
                     onChange={(e) => {
                       useLoginHook.setEmail(e.target.value);
+                      useLoginHook.setError({
+                        ...useLoginHook.error,
+                        emailError: "",
+                      });
                     }}
                     autoComplete={"email"}
                     className="bg-rmlk-dark-lighter text-[12px] p-[6px] rounded-md"
                   ></input>
+                  {useLoginHook.error.emailError && (
+                    <p className="text-[12px] py-[4px] text-red-600">
+                      {useLoginHook.error.emailError}
+                    </p>
+                  )}
                 </div>
                 <div className="flex flex-col mb-[8px]">
                   <label className="my-[2px]">Password</label>
@@ -65,10 +66,19 @@ const Signin = () => {
                     value={useLoginHook.password}
                     onChange={(e) => {
                       useLoginHook.setPassword(e.target.value);
+                      useLoginHook.setError({
+                        ...useLoginHook.error,
+                        passwordError: "",
+                      });
                     }}
                     autoComplete={"current-password"}
                     className="bg-rmlk-dark-lighter text-[12px] p-[6px] rounded-md"
                   ></input>
+                  {useLoginHook.error.passwordError && (
+                    <p className="text-[12px] py-[4px] text-red-600">
+                      {useLoginHook.error.passwordError}
+                    </p>
+                  )}
                 </div>
                 <div className="flex flex-col mt-[24px] ">
                   <button
