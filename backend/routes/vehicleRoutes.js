@@ -23,6 +23,7 @@ import {
   createManufacturer,
   getManufacturer,
   deleteManufacturer,
+  getVehiclesByFilter,
 } from "../controllers/vehicleController.js";
 import vehicleLogicCreator from "../middlewares/vehicleLogicCreator.js";
 import { authAdmin, authenticate } from "../middlewares/authMiddleware.js";
@@ -52,6 +53,7 @@ router.delete("/manufacturer/:id", authenticate, authAdmin, deleteManufacturer);
 
 //GET /api/vehicles
 router.get("/", authenticate, authAdmin, getAllVehicles);
+router.get("/filter", authenticate, authAdmin, getVehiclesByFilter);
 //GET /api/vehicles/:id
 router.get("/:id", getVehicle);
 //POST /api/vehicles

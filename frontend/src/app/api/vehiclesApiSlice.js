@@ -44,7 +44,25 @@ export const vehiclesApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Vehicle"],
     }),
+    getVehicleByFilter: builder.query({
+      query: ({ fuelType, bodyType, Manufacturer }) => {
+        const params = new URLSearchParams();
+        if (fuelType) params.append("Fuel Type", fuelType);
+        if (bodyType) params.append("Body Type", bodyType);
+        if (Manufacturer) params.append("Manufacturer", Manufacturer);
+        return {
+          url: `${VEHICLES_URL}/filter?${params.toString()}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["Vehicle"],
+    }),
   }),
 });
 
-export const { useGetVehiclesQuery, useAddVehiclesMutation } = vehiclesApiSlice;
+export const {
+  useGetVehiclesQuery,
+  useAddVehiclesMutation,
+  useDeleteVehicleMutation,
+  useGetVehicleByFilterQuery,
+} = vehiclesApiSlice;

@@ -3,12 +3,14 @@ import { useGetVehiclesQuery } from "../../../app/api/vehiclesApiSlice";
 import { setPage } from "../../../app/slices/paginationSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { Link } from "react-router-dom";
 import PageWrapper from "../../../components/Assets/PageWrapper";
 import BreadCrumb from "../../../components/BreadCrumb";
 import PopupModal from "../../../components/PopupModal";
+import PopupTableRow from "../../../components/Assets/PopupTableRow";
 import { useDeleteVehicle } from "../../../hooks/useDeleteVehicle";
+import WarningIcon from "../../../components/Assets/WarningIcon";
 
 const AllVehicles = () => {
   const dispatch = useDispatch();
@@ -58,10 +60,44 @@ const AllVehicles = () => {
   const deleteModel = (
     <PopupModal
       actionName={"Delete"}
-      action={() => {}}
+      action={() => {
+        if (useDeleteVehicleHook.selectedVehicle) {
+          useDeleteVehicleHook.handleDeleteVehicle(
+            useDeleteVehicleHook.selectedVehicle
+          );
+        }
+      }}
       isOpen={useDeleteVehicleHook.showDeleteVehicleModal}
       onClose={() => useDeleteVehicleHook.setShowDeleteVehicleModal(false)}
-      children={<></>}
+      children={
+        <>
+          <div className="flex items-center justify-center text-white flex-col font-rmlk-secondary">
+            <WarningIcon />
+            <h2 className="text-[16px]  text-center">
+              Are you sure you want to delete this vehicle?
+            </h2>
+            <div className="max-h-[300px] overflow-y-scroll w-full">
+              <table className="table-auto border-collapse p-[8px] w-full mt-[20px] ">
+                <tbody className="">
+                  {useDeleteVehicleHook.VehicleTable.map((vehicle) => (
+                    <tr
+                      className="text-[10px] text-left flex w-full border border-white/20 "
+                      key={vehicle.key}
+                    >
+                      <th className="p-[4px]  bg-rmlk-dark-light w-[50%]">
+                        {vehicle.head}
+                      </th>
+                      <td className="p-[4px]  border-rmlk-dark-light w-[50%]">
+                        {vehicle.data}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </>
+      }
     />
   );
 
@@ -133,9 +169,10 @@ const AllVehicles = () => {
                   <td className="p-2">
                     <button
                       id="delete"
-                      onClick={() =>
-                        useDeleteVehicleHook.setShowDeleteVehicleModal(true)
-                      }
+                      onClick={() => {
+                        useDeleteVehicleHook.setShowDeleteVehicleModal(true);
+                        useDeleteVehicleHook.setSelectedVehicle(vehicle);
+                      }}
                       className="bg-rmlk-dark-lighter p-[6px] rounded-md shadow-md mx-[2px] cursor-pointer hover:bg-rmlk-dark-lighter/50 duration-200"
                     >
                       <FontAwesomeIcon icon={faTrash} />

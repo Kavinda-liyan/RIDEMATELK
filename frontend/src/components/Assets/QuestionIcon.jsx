@@ -5,7 +5,7 @@ const QuestionIcon = () => {
   return (
     <>
       <FontAwesomeIcon
-        className="text-[60px] mb-[16px] text-blue-500 text-shadow"
+        className="text-[32px] mb-[16px] text-blue-500 text-shadow"
         icon={faQuestionCircle}
       />
     </>

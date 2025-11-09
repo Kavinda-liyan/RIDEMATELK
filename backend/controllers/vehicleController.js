@@ -170,6 +170,27 @@ const getAllVehicles = asyncHandler(async (req, res) => {
   }
 });
 
+const getVehiclesByFilter = asyncHandler(async (req, res) => {
+  try {
+    const {
+      Manufacturer,
+      "Fuel Type": fuelType,
+      "Body Type": bodyType,
+    } = req.query || {};
+
+    const filter = {};
+    if (Manufacturer)
+      filter.Manufacturer = { $regex: Manufacturer, $options: "i" };
+    if (fuelType) filter["Fuel Type"] = { $regex: fuelType, $options: "i" };
+    if (bodyType) filter["Body Type"] = { $regex: bodyType, $options: "i" };
+
+    const vehicles = await Vehicle.find(filter);
+    res.status(200).json(vehicles);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 //@route  GET /api/vehicles/:id
 // @access  Private/Admin , Public/User
 const getVehicle = asyncHandler(async (req, res) => {
@@ -199,7 +220,7 @@ const createVehicle = async (req, res) => {
     if (years && typeof years === "string") {
       vehicleData.years = JSON.parse(years);
     }
-    
+
     if (transmission && typeof transmission === "string") {
       vehicleData.transmission = JSON.parse(transmission);
     }
@@ -295,6 +316,7 @@ export { createManufacturer, getManufacturer, deleteManufacturer };
 export {
   getAllVehicles,
   getVehicle,
+  getVehiclesByFilter,
   createVehicle,
   updateVehicle,
   deleteVehicle,

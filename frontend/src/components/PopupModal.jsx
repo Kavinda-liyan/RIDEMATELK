@@ -19,7 +19,7 @@ const PopupModal = ({ children, action, actionName, isOpen, onClose }) => {
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.5, opacity: 0 }}
           transition={{ duration: 0.2, ease: "easeInOut" }}
-          className="bg-rmlk-dark-lighter rounded-md shadow-md w-[90%] max-w-[400px] flex flex-col"
+          className="bg-rmlk-dark-lighter rounded-md shadow-md w-[90%] max-w-[520px] flex flex-col"
         >
           <div className="flex flex-col items-center justify-end">
             <button
