@@ -13,12 +13,7 @@ import { useDashboardComponents } from "../../hooks/useDashboardComponents";
 
 const Dashboard = () => {
   const useDashBoardHook = useDashboardComponents();
-  const pieData = [
-    { name: "Petrol", value: useDashBoardHook.petrolVehicles },
-    { name: "Diesel", value: useDashBoardHook.dieselVehicles },
-    { name: "Electric", value: useDashBoardHook.hybridVehicles },
-    { name: "Hybrid", value: useDashBoardHook.electricVehicles },
-  ];
+  const pieData = useDashBoardHook.fuelTypePieData;
 
   const COLORS = ["#FF6384", "#36A2EB", "#FFCE56", "#4CAF50"];
 
@@ -31,10 +26,11 @@ const Dashboard = () => {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="bg-rmlk-dark-light rounded-md p-[8px] shadow-lg"
+            className="bg-rmlk-dark-light rounded-md p-[8px] shadow-md"
           >
             <h3 className="text-[14px] text-center  text-white/90 font-rmlk-secondary">
-              Fuel Type Distribution For {useDashBoardHook.AllVehicles} Vehicles in database
+              Fuel Type Distribution For {useDashBoardHook.AllVehicles} Vehicles
+              in database
             </h3>
             <div className="flex justify-center items-center">
               <ResponsiveContainer width="100%" height="200">

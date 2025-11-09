@@ -10,25 +10,32 @@ export const useDashboardComponents = () => {
   const AllVehicles = Array.isArray(vehicleData) ? vehicleData.length : 0;
 
   //Cal fuel Types
+
+  //getting each fuel types
   const AvailableFuelTypes = Array.isArray(vehicleData)
     ? [...new Set(vehicleData.map((v) => v["Fuel Type"].toLowerCase()))]
     : [];
 
-  const VehicleDataArray = AvailableFuelTypes.map((fuel) => ({
-    constName: `${fuel}Vehicles`,
-    filterKey: fuel,
-  }));
-
   const vehicleCounts = {};
 
-  VehicleDataArray.forEach(({ constName, filterKey }) => {
-    vehicleCounts[constName] = Array.isArray(vehicleData)
+  AvailableFuelTypes.forEach((fuel) => {
+    vehicleCounts[fuel] = Array.isArray(vehicleData)
       ? vehicleData.filter(
-          (vehicle) => vehicle["Fuel Type"].toLowerCase() === filterKey
+          (vehicle) => vehicle["Fuel Type"].toLowerCase() === fuel
         ).length
       : 0;
   });
 
+  console.log("Vehicle Counts by Fuel Type:", vehicleCounts);
+  const fuelTypePieData = Object.entries(vehicleCounts).map(([key, value]) => ({
+    name: key.charAt(0).toUpperCase() + key.slice(1),
+    value: value,
+  }));
+
+  //   //Cal Body Types
+  //   const AvailableBodyTypes = Array.isArray(vehicleData)
+  //     ? [...new Set(vehicleData.map((v) => v["Body Type"].toLowerCase()))]
+  //     : [];
 
   return {
     vehicleData,
@@ -37,5 +44,6 @@ export const useDashboardComponents = () => {
     AllVehicles,
     ...vehicleCounts,
     AvailableFuelTypes,
+    fuelTypePieData,
   };
 };
