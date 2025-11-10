@@ -57,6 +57,13 @@ export const vehiclesApiSlice = apiSlice.injectEndpoints({
       },
       providesTags: ["Vehicle"],
     }),
+    getVehicleById: builder.query({
+      query: (id) => ({
+        url: `${VEHICLES_URL}/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["Vehicle"],
+    }),
   }),
 });
 
@@ -65,4 +72,5 @@ export const {
   useAddVehiclesMutation,
   useDeleteVehicleMutation,
   useGetVehicleByFilterQuery,
+  useGetVehicleByIdQuery
 } = vehiclesApiSlice;

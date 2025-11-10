@@ -3,6 +3,7 @@ import { useGetBodyTypesQuery } from "../app/api/bodyTypesApiSlice";
 import { useGetRecommendationsMutation } from "../app/api/recommendVehiclesApiSlice";
 export const useSetRecommendations = () => {
   const { data: bodyTypes, isLoading, isError } = useGetBodyTypesQuery();
+  
   const [
     getRecommendations,
     {

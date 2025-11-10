@@ -4,7 +4,7 @@ import { setPage } from "../../../app/slices/paginationSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect, use } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import PageWrapper from "../../../components/Assets/PageWrapper";
 import BreadCrumb from "../../../components/BreadCrumb";
 import PopupModal from "../../../components/PopupModal";
@@ -14,6 +14,7 @@ import WarningIcon from "../../../components/Assets/WarningIcon";
 
 const AllVehicles = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { page, limit } = useSelector((state) => state.pagination);
   const [filters, setFilters] = useState({
     Manufacturer: "",
@@ -160,6 +161,9 @@ const AllVehicles = () => {
                   <td className="p-2">{vehicle["Year"]}</td>
                   <td className="p-2">
                     <button
+                      onClick={() =>
+                        navigate(`/admin/editvehicle/${vehicle._id}`)
+                      }
                       id="edit"
                       className="p-[6px] mx-[2px] bg-rmlk-red rounded-md shadow-md"
                     >

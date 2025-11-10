@@ -1,4 +1,5 @@
 import { useGetVehicleByFilterQuery } from "../app/api/vehiclesApiSlice";
+import { useGetAllUsersQuery } from "../app/api/usersApiSlice";
 
 export const useDashboardComponents = () => {
   const {
@@ -6,6 +7,12 @@ export const useDashboardComponents = () => {
     isLoading: loadingVehicle,
     isError: errorVehicle,
   } = useGetVehicleByFilterQuery({});
+
+  const { data: userData = [] } = useGetAllUsersQuery();
+
+  const AllUsers = Array.isArray(userData)
+    ? userData.filter((user) => user.isAdmin === false).length
+    : 0;
 
   const AllVehicles = Array.isArray(vehicleData) ? vehicleData.length : 0;
 
@@ -26,24 +33,43 @@ export const useDashboardComponents = () => {
       : 0;
   });
 
-  console.log("Vehicle Counts by Fuel Type:", vehicleCounts);
   const fuelTypePieData = Object.entries(vehicleCounts).map(([key, value]) => ({
     name: key.charAt(0).toUpperCase() + key.slice(1),
     value: value,
   }));
 
-  //   //Cal Body Types
-  //   const AvailableBodyTypes = Array.isArray(vehicleData)
-  //     ? [...new Set(vehicleData.map((v) => v["Body Type"].toLowerCase()))]
-  //     : [];
+  //getting each vehicle Manufacturer
+  const AvailableManufacturers = Array.isArray(vehicleData)
+    ? [...new Set(vehicleData.map((v) => v["Manufacturer"].toLowerCase()))]
+    : [];
+
+  console.log(AvailableManufacturers);
+  const manufacturerCounts = {};
+
+  AvailableManufacturers.forEach((manu) => {
+    manufacturerCounts[manu] = Array.isArray(vehicleData)
+      ? vehicleData.filter(
+          (vehicle) => vehicle["Manufacturer"].toLowerCase() === manu
+        ).length
+      : 0;
+  });
+
+  const manufacturerBarData = Object.entries(manufacturerCounts).map(
+    ([key, value]) => ({
+      name: key.charAt(0).toUpperCase() + key.slice(1),
+      value: value,
+    })
+  );
+
+  console.log(manufacturerCounts);
 
   return {
     vehicleData,
     loadingVehicle,
     errorVehicle,
     AllVehicles,
-    ...vehicleCounts,
-    AvailableFuelTypes,
     fuelTypePieData,
+    manufacturerBarData,
+    AllUsers,
   };
 };
