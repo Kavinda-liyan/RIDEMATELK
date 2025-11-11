@@ -64,6 +64,20 @@ export const vehiclesApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["Vehicle"],
     }),
+    updateVehicle: builder.mutation({
+      query: ({ id, body }) => {
+        const isFormData = body instanceof FormData;
+        return {
+          url: `${VEHICLES_URL}/${id}`,
+          method: "PATCH",
+          body,
+          headers: !isFormData
+            ? { "Content-Type": "application/json" }
+            : undefined,
+        };
+      },
+      invalidatesTags: ["Vehicle"],
+    }),
   }),
 });
 
@@ -72,5 +86,6 @@ export const {
   useAddVehiclesMutation,
   useDeleteVehicleMutation,
   useGetVehicleByFilterQuery,
-  useGetVehicleByIdQuery
+  useGetVehicleByIdQuery,
+  useUpdateVehicleMutation,
 } = vehiclesApiSlice;

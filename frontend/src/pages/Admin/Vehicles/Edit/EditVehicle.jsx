@@ -4,7 +4,11 @@ import PageWrapper from "../../../../components/Assets/PageWrapper";
 import BreadCrumb from "../../../../components/BreadCrumb";
 import { useEditVehicle } from "../../../../hooks/useEditVehicle";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import { yearsArr } from "../../../../utils/yearList";
+import {
+  fuelTypeArr,
+  transmissionTypesArr,
+  yearsArr,
+} from "../../../../utils/ArrLists";
 
 const EditVehicle = () => {
   const editVehicleHook = useEditVehicle();
@@ -16,6 +20,7 @@ const EditVehicle = () => {
   if (editVehicleHook.errorVehicle) {
     return <div>Error loading vehicle data.</div>;
   }
+  console.log(editVehicleHook.manufacturer);
 
   return (
     <PageWrapper>
@@ -35,7 +40,7 @@ const EditVehicle = () => {
             <h3 className="text-[18px]">Basic vehicle informations</h3>
             <div className="my-[4px] h-[2px] w-full bg-rmlk-dark-lighter rounded-full"></div>
             <div id="bFormInfo" className="w-full">
-              <form>
+              <form onSubmit={editVehicleHook.handleFormSubmit}>
                 <InputWrapper title={"Manufacturer and Model"}>
                   <div className="p-[8px] w-full text-[12px] flex flex-col gap-[4px]">
                     <div className="flex flex-col w-full my-[4px]">
@@ -46,8 +51,11 @@ const EditVehicle = () => {
                         id="manufacturer"
                         name="manufacturer"
                         type="text"
-                        placeholder={editVehicleHook.vehicle.Manufacturer}
-                        className="w-full h-30px bg-rmlk-dark-lighter text-white placeholder:text-white p-[4px] rounded-md"
+                        placeholder={editVehicleHook.manufacturer}
+                        onChange={(e) => {
+                          editVehicleHook.setManufacturer(e.target.value);
+                        }}
+                        className="w-full h-[30px] bg-rmlk-dark-lighter text-white placeholder:text-white p-[4px] rounded-md"
                       />
                     </div>
                     <div className="flex flex-col w-full my-[4px]">
@@ -58,8 +66,11 @@ const EditVehicle = () => {
                         id="model"
                         name="model"
                         type="text"
-                        placeholder={editVehicleHook.vehicle.Model}
-                        className="w-full h-30px bg-rmlk-dark-lighter text-white placeholder:text-white p-[4px] rounded-md"
+                        placeholder={editVehicleHook.model}
+                        onChange={(e) => {
+                          editVehicleHook.setModel(e.target.value);
+                        }}
+                        className="w-full h-[30px] bg-rmlk-dark-lighter text-white placeholder:text-white p-[4px] rounded-md"
                       />
                     </div>
                   </div>
@@ -110,7 +121,11 @@ const EditVehicle = () => {
                       </select>
 
                       <button
-                        onClick={() => editVehicleHook.handleAddYear()}
+                        type="button"
+                        onClick={(e) => {
+                          editVehicleHook.handleAddYear();
+                          e.preventDefault();
+                        }}
                         className="p-[2px] bg-blue-600 rounded-md shadow-md hover:cursor-pointer hover:bg-blue-500 mx-[4px] w-[30px] duration-200 text-[16px]"
                       >
                         +
@@ -124,13 +139,26 @@ const EditVehicle = () => {
                       <label htmlFor="fuelType" className="pr-[2px]">
                         Fuel Type
                       </label>
-                      <input
-                        id="fuelType"
-                        name="fuelType"
-                        type="text"
-                        placeholder={editVehicleHook.vehicle["Fuel Type"]}
-                        className="w-full h-30px bg-rmlk-dark-lighter text-white placeholder:text-white p-[4px] rounded-md"
-                      />
+                      <div className="flex">
+                        <select
+                          id="year"
+                          name="year"
+                          value={editVehicleHook.fuelType}
+                          onChange={(e) => {
+                            editVehicleHook.setFuelType(e.target.value);
+                          }}
+                          className="w-full h-[30px] p-[4px] bg-rmlk-dark-lighter rounded-md"
+                        >
+                          <option disabled value={[]}>
+                            {editVehicleHook.vehicle["Fuel Type"]}
+                          </option>
+                          {fuelTypeArr?.map((fuel) => (
+                            <option key={fuel} value={fuel}>
+                              {fuel}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
                     </div>
                     <div className="flex flex-col w-full my-[4px]">
                       <label htmlFor="fuelEff" className="pr-[2px]">
@@ -141,7 +169,7 @@ const EditVehicle = () => {
                         name="fuelEff"
                         type="text"
                         placeholder={editVehicleHook.vehicle["Fuel Efficiency"]}
-                        className="w-full h-30px bg-rmlk-dark-lighter text-white placeholder:text-white p-[4px] rounded-md"
+                        className="w-full h-[30px] bg-rmlk-dark-lighter text-white placeholder:text-white p-[4px] rounded-md"
                       />
                     </div>
                   </div>
@@ -151,16 +179,37 @@ const EditVehicle = () => {
                 >
                   <div className="p-[8px] w-full text-[12px] flex flex-row gap-[16px]">
                     <div className="flex flex-col w-full my-[4px]">
-                      <label htmlFor="bodyType" className="pr-[2px]">
-                        Body Type
-                      </label>
-                      <input
-                        id="bodyType"
-                        name="bodyType"
-                        type="text"
-                        placeholder={editVehicleHook.vehicle["Body Type"]}
-                        className="w-full h-30px bg-rmlk-dark-lighter text-white placeholder:text-white p-[4px] rounded-md"
-                      />
+                      {editVehicleHook.loadingBodyTypes ? (
+                        <p>Loading...</p>
+                      ) : editVehicleHook.errorBodyTypes ? (
+                        <p>Error..</p>
+                      ) : (
+                        <>
+                          <label htmlFor="bodyType" className="pr-[2px]">
+                            Body Type
+                          </label>
+                          <div className="flex">
+                            <select
+                              id="bodyType"
+                              name="bodyType"
+                              value={editVehicleHook.bodyType}
+                              onChange={(e) => {
+                                editVehicleHook.setBodytype(e.target.value);
+                              }}
+                              className="w-full h-[30px] p-[4px] bg-rmlk-dark-lighter rounded-md"
+                            >
+                              <option disabled value={[]}>
+                                {editVehicleHook.vehicle["Body Type"]}
+                              </option>
+                              {editVehicleHook.bodyTypesData?.map((body) => (
+                                <option key={body._id} value={body.bodytype}>
+                                  {body.bodytype}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        </>
+                      )}
                     </div>
                     <div className="flex flex-col w-full my-[4px]">
                       <label htmlFor="seat" className="pr-[2px]">
@@ -173,7 +222,7 @@ const EditVehicle = () => {
                         placeholder={
                           editVehicleHook.vehicle["Seating Capacity"]
                         }
-                        className="w-full h-30px bg-rmlk-dark-lighter text-white placeholder:text-white p-[4px] rounded-md"
+                        className="w-full h-[30px] bg-rmlk-dark-lighter text-white placeholder:text-white p-[4px] rounded-md"
                       />
                     </div>
                     <div className="flex flex-col w-full my-[4px]">
@@ -187,7 +236,7 @@ const EditVehicle = () => {
                         placeholder={
                           editVehicleHook.vehicle["Ground Clearance (range)"]
                         }
-                        className="w-full h-30px bg-rmlk-dark-lighter text-white placeholder:text-white p-[4px] rounded-md"
+                        className="w-full h-[30px] bg-rmlk-dark-lighter text-white placeholder:text-white p-[4px] rounded-md"
                       />
                     </div>
                   </div>
@@ -232,17 +281,19 @@ const EditVehicle = () => {
                         <option disabled value={[]}>
                           -- Select --
                         </option>
-                        {editVehicleHook.transmissionTypesArr?.map(
-                          (transmission) => (
-                            <option key={transmission} value={transmission}>
-                              {transmission}
-                            </option>
-                          )
-                        )}
+                        {transmissionTypesArr?.map((transmission) => (
+                          <option key={transmission} value={transmission}>
+                            {transmission}
+                          </option>
+                        ))}
                       </select>
 
                       <button
-                        onClick={() => editVehicleHook.handleAddTransmission()}
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          editVehicleHook.handleAddTransmission();
+                        }}
                         className="p-[2px] bg-blue-600 rounded-md shadow-md hover:cursor-pointer hover:bg-blue-500 mx-[4px] w-[30px] duration-200 text-[16px]"
                       >
                         +
@@ -250,6 +301,12 @@ const EditVehicle = () => {
                     </div>
                   </div>
                 </InputWrapper>
+                <button
+                  type="submit"
+                  className="mt-[8px] w-full bg-green-600 hover:bg-green-500 duration-200 p-[8px] rounded-md shadow-md"
+                >
+                  Save Changes
+                </button>
               </form>
             </div>
           </div>
