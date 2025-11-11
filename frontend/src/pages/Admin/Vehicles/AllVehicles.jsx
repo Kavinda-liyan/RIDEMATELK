@@ -165,7 +165,7 @@ const AllVehicles = () => {
                         navigate(`/admin/editvehicle/${vehicle._id}`)
                       }
                       id="edit"
-                      className="p-[6px] mx-[2px] bg-rmlk-red rounded-md shadow-md"
+                      className="p-[6px] mx-[2px] bg-rmlk-red rounded-md shadow-md cursor-pointer hover:bg-rmlk-red-light duration-200"
                     >
                       <FontAwesomeIcon icon={faEdit} />
                     </button>
