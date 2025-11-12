@@ -32,9 +32,14 @@ export const useEditVehicle = () => {
   const [transmissionArr, setTransmissionArr] = useState([]);
   const [fuelType, setFuelType] = useState("");
   const [bodyType, setBodytype] = useState("");
-  const [seatingCapacity, setSeatingCapacity] = useState();
+  const [seatingCapacity, setSeatingCapacity] = useState("");
   const [fuelEfficiency, setFuelEfficiency] = useState("");
   const [groundClearance, setGroundClearance] = useState("");
+
+  //State for info links
+  const [infoTag, setInfoTag] = useState("");
+  const [infoLink, setInfoLink] = useState("");
+  const [infoLinkList, setInfoLinkList] = useState([]);
 
   //Mutate States
   const [newYear, setNewYear] = useState("");
@@ -52,6 +57,9 @@ export const useEditVehicle = () => {
     setSeatingCapacity(vehicle["Seating Capacity"]);
     setFuelEfficiency(vehicle["Fuel Efficiency"]);
     setGroundClearance(vehicle["Ground Clearance (range)"]);
+    setInfoTag(vehicle.info_links?.tag);
+    setInfoLink(vehicle.info_links?.link);
+    setInfoLinkList(vehicle.info_links || []);
   }, [vehicle]);
 
   //Year Handlers
@@ -87,6 +95,30 @@ export const useEditVehicle = () => {
     }
   };
 
+  //Info link handlers
+  const handleRemoveInfoLinks = (indexToRemove) => {
+    setInfoLinkList((prev) =>
+      prev.filter((_, index) => index !== indexToRemove)
+    );
+  };
+
+  const handleAddInfoLinks = () => {
+    try {
+      if (infoLink && infoTag) {
+        setInfoLinkList([...infoLinkList, { link: infoLink, tag: infoTag }]);
+        setInfoLink("");
+        setInfoTag("");
+      } else {
+        toast.error("Info link and tag cannot be empty");
+        setInfoLink("");
+        setInfoTag("");
+      }
+    } catch (error) {
+      console.error("Error adding info link:", error);
+      toast.error("Error adding info link");
+    }
+  };
+
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     // const formData = new FormData();
@@ -107,6 +139,7 @@ export const useEditVehicle = () => {
       "Seating Capacity": Number(seatingCapacity),
       "Fuel Efficiency": fuelEfficiency,
       "Ground Clearance (range)": Number(groundClearance),
+      info_links: infoLinkList,
     };
 
     try {
@@ -151,5 +184,13 @@ export const useEditVehicle = () => {
     groundClearance,
     setGroundClearance,
     handleFormSubmit,
+    infoLinkList,
+    setInfoLinkList,
+    infoTag,
+    setInfoTag,
+    infoLink,
+    setInfoLink,
+    handleRemoveInfoLinks,
+    handleAddInfoLinks,
   };
 };

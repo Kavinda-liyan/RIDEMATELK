@@ -13,6 +13,7 @@ const EditVehicleForm = () => {
     ManufacturerArr,
     ManufacturerError,
     ManufacturerLoading,
+    infoTagsArr,
   } = vehicleUtils();
 
   if (editVehicleHook.loadVehicle) {
@@ -22,17 +23,21 @@ const EditVehicleForm = () => {
   if (editVehicleHook.errorVehicle) {
     return <div>Error loading vehicle data.</div>;
   }
+
   return (
     <>
       <div className="col-span-7 bg-rmlk-dark-light rounded-md shadow-md max-h-[420px] overflow-y-scroll my-[16px] p-[16px] text-white font-rmlk-secondary">
         <div className="flex flex-col w-full">
           <h3 className="text-[18px]">Basic vehicle informations</h3>
           <div className="my-[4px] h-[2px] w-full bg-rmlk-dark-lighter rounded-full"></div>
-          <div id="bFormInfo" className="w-full">
+          <div
+            id="bFormInfo"
+            className="w-full text-[12px] font-rmlk-secondary"
+          >
             <form onSubmit={editVehicleHook.handleFormSubmit}>
               <InputWrapper title={"Manufacturer and Model"}>
-                <div className="p-[8px] w-full text-[12px] flex flex-col gap-[4px]">
-                  <div className="flex flex-col w-full my-[4px]">
+                <div className="p-[8px] w-full text-[12px] flex  gap-[4px]">
+                  <div className="flex flex-col  my-[4px] w-1/3">
                     <label htmlFor="manufacturer" className="pr-[2px]">
                       Manufacturer
                     </label>
@@ -63,7 +68,7 @@ const EditVehicleForm = () => {
                       )}
                     </div>
                   </div>
-                  <div className="flex flex-col w-full my-[4px]">
+                  <div className="flex flex-col w-2/3 my-[4px]">
                     <label htmlFor="model" className="pr-[2px]">
                       Model
                     </label>
@@ -81,8 +86,8 @@ const EditVehicleForm = () => {
                 </div>
               </InputWrapper>
               <InputWrapper title={"Year of manufacture"}>
-                <div className="p-[8px] w-full text-[12px] flex flex-col gap-[4px]">
-                  <div className="flex flex-wrap gap-[2px] py-[4px]">
+                <div className="p-[8px] w-full text-[12px] flex  gap-[4px]">
+                  <div className="flex flex-wrap gap-[2px] py-[4px] w-1/3">
                     {editVehicleHook.yearsArr.length > 0 ? (
                       editVehicleHook.yearsArr.map((year) => (
                         <span
@@ -105,7 +110,7 @@ const EditVehicleForm = () => {
                       </span>
                     )}
                   </div>
-                  <div className="flex">
+                  <div className="flex w-2/3">
                     <select
                       id="year"
                       name="year"
@@ -131,7 +136,7 @@ const EditVehicleForm = () => {
                         editVehicleHook.handleAddYear();
                         e.preventDefault();
                       }}
-                      className="p-[2px] bg-blue-600 rounded-md shadow-md hover:cursor-pointer hover:bg-blue-500 mx-[4px] w-[30px] duration-200 text-[16px]"
+                      className="p-[2px] bg-blue-600 rounded-md shadow-md hover:cursor-pointer hover:bg-blue-500 mx-[4px] w-[30px] h-[30px] duration-200 text-[16px]"
                     >
                       +
                     </button>
@@ -257,8 +262,8 @@ const EditVehicleForm = () => {
                 </div>
               </InputWrapper>
               <InputWrapper title={"Transmission(s)"}>
-                <div className="p-[8px] w-full text-[12px] flex flex-col gap-[4px]">
-                  <div className="flex flex-wrap gap-[2px] py-[4px]">
+                <div className="p-[8px] w-full text-[12px] flex gap-[4px]">
+                  <div className="flex flex-wrap gap-[2px] py-[4px] w-1/3">
                     {editVehicleHook.transmissionArr.length > 0 ? (
                       editVehicleHook.transmissionArr.map((transmission) => (
                         <span
@@ -283,7 +288,7 @@ const EditVehicleForm = () => {
                       </span>
                     )}
                   </div>
-                  <div className="flex">
+                  <div className="flex w-2/3">
                     <select
                       id="year"
                       name="year"
@@ -313,6 +318,75 @@ const EditVehicleForm = () => {
                     >
                       +
                     </button>
+                  </div>
+                </div>
+              </InputWrapper>
+              <InputWrapper title={"Information links"}>
+                <div className="flex flex-col w-full">
+                  <div className="p-[8px] flex w-full ">
+                    <div className="p-[8px] flex flex-col w-2/3">
+                      <label htmlFor="link">Link:</label>
+                      <input
+                        id="link"
+                        name="link"
+                        type="text"
+                        placeholder="www.example.com"
+                        value={editVehicleHook.infoLink}
+                        onChange={(e) =>
+                          editVehicleHook.setInfoLink(e.target.value)
+                        }
+                        className="bg-rmlk-dark-lighter p-[4px] rounded-md h-[30px]"
+                      />
+                    </div>
+
+                    <div className="p-[8px] flex flex-col w-1/3">
+                      <label htmlFor="infotag">Tags:</label>
+                      <div className="flex">
+                        <select
+                          id="infotag"
+                          name="infotag"
+                          value={editVehicleHook.infoTag}
+                          className="w-full h-[30px] p-[4px] bg-rmlk-dark-lighter rounded-md"
+                          onChange={(e) =>
+                            editVehicleHook.setInfoTag(e.target.value)
+                          }
+                        >
+                          <option disabled value={""}>
+                            -- Select --
+                          </option>
+                          {infoTagsArr?.map((tag, index) => (
+                            <option key={index} value={tag}>
+                              {tag}
+                            </option>
+                          ))}
+                        </select>
+
+                        <button
+                          type="button"
+                          onClick={editVehicleHook.handleAddInfoLinks}
+                          className="p-[2px] bg-blue-600 rounded-md shadow-md hover:cursor-pointer hover:bg-blue-500 mx-[4px] w-[30px] duration-200 text-[16px] h-[30px]"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap gap-[2px] px-[8px] py-[4px]">
+                    {editVehicleHook.infoLinkList?.map(
+                      ({ link, tag }, index) => (
+                        <div key={index}>
+                          <span
+                            className="px-[4px] py-[2px]  text-[10px] text-amber-400 font-semibold hover:cursor-pointer hover:text-white duration-200"
+                            onClick={() =>
+                              editVehicleHook.handleRemoveInfoLinks(index)
+                            }
+                          >
+                            <FontAwesomeIcon icon={faTimes} />
+                            {link} - {tag}
+                          </span>
+                        </div>
+                      )
+                    )}
                   </div>
                 </div>
               </InputWrapper>

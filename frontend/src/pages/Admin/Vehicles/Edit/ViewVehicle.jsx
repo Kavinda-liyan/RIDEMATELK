@@ -1,4 +1,4 @@
-import { data } from "react-router-dom";
+import { data, Link } from "react-router-dom";
 import { useEditVehicle } from "../../../../hooks/useEditVehicle";
 const ViewVehicle = () => {
   const viewEditedVehicleHook = useEditVehicle();
@@ -49,6 +49,38 @@ const ViewVehicle = () => {
                   <td className=" px-4 py-2 text-left">: {item.data}</td>
                 </tr>
               ))}
+              {viewEditedVehicleHook.infoLinkList.length > 0 && (
+                <tr className="border-b border-rmlk-dark-lighter">
+                  <th className=" px-4 py-2 text-left">
+                    <div className="max-w-[120px]">Info Links</div>
+                  </th>
+                  <td className=" px-4 py-2 text-left">
+                    {viewEditedVehicleHook.infoLinkList.map(
+                      ({ link, tag }, index) => (
+                         <a
+                          key={index}
+                          href={
+                            link.startsWith("http") ? link : `https://${link}`
+                          }
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`block text-rmlk-primary decoration-none text-center py-[2px] w-fit px-[4px] rounded-md shadow-md cursor-pointer m-[4px] text-[10px] ${
+                            tag === "ikman"
+                              ? "bg-green-600"
+                              : tag === `riyasewana`
+                              ? "bg-yellow-500"
+                              : tag === "other"
+                              ? "bg-gray-900"
+                              : "bg-blue-600"
+                          } `}
+                        >
+                        {tag}
+                        </a>
+                      )
+                    )}
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

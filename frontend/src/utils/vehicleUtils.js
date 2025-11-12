@@ -23,6 +23,8 @@ export const vehicleUtils = () => {
 
   const fuelTypeArr = ["petrol", "diesel", "electric", "hybrid"];
 
+  const infoTagsArr = ["ikman", "riyasewana", "other"];
+
   return {
     ManufacturerArr,
     yearsArr,
@@ -30,5 +32,6 @@ export const vehicleUtils = () => {
     fuelTypeArr,
     ManufacturerLoading,
     ManufacturerError,
+    infoTagsArr,
   };
 };
