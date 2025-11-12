@@ -1,12 +1,13 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useGetVehicleByIdQuery } from "../app/api/vehiclesApiSlice";
 import { useEffect, useState } from "react";
-import { fuelTypeArr } from "../utils/ArrLists";
 import { useGetBodyTypesQuery } from "../app/api/bodyTypesApiSlice";
 import { useUpdateVehicleMutation } from "../app/api/vehiclesApiSlice";
 import { toast } from "react-toastify";
+import { vehicleUtils } from "../utils/vehicleUtils";
 
 export const useEditVehicle = () => {
+  const { fuelTypeArr } = vehicleUtils();
   const [updateVehicle, { isLoading, isError }] = useUpdateVehicleMutation();
   const {
     data: bodyTypesData,
@@ -19,7 +20,10 @@ export const useEditVehicle = () => {
     data: vehicle,
     isLoading: loadVehicle,
     isError: errorVehicle,
+    refetch,
   } = useGetVehicleByIdQuery(id);
+
+  const navigate = useNavigate();
 
   //Update Form States
   const [manufacturer, setManufacturer] = useState("");
@@ -28,7 +32,7 @@ export const useEditVehicle = () => {
   const [transmissionArr, setTransmissionArr] = useState([]);
   const [fuelType, setFuelType] = useState("");
   const [bodyType, setBodytype] = useState("");
-  const [seatingCapacity, setSeatingCapacity] = useState("");
+  const [seatingCapacity, setSeatingCapacity] = useState();
   const [fuelEfficiency, setFuelEfficiency] = useState("");
   const [groundClearance, setGroundClearance] = useState("");
 
@@ -46,7 +50,8 @@ export const useEditVehicle = () => {
     setFuelType(vehicle["Fuel Type"]);
     setBodytype(vehicle["Body Type"]);
     setSeatingCapacity(vehicle["Seating Capacity"]);
-    setFuelEfficiency(vehicle[""]);
+    setFuelEfficiency(vehicle["Fuel Efficiency"]);
+    setGroundClearance(vehicle["Ground Clearance (range)"]);
   }, [vehicle]);
 
   //Year Handlers
@@ -95,11 +100,19 @@ export const useEditVehicle = () => {
     const updateData = {
       Manufacturer: manufacturer,
       Model: model,
+      years: yearsArr,
+      transmission: transmissionArr,
+      "Fuel Type": fuelType,
+      "Body Type": bodyType,
+      "Seating Capacity": Number(seatingCapacity),
+      "Fuel Efficiency": fuelEfficiency,
+      "Ground Clearance (range)": Number(groundClearance),
     };
 
     try {
       await updateVehicle({ id: vehicle._id, body: updateData }).unwrap();
       toast.success("Vehicle updated successfully!");
+      refetch();
     } catch (error) {
       toast.error(`Update failed: ${error?.data?.message || error.message}`);
     }

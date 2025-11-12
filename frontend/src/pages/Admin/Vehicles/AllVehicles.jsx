@@ -40,6 +40,7 @@ const AllVehicles = () => {
     "Manufacturer",
     "Model",
     "Year(s)",
+    "Last modified",
     "Edit",
     "Delete",
   ];
@@ -159,6 +160,11 @@ const AllVehicles = () => {
 
                   <td className={`p-2 `}>{vehicle["Model"]}</td>
                   <td className="p-2">{vehicle["Year"]}</td>
+                  <td className="p-2">
+                    {vehicle.updatedAt
+                      ? new Date(vehicle.updatedAt).toLocaleDateString()
+                      : "N/A"}
+                  </td>
                   <td className="p-2">
                     <button
                       onClick={() =>
