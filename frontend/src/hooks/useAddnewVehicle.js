@@ -151,8 +151,14 @@ export const useAddnewVehicle = () => {
 
       // add images
       gallery.forEach((imgObj) => {
-        formData.append("gallery_img", imgObj.file); // must match multer key
+        formData.append("gallery_img", imgObj.file);
       });
+
+      // Send metadata as JSON string
+      formData.append(
+        "gallery_meta",
+        JSON.stringify(gallery.map((img) => ({ tag: img.tag, year: img.year })))
+      );
 
       const res = await addVehicles(formData).unwrap();
 
@@ -229,5 +235,6 @@ export const useAddnewVehicle = () => {
     setShowAddImageModal,
     handleFileSelect,
     gallery,
+    removeGalleryItem,
   };
 };

@@ -41,6 +41,9 @@ export const useEditVehicle = () => {
   const [infoLink, setInfoLink] = useState("");
   const [infoLinkList, setInfoLinkList] = useState([]);
 
+  //State for gallery images
+  const [galleryImages, setGalleryImages] = useState([]);
+
   //Mutate States
   const [newYear, setNewYear] = useState("");
   const [newTransmission, setNewTransmission] = useState("");
@@ -60,6 +63,7 @@ export const useEditVehicle = () => {
     setInfoTag(vehicle.info_links?.tag);
     setInfoLink(vehicle.info_links?.link);
     setInfoLinkList(vehicle.info_links || []);
+    setGalleryImages(vehicle.gallery_img || []);
   }, [vehicle]);
 
   //Year Handlers
@@ -192,5 +196,7 @@ export const useEditVehicle = () => {
     setInfoLink,
     handleRemoveInfoLinks,
     handleAddInfoLinks,
+    galleryImages,
+    setGalleryImages,
   };
 };

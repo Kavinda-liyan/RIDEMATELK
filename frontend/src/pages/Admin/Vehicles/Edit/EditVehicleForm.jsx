@@ -390,6 +390,41 @@ const EditVehicleForm = () => {
                   </div>
                 </div>
               </InputWrapper>
+              <InputWrapper title={"Gallery Images"}>
+                <div className="flex flex-wrap gap-[8px] p-[8px] w-full">
+                  {editVehicleHook.galleryImages.length > 0 ? (
+                    <div className="w-2/3 flex flex-wrap gap-[8px]">
+                      {editVehicleHook.galleryImages.map(
+                        ({ url, tag, year }, index) => (
+                          <div
+                            key={index}
+                            className="relative h-[50px] rounded-md overflow-hidden"
+                          >
+                            <img
+                              src={url}
+                              alt={`Gallery ${index}`}
+                              className=" h-full object-cover"
+                            />
+                            <button className="absolute top-1 right-1 bg-red-600 rounded-full h-[15px] w-[15px] text-[8px] text-white flex items-center justify-center font-bold">
+                              <FontAwesomeIcon icon={faTimes} />
+                            </button>
+                            <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-[10px] text-center">
+                              {tag} - {year}
+                            </div>
+                          </div>
+                        )
+                      )}
+                    </div>
+                  ) : (
+                    <div className="w-2/3">
+                      <span className="text-[12px] text-red-600 px-[4px] py-[2px]">
+                        No images added
+                      </span>
+                    </div>
+                  )}
+                  <div className="w-1/3 flex items-center"></div>
+                </div>
+              </InputWrapper>
               <div className="p-[8px]">
                 <button
                   type="submit"

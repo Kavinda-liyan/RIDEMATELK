@@ -207,7 +207,7 @@ const ImageModal = ({ onClose, isOpen, onFileSelect, existingFiles = [] }) => {
                         )
                       )
                     }
-                    className="bg-blue-600 px-[8px] py-[4px] rounded-md shadow-md cursor-pointer"
+                    className="bg-blue-600 hover:bg-blue-500 px-[8px] py-[4px] rounded-md shadow-md cursor-pointer"
                   >
                     Crop
                   </button>
@@ -261,7 +261,7 @@ const ImageModal = ({ onClose, isOpen, onFileSelect, existingFiles = [] }) => {
               {crop && tag && year && (
                 <button
                   onClick={handleAddImage}
-                  className="w-full bg-green-600 mt-2 py-2 rounded-md hover:bg-green-700 duration-200"
+                  className="w-full bg-blue-600 mt-2 px-[8px] py-[4px] rounded-md hover:bg-blue-500 duration-200 cursor-pointer"
                 >
                   Add Image
                 </button>

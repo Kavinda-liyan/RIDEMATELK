@@ -209,8 +209,15 @@ const getVehicle = asyncHandler(async (req, res) => {
 // @access  Private/Admin
 const createVehicle = async (req, res) => {
   try {
-    const { tag, year, info_links, years, transmission, ...vehicleData } =
-      req.body;
+    const {
+      tag,
+      year,
+      info_links,
+      years,
+      transmission,
+      gallery_meta,
+      ...vehicleData
+    } = req.body;
 
     // Parse JSON strings into arrays
     if (info_links && typeof info_links === "string") {
@@ -225,11 +232,45 @@ const createVehicle = async (req, res) => {
       vehicleData.transmission = JSON.parse(transmission);
     }
 
+    //gallery metadata parse
+    let galleryMetaArray = [];
+    if (gallery_meta) {
+      galleryMetaArray = JSON.parse(gallery_meta);
+    }
+
     // Handle multiple gallery files
     let galleryImages = [];
+
+    // if (req.files && req.files.length > 0) {
+    //   for (const file of req.files) {
+    //     const fileName = `vehicles/${uuidv4()}=${file.originalname}`;
+    //     await s3.send(
+    //       new PutObjectCommand({
+    //         Bucket: BUCKET_NAME,
+    //         Key: fileName,
+    //         Body: file.buffer,
+    //         ContentType: file.mimetype,
+    //       })
+    //     );
+
+    //     galleryImages.push({
+    //       url: `https://${BUCKET_NAME}.s3.${BUCKET_REGION}.amazonaws.com/${fileName}`,
+    //       tag: tag || "default",
+    //       year: year || new Date().getFullYear(),
+    //     });
+    //   }
+    // }
+
     if (req.files && req.files.length > 0) {
-      for (const file of req.files) {
+      for (let idx = 0; idx < req.files.length; idx++) {
+        const file = req.files[idx];
+        const meta = galleryMetaArray[idx] || {
+          tag: "default",
+          year: new Date().getFullYear(),
+        };
+
         const fileName = `vehicles/${uuidv4()}=${file.originalname}`;
+
         await s3.send(
           new PutObjectCommand({
             Bucket: BUCKET_NAME,
@@ -241,8 +282,8 @@ const createVehicle = async (req, res) => {
 
         galleryImages.push({
           url: `https://${BUCKET_NAME}.s3.${BUCKET_REGION}.amazonaws.com/${fileName}`,
-          tag: tag || "default",
-          year: year || new Date().getFullYear(),
+          tag: meta.tag,
+          year: meta.year,
         });
       }
     }

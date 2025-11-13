@@ -3,7 +3,7 @@ import { useGetBodyTypesQuery } from "../app/api/bodyTypesApiSlice";
 import { useGetRecommendationsMutation } from "../app/api/recommendVehiclesApiSlice";
 export const useSetRecommendations = () => {
   const { data: bodyTypes, isLoading, isError } = useGetBodyTypesQuery();
-  
+
   const [
     getRecommendations,
     {
@@ -19,6 +19,7 @@ export const useSetRecommendations = () => {
   const [roadCondition, setRoadCondition] = useState("");
   const [fuelType, setFuelType] = useState("");
   const [trafficCondition, setTrafficCondition] = useState("");
+  const [recommendations, setRecommendations] = useState([]);
 
   const seatingList = ["2", "4", "5", "6", "7", "8"];
   const roadConditionList = [
@@ -42,7 +43,7 @@ export const useSetRecommendations = () => {
         fuel: fuelType,
       }).unwrap();
 
-      console.log("Received recommendations:", res.recommendations);
+      setRecommendations(res.recommendations);
     } catch (error) {
       console.error("Error getting recommendations:", error);
     }
@@ -66,8 +67,7 @@ export const useSetRecommendations = () => {
     setFuelType,
     trafficCondition,
     setTrafficCondition,
-    isLoading,
-    isError,
     handleSubmit,
+    recommendations,
   };
 };
