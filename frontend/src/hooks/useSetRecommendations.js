@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useGetBodyTypesQuery } from "../app/api/bodyTypesApiSlice";
 import { useGetRecommendationsMutation } from "../app/api/recommendVehiclesApiSlice";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 export const useSetRecommendations = () => {
-  const { data: bodyTypes, isLoading, isError } = useGetBodyTypesQuery();
+  const navigate = useNavigate();
 
   const [
     getRecommendations,
@@ -21,18 +23,18 @@ export const useSetRecommendations = () => {
   const [trafficCondition, setTrafficCondition] = useState("");
   const [recommendations, setRecommendations] = useState([]);
 
-  const seatingList = ["2", "4", "5", "6", "7", "8"];
-  const roadConditionList = [
-    "urban/highway",
-    "suburban",
-    "mid-offroad",
-    "offroad/hilly",
-  ];
-  const fuelTypeList = ["petrol", "diesel", "electric", "hybrid"];
-  const trafficConditionList = ["low", "medium", "high", "mixed"];
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (
+      bodyType === "" ||
+      seatingCapacity === "" ||
+      roadCondition === "" ||
+      fuelType === "" ||
+      trafficCondition === ""
+    ) {
+      toast.error("Please fill in all fields before submitting.");
+      return;
+    }
 
     try {
       const res = await getRecommendations({
@@ -44,19 +46,24 @@ export const useSetRecommendations = () => {
       }).unwrap();
 
       setRecommendations(res.recommendations);
+      navigate("/recommendations/result", {
+        state: {
+          recommendations: res.recommendations,
+          inputs: {
+            bodyType,
+            seatingCapacity,
+            roadCondition,
+            fuelType,
+            trafficCondition,
+          },
+        },
+      });
     } catch (error) {
       console.error("Error getting recommendations:", error);
     }
   };
 
   return {
-    bodyTypes,
-    isLoading,
-    isError,
-    seatingList,
-    roadConditionList,
-    fuelTypeList,
-    trafficConditionList,
     bodyType,
     setBodyType,
     seatingCapacity,

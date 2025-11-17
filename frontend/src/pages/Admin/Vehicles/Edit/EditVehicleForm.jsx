@@ -1,8 +1,10 @@
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faImage, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import InputWrapper from "../../../../components/Assets/InputWrapper";
 import { useEditVehicle } from "../../../../hooks/useEditVehicle";
 import { vehicleUtils } from "../../../../utils/vehicleUtils";
+import ImageModal from "../../../../components/ImageModal";
+
 
 const EditVehicleForm = () => {
   const editVehicleHook = useEditVehicle();
@@ -24,8 +26,28 @@ const EditVehicleForm = () => {
     return <div>Error loading vehicle data.</div>;
   }
 
+  const addImageModal = (
+    <>
+      <ImageModal
+        isOpen={editVehicleHook.showAddImageModal}
+        onClose={() => editVehicleHook.setShowAddImageModal(false)}
+        onFileSelect={editVehicleHook.handleFileSelect}
+        existingFiles={editVehicleHook.galleryImages}
+      ></ImageModal>
+    </>
+  );
+
+  const popupModal=(
+    <>
+    
+    </>
+  )
+
+  console.log("Body Type:", editVehicleHook.bodyType);
+
   return (
     <>
+      <>{addImageModal}</>
       <div className="col-span-7 bg-rmlk-dark-light rounded-md shadow-md max-h-[420px] overflow-y-scroll my-[16px] p-[16px] text-white font-rmlk-secondary">
         <div className="flex flex-col w-full">
           <h3 className="text-[18px]">Basic vehicle informations</h3>
@@ -35,6 +57,85 @@ const EditVehicleForm = () => {
             className="w-full text-[12px] font-rmlk-secondary"
           >
             <form onSubmit={editVehicleHook.handleFormSubmit}>
+              <InputWrapper title={"Gallery Images"}>
+                <div className="flex items-center gap-[8px] p-[8px] w-2/3">
+                  {editVehicleHook.galleryImages.length > 0 ? (
+                    <div className="w-1/2 flex flex-wrap gap-[8px]">
+                      {editVehicleHook.galleryImages.map(
+                        ({ url, tag, year }, index) => (
+                          <div
+                            key={index}
+                            className="relative h-[40px] rounded-md overflow-hidden"
+                          >
+                            <img
+                              src={url}
+                              alt={`Gallery ${index}`}
+                              className=" h-full object-cover"
+                            />
+                            <button
+                              type="button"
+                              onClick={() =>
+                                editVehicleHook.handleRemoveGalleryImage(index)
+                              }
+                              className="absolute top-1 right-1 bg-red-600 rounded-full h-[15px] w-[15px] text-[8px] text-white flex items-center justify-center font-bold"
+                            >
+                              <FontAwesomeIcon icon={faTimes} />
+                            </button>
+                            <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-[10px] text-center">
+                              {tag} - {year}
+                            </div>
+                          </div>
+                        )
+                      )}
+                    </div>
+                  ) : (
+                    <div className="w-2/3">
+                      <span className="text-[12px] text-red-600 px-[4px] py-[2px]">
+                        No images added
+                      </span>
+                    </div>
+                  )}
+
+                  {editVehicleHook.newgalleryImage.length > 0 && (
+                    <div className="w-1/2 flex  gap-[8px]">
+                      {editVehicleHook.newgalleryImage.map((img, index) => (
+                        <div
+                          key={index}
+                          className="relative h-[45px] rounded-md overflow-hidden border border-green-500"
+                        >
+                          <img
+                            src={URL.createObjectURL(img.file)}
+                            alt={`Preview-${index}`}
+                            className=" h-full object-cover"
+                          />
+                          <button
+                            type="button"
+                            onClick={() =>
+                              editVehicleHook.handleRemoveNewGalleryImage(index)
+                            }
+                            className="absolute top-1 right-1 bg-red-600 rounded-full h-[15px] w-[15px] text-[8px] text-white flex items-center justify-center font-bold"
+                          >
+                            <FontAwesomeIcon icon={faTimes} />
+                          </button>
+                          <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-[10px] text-center">
+                            {img.tag} - {img.year}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <div className="w-1/3 flex items-center p-[8px]">
+                  <button
+                    type="button"
+                    onClick={() => editVehicleHook.setShowAddImageModal(true)}
+                    className="py-[8px] px-[8px] border-2 border-rmlk-dark-lighter border-dashed rounded-md shadow-md hover:cursor-pointer text-rmlk-dark-lighter font-semibold text-[16px] flex items-center justify-center gap-[8px]"
+                  >
+                    <FontAwesomeIcon icon={faImage} className="text-[24px]" />{" "}
+                    Add image
+                  </button>
+                </div>
+              </InputWrapper>
               <InputWrapper title={"Manufacturer and Model"}>
                 <div className="p-[8px] w-full text-[12px] flex  gap-[4px]">
                   <div className="flex flex-col  my-[4px] w-1/3">
@@ -180,7 +281,7 @@ const EditVehicleForm = () => {
                       type="text"
                       value={editVehicleHook.fuelEfficiency}
                       onChange={(e) =>
-                        editVehicleHook.setFuelEfficiency(e.target.valu)
+                        editVehicleHook.setFuelEfficiency(e.target.value)
                       }
                       placeholder={editVehicleHook.fuelEfficiency}
                       className="w-full h-[30px] bg-rmlk-dark-lighter text-white placeholder:text-white p-[4px] rounded-md"
@@ -390,41 +491,7 @@ const EditVehicleForm = () => {
                   </div>
                 </div>
               </InputWrapper>
-              <InputWrapper title={"Gallery Images"}>
-                <div className="flex flex-wrap gap-[8px] p-[8px] w-full">
-                  {editVehicleHook.galleryImages.length > 0 ? (
-                    <div className="w-2/3 flex flex-wrap gap-[8px]">
-                      {editVehicleHook.galleryImages.map(
-                        ({ url, tag, year }, index) => (
-                          <div
-                            key={index}
-                            className="relative h-[50px] rounded-md overflow-hidden"
-                          >
-                            <img
-                              src={url}
-                              alt={`Gallery ${index}`}
-                              className=" h-full object-cover"
-                            />
-                            <button className="absolute top-1 right-1 bg-red-600 rounded-full h-[15px] w-[15px] text-[8px] text-white flex items-center justify-center font-bold">
-                              <FontAwesomeIcon icon={faTimes} />
-                            </button>
-                            <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-[10px] text-center">
-                              {tag} - {year}
-                            </div>
-                          </div>
-                        )
-                      )}
-                    </div>
-                  ) : (
-                    <div className="w-2/3">
-                      <span className="text-[12px] text-red-600 px-[4px] py-[2px]">
-                        No images added
-                      </span>
-                    </div>
-                  )}
-                  <div className="w-1/3 flex items-center"></div>
-                </div>
-              </InputWrapper>
+
               <div className="p-[8px]">
                 <button
                   type="submit"

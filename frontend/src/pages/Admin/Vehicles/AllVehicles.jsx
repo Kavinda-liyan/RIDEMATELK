@@ -2,9 +2,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { useGetVehiclesQuery } from "../../../app/api/vehiclesApiSlice";
 import { setPage } from "../../../app/slices/paginationSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCaretLeft,
+  faCaretRight,
+  faEdit,
+  faPlus,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect, use } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import PageWrapper from "../../../components/Assets/PageWrapper";
 import BreadCrumb from "../../../components/BreadCrumb";
 import PopupModal from "../../../components/PopupModal";
@@ -15,6 +21,7 @@ import WarningIcon from "../../../components/Assets/WarningIcon";
 const AllVehicles = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const { page, limit } = useSelector((state) => state.pagination);
   const [filters, setFilters] = useState({
     Manufacturer: "",
@@ -37,9 +44,12 @@ const AllVehicles = () => {
   const groupEnd = Math.min(groupStart + visiblePages - 1, totalPages);
 
   const vehicleTableHead = [
+    "#",
     "Manufacturer",
     "Model",
     "Year(s)",
+    "Fuel Type",
+    "Body Type",
     "Last modified",
     "Edit",
     "Delete",
@@ -47,17 +57,12 @@ const AllVehicles = () => {
 
   const useDeleteVehicleHook = useDeleteVehicle();
 
-  const roadCondition = [
-    { type: "City/Urban", color: "bg-green-400" },
-    { type: "Suburban/Normal", color: "bg-amber-400" },
-    { type: "Mid Off-Road", color: "bg-orange-500" },
-    { type: "Off-Road/Hilly Terrain", color: "bg-red-600" },
-  ];
-  const handleVehicleClick = () => {};
-
-  useEffect(() => {
-    dispatch(setPage(1));
-  }, [filters, dispatch]);
+  // useEffect(() => {
+  //   // Reset page only if not on editvehicle path
+  //   if (!location.pathname.startsWith("/admin/editvehicle")) {
+  //     dispatch(setPage(1));
+  //   }
+  // }, [location.pathname, dispatch]);
 
   const deleteModel = (
     <PopupModal
@@ -111,14 +116,15 @@ const AllVehicles = () => {
         <div className="flex items-center">
           <Link
             to="/admin/addvehicle"
-            className="w-fit h-fit px-[8px] py-[4px] rounded-md bg-rmlk-red text-white font-semibold shadow-md hover:bg-rmlk-red-light duration-200"
+            className="w-fit flex items-center px-[8px] py-[4px] rounded-md bg-rmlk-red text-white font-semibold shadow-md hover:bg-rmlk-red-light duration-200 h-[30px]"
           >
             <FontAwesomeIcon icon={faPlus} /> Add new vehicle
           </Link>
         </div>
         <input
+          className="p-[8px] rounded-md bg-rmlk-dark-lighter text-white w-full md:w-auto h-[30px]"
           type="text"
-          placeholder="manufacturer"
+          placeholder="Search by Manufacturer"
           value={filters.Manufacturer}
           onChange={(e) =>
             setFilters({ ...filters, Manufacturer: e.target.value })
@@ -150,16 +156,25 @@ const AllVehicles = () => {
                 </td>
               </tr>
             ) : data?.vehicles?.length > 0 ? (
-              data.vehicles.map((vehicle) => (
+              data.vehicles.map((vehicle,index) => (
                 <tr
                   key={vehicle._id}
                   className="text-[12px] font-rmlk-secondary transition-all duration-200 "
                   onClick={() => handleVehicleClick()}
                 >
+                  <td className="p-2">{index+1}</td>
                   <td className="p-2">{vehicle["Manufacturer"]}</td>
 
                   <td className={`p-2 `}>{vehicle["Model"]}</td>
-                  <td className="p-2">{vehicle["Year"]}</td>
+                  <td className="p-2">
+                    <div className="max-w-[150px]">
+                      {Array.isArray(vehicle.years)
+                        ? vehicle.years.join(", ")
+                        : vehicle.years}
+                    </div>
+                  </td>
+                  <td className="p-2">{vehicle["Fuel Type"]}</td>
+                  <td className="p-2">{vehicle["Body Type"]}</td>
                   <td className="p-2">
                     {vehicle.updatedAt
                       ? new Date(vehicle.updatedAt).toLocaleDateString()
@@ -218,7 +233,8 @@ const AllVehicles = () => {
               className="px-3 py-1 bg-rmlk-dark-lighter rounded hover:cursor-pointer"
               onClick={() => dispatch(setPage(groupStart - 1))}
             >
-              ...
+              <FontAwesomeIcon icon={faCaretLeft} />
+              <FontAwesomeIcon icon={faCaretLeft} />
             </button>
           )}
 
@@ -246,7 +262,8 @@ const AllVehicles = () => {
               className="px-3 py-1 bg-rmlk-dark-lighter rounded hover:cursor-pointer"
               onClick={() => dispatch(setPage(groupEnd + 1))}
             >
-              ...
+              <FontAwesomeIcon icon={faCaretRight} />
+              <FontAwesomeIcon icon={faCaretRight} />
             </button>
           )}
 

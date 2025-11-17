@@ -45,15 +45,15 @@ router.post("/bodytypes", authenticate, authAdmin, createBodyType);
 router.delete("/bodytypes/:id", authenticate, authAdmin, deleteBodyType);
 
 //---------------Manufacturer---------------
-router.get("/manufacturer", authenticate, authAdmin, getManufacturer);
+router.get("/manufacturer", getManufacturer);
 router.post("/manufacturer", authenticate, authAdmin, createManufacturer);
 router.delete("/manufacturer/:id", authenticate, authAdmin, deleteManufacturer);
 
 //---------------View Vehicles---------------
 
 //GET /api/vehicles
-router.get("/", authenticate, authAdmin, getAllVehicles);
-router.get("/filter", authenticate, authAdmin, getVehiclesByFilter);
+router.get("/", getAllVehicles);
+router.get("/filter", getVehiclesByFilter);
 //GET /api/vehicles/:id
 router.get("/:id", getVehicle);
 //POST /api/vehicles
@@ -70,6 +70,7 @@ router.post(
 //PUT /api/vehicles/:id
 router.patch(
   "/:id",
+  upload.array("gallery_img"),
   authenticate,
   authAdmin,
   validateVehicleInput,

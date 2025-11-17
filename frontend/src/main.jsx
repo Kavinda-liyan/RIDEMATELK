@@ -22,6 +22,7 @@ import IndexRoute from "./components/Routes/IndexRoute.jsx";
 import Dashboard from "./pages/Admin/Dashboard.jsx";
 import AddVehicles from "./pages/Admin/Vehicles/Add/AddVehicles.jsx";
 import EditVehicle from "./pages/Admin/Vehicles/Edit/EditVehicle.jsx";
+import RecommendationForm from "./pages/Recommendation/RecommendationForm.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -37,6 +38,7 @@ const router = createBrowserRouter(
         }
       />
       <Route path="/recommendations" element={<Recommendation />} />
+      <Route path="/recommendations/result" element={<RecommendationForm />} />
       <Route path="/signin" element={<Signin />} />
       <Route path="/signup" element={<Signup />} />
       <Route

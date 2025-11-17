@@ -1,198 +1,158 @@
-import pandas as pd
-import numpy as np
-import joblib
-from sklearn.preprocessing import StandardScaler
-from sklearn.neighbors import NearestNeighbors
+import json
 import sys
 import os
+import math
+import joblib
+import pandas as pd
+import numpy as np
 from pymongo import MongoClient
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.compose import ColumnTransformer
+from sklearn.neighbors import NearestNeighbors
 
-# --- Configuration and Constants (Derived from your model) ---
+# ------------------ MongoDB Connection ------------------
 
-NUMERIC_COLS = ["Seating Capacity", "EFF (km/l)/(km/kwh)", "Ground Clearance (range)"]
-BODY_TYPES = [
-    "sedan",
-    "hatchback",
-    "suv",
-    "mpv",
-    "pickup",
-    "coupe",
-    "convertible",
-    "wagon",
-    "van",
-    "crossover",
-    "kei / microvan",
-    "roadster",
-    "other",
-    "liftback",
-    "mpv / minivan",
-    "kei",
-    "microvan",
-    "minivan",
+MONGO_URI = os.environ.get("MONGO_URI", "mongodb://localhost:27017/")
+DB_NAME = os.environ.get("MONGO_DB_NAME", "ridematelk")
+COLLECTION_NAME = os.environ.get("MONGO_COLLECTION_NAME", "vehicledata")
+
+try:
+    client = MongoClient(MONGO_URI)
+    db = client[DB_NAME]
+    vehicle_col = db[COLLECTION_NAME]
+except Exception as e:
+    print(json.dumps({"error": f"MongoDB connection failed: {str(e)}"}))
+    sys.exit(1)
+
+# ------------------ Constants ------------------
+
+NUMERIC_COLS = [
+    "Seating Capacity",
+    "EFF (km/l)/(km/kwh)",
+    "Ground Clearance (range)",
 ]
-ROAD_COLS = ["City/Urban", "Suburban/Normal", "Mid Off-Road", "Off-Road/Hilly Terrain"]
-# Weights are fixed but size depends on number of fuel types
-WEIGHT_BODY = 3.5
-WEIGHT_NUMERIC = 3.5
-WEIGHT_ROAD = 3
-WEIGHT_EFF_GC = 3.5
-WEIGHT_FUEL = 15
 
+CATEGORICAL_COLS = [
+    "Fuel Type",
+    "Body Type",
+    "Road Type",
+]
 
-def load_data_and_extract_features():
-    """Loads data from MongoDB and performs all preprocessing steps."""
-    try:
-        # --- 1. DATA EXTRACTION (MongoDB Connection) ---
+OUTPUT_COLS = [
+    "Manufacturer",
+    "Model",
+    "Body Type",
+    "Seating Capacity",
+    "Fuel Type",
+    "EFF (km/l)/(km/kwh)",
+    "Ground Clearance (range)",
+]
 
-        # Pull connection details from environment variables
-        MONGO_URI = os.environ.get("MONGO_URI", "mongodb://localhost:27017/")
-        DB_NAME = os.environ.get("MONGO_DB_NAME", "ridematelk")
-        COLLECTION_NAME = os.environ.get("MONGO_COLLECTION_NAME", "vehicledata")
+# Keep consistent road mapping
+ROAD_MAPPING = {
+    "town": "City/Urban",
+    "urban": "City/Urban",
+    "city": "City/Urban",
+    "suburban": "Suburban/Normal",
+    "mid off-road": "Mid Off-Road",
+    "off-road": "Off-Road/Hilly Terrain",
+    "hilly": "Off-Road/Hilly Terrain",
+}
 
-        client = MongoClient(MONGO_URI)
-        db = client[DB_NAME]
-        collection = db[COLLECTION_NAME]
+# ------------------ Helper Functions ------------------
 
-        # Fetch all documents and load into a list, then into a DataFrame
-        cursor = collection.find({})
-        data_list = list(cursor)
-        df = pd.DataFrame(data_list)
+def load_dataframe():
+    vehicles = list(vehicle_col.find())
+    if not vehicles:
+        return pd.DataFrame()
 
-        # Clean up the MongoDB ID column which is not needed for training
-        if "_id" in df.columns:
-            df = df.drop(columns=["_id"])
+    df = pd.DataFrame(vehicles)
 
-        print(f"Successfully loaded {len(df)} documents from MongoDB.")
+    if "_id" in df.columns:
+        df = df.drop(columns=["_id"])
 
-    except Exception as e:
-        # Use print to send error messages back to the Node.js process (STDERR)
-        print(f"Error loading data from MongoDB: {e}", file=sys.stderr)
-        sys.exit(1)
+    # ensure all needed columns exist
+    for col in OUTPUT_COLS:
+        if col not in df.columns:
+            df[col] = np.nan
 
-    # --- 2. NUMERIC PREPROCESSING ---
+    # clean string columns
+    for col in CATEGORICAL_COLS:
+        if col in df.columns:
+            df[col] = df[col].astype(str).fillna("").str.lower().str.strip()
+        else:
+            df[col] = ""
+
+    # convert numeric columns
     for col in NUMERIC_COLS:
-        # Use .get() defensively as some records might miss a column
-        df[col] = pd.to_numeric(df.get(col, np.nan), errors="coerce")
+        df[col] = pd.to_numeric(df.get(col, pd.Series(dtype=float)), errors="coerce")
 
-    # Fill missing numeric values with the column mean
-    df[NUMERIC_COLS] = df[NUMERIC_COLS].fillna(df[NUMERIC_COLS].mean())
+    # fill missing numeric with median
+    for col in NUMERIC_COLS:
+        med = df[col].median(skipna=True)
+        df[col] = df[col].fillna(med if not np.isnan(med) else 0)
 
-    # --- 3. FEATURE ENGINEERING (OHE) ---
-    df["Fuel Type"] = df["Fuel Type"].str.lower().str.strip()
-    # Filter fuel types that aren't empty strings (in case of bad data)
-    fuel_types = df["Fuel Type"].unique().tolist()
-    fuel_types = [f for f in fuel_types if f]
-
-    for bt in BODY_TYPES:
-        df[f"Body_{bt}"] = df["Body Type"].apply(
-            lambda x: (
-                1
-                if bt.lower()
-                in [t.strip().lower() for t in str(x).replace("/", ",").split(",")]
-                else 0
-            )
-        )
-    for f in fuel_types:
-        df[f"Fuel_{f}"] = df["Fuel Type"].apply(lambda x: 1 if x == f else 0)
-
-    # Ensure road columns exist (though not strictly necessary for OHE data)
-    for rc in ROAD_COLS:
-        if rc not in df.columns:
-            df[rc] = 0
-
-    return df, fuel_types
+    return df
 
 
-def preprocess_and_train(df, fuel_types):
-    """Scales, weights, and trains the K-NN model."""
+def train_knn(df):
+    """
+    Creates ColumnTransformer → preprocess features → trains KNN.
+    Saves:
+        - knn_model.joblib
+        - preprocessor.joblib
+        - feature_columns.joblib
+        - metadata.joblib
+    """
+    if df.empty:
+        print(json.dumps({"error": "Empty dataset — cannot train"}))
+        sys.exit(0)
 
-    ALL_FUEL_COLS = [f"Fuel_{f}" for f in fuel_types]
-    FEATURE_COLS = (
-        [f"Body_{bt}" for bt in BODY_TYPES]
-        + ["Seating Capacity"]
-        + ROAD_COLS
-        + ["EFF (km/l)/(km/kwh)", "Ground Clearance (range)"]
-        + ALL_FUEL_COLS
+    # Create preprocessor
+    preprocessor = ColumnTransformer(
+        transformers=[
+            ("num", StandardScaler(), NUMERIC_COLS),
+            ("cat", OneHotEncoder(handle_unknown="ignore", sparse_output=False), CATEGORICAL_COLS),
+        ],
+        remainder="drop",
     )
 
-    X_full = df[FEATURE_COLS].fillna(0).values
+    feature_df = df[NUMERIC_COLS + CATEGORICAL_COLS]
 
-    # 1. SCALING NUMERIC FEATURES (Seating, EFF, GC)
+    X = preprocessor.fit_transform(feature_df)
 
-    # Find indices for the 3 numeric columns within the feature_cols list
-    num_indices = [
-        FEATURE_COLS.index(col) for col in NUMERIC_COLS if col in FEATURE_COLS
-    ]
-    X_numeric_data = X_full[:, num_indices]
+    # neighbors limited to dataset size
+    k = min(50, len(df))
+    knn = NearestNeighbors(n_neighbors=k, metric="euclidean")
+    knn.fit(X)
 
-    scaler = StandardScaler()
-    X_numeric_scaled = scaler.fit_transform(X_numeric_data)
+    # Save artifacts
+    joblib.dump(knn, "knn_model.joblib")
+    joblib.dump(preprocessor, "preprocessor.joblib")
+    joblib.dump(NUMERIC_COLS + CATEGORICAL_COLS, "feature_columns.joblib")
 
-    # Reassemble X_model with scaled features inserted back
-    X_model = X_full.copy()
-    for i, col_idx in enumerate(num_indices):
-        X_model[:, col_idx] = X_numeric_scaled[:, i]
+    metadata_df = df[OUTPUT_COLS].copy()
+    joblib.dump(metadata_df, "metadata.joblib")
 
-    # 2. FEATURE WEIGHTING (Must match the structure of FEATURE_COLS)
-    weights = []
-    weights += [WEIGHT_BODY] * len(BODY_TYPES)  # Body Type
-    weights.append(WEIGHT_NUMERIC)  # Seating Capacity
-    weights += [WEIGHT_ROAD] * len(ROAD_COLS)  # Road Type
-    weights += [WEIGHT_EFF_GC, WEIGHT_EFF_GC]  # EFF, Ground Clearance
-    weights += [WEIGHT_FUEL] * len(fuel_types)  # Fuel Type
-    weights = np.array(weights)
-
-    X_weighted = X_model * weights
-
-    # 3. TRAIN K-NN MODEL
-    print("Training Weighted NearestNeighbors model...")
-    top_n = min(100, len(X_weighted))
-    knn = NearestNeighbors(n_neighbors=top_n, metric="euclidean")
-    knn.fit(X_weighted)
-
-    return scaler, knn, FEATURE_COLS, weights
+    return True
 
 
-def save_artifacts(scaler, knn_model, feature_cols, weights, df):
-    """Saves all artifacts to disk."""
-    print("Saving artifacts...")
-    joblib.dump(scaler, "scaler.joblib")
-    joblib.dump(knn_model, "knn_model.joblib")
-    joblib.dump(feature_cols, "feature_cols.joblib")
-    joblib.dump(weights, "weights.joblib")
-
-    # Save essential metadata including indices
-    metadata_cols = [
-        "Manufacturer",
-        "Model",
-        "Body Type",
-        "Seating Capacity",
-        "Fuel Type",
-        "EFF (km/l)/(km/kwh)",
-        "Ground Clearance (range)",
-    ]
-    metadata_df = df[[c for c in metadata_cols if c in df.columns]].copy()
-    joblib.dump(metadata_df, "vehicle_metadata.joblib")
-
-    print("Model, Scaler, and Metadata saved successfully.")
-
+# ------------------ Main ------------------
 
 if __name__ == "__main__":
-    print("--- Starting ML Model Retraining Job ---")
+    try:
+        print("Loading data from MongoDB...")
+        df = load_dataframe()
 
-    df, fuel_types = load_data_and_extract_features()
+        if df.empty or len(df) < 5:
+            print(json.dumps({"error": "Not enough records to train (minimum 5)"}))
+            sys.exit(0)
 
-    # Handle edge case where the database is empty (no training data)
-    if df.empty or len(df) < 5:
-        print(
-            "WARNING: Database is empty or too small (less than 5 records). Skipping training."
-        )
-        sys.exit(0)  # Exit successfully but do not proceed with training/saving
+        print(f"Training model with {len(df)} vehicles...")
+        train_knn(df)
 
-    # 3. Preprocess, Train, and Get Artifacts
-    scaler, knn_model, feature_cols, weights = preprocess_and_train(df, fuel_types)
+        print(json.dumps({"status": "success", "message": "Retraining completed"}))
 
-    # 4. Save Artifacts
-    save_artifacts(scaler, knn_model, feature_cols, weights, df)
-
-    print("--- Retraining Job Finished ---")
+    except Exception as e:
+        print(json.dumps({"error": str(e)}))
+        sys.exit(1)

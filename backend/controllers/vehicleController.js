@@ -6,7 +6,7 @@ import vehicleLogicCreator from "../middlewares/vehicleLogicCreator.js";
 import { bodyType } from "../models/bodyTypesModel.js";
 import { Manufacturer } from "../models/manufactureModel.js";
 import s3 from "../config/S3Client.js";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { v4 as uuidv4 } from "uuid";
 import multer from "multer";
 import dotenv from "dotenv";
@@ -305,31 +305,120 @@ const createVehicle = async (req, res) => {
 // @desc    Update a vehicle
 // @route   PUT /api/vehicles/:id
 // @access  Public
-const updateVehicle = async (req, res) => {
+const updateVehicle = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  if (!mongoose.Types.ObjectId.isValid(id))
-    return res.status(404).json({ message: `No vehicle found with id: ${id}` });
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: `Invalid vehicle ID: ${id}` });
+  }
 
   try {
-    // Use $set to update only provided fields
-    const updatedVehicle = await Vehicle.findByIdAndUpdate(
-      id,
-      { $set: req.body },
-      { new: true, runValidators: true }
-    );
+    let updateData = { ...req.body };
 
-    if (!updatedVehicle)
+    // --- JSON fields parsing ---
+    const jsonFields = ["info_links", "years", "transmission", "removedImages"];
+    jsonFields.forEach((field) => {
+      if (updateData[field] && typeof updateData[field] === "string") {
+        try {
+          updateData[field] = JSON.parse(updateData[field]);
+        } catch (e) {
+          console.error(`Invalid JSON for field ${field}`);
+        }
+      }
+    });
+
+    // --- Handle removed images ---
+    if (updateData.removedImages?.length > 0) {
+      for (const url of updateData.removedImages) {
+        // Extract S3 key from URL
+        const key = url.split(
+          `https://${BUCKET_NAME}.s3.${BUCKET_REGION}.amazonaws.com/`
+        )[1];
+        if (key) {
+          await s3.send(
+            new DeleteObjectCommand({ Bucket: BUCKET_NAME, Key: key })
+          );
+        }
+      }
+
+      // Remove from MongoDB gallery array
+      await Vehicle.findByIdAndUpdate(id, {
+        $pull: { gallery_img: { url: { $in: updateData.removedImages } } },
+      });
+
+      delete updateData.removedImages;
+    }
+
+    // --- Handle new gallery images ---
+    let newGallery = [];
+    let galleryMetaArray = [];
+
+    if (updateData.gallery_meta) {
+      try {
+        galleryMetaArray = JSON.parse(updateData.gallery_meta);
+      } catch {
+        console.error("Invalid gallery_meta JSON");
+      }
+      delete updateData.gallery_meta;
+    }
+
+    if (req.files && req.files.length > 0) {
+      for (let i = 0; i < req.files.length; i++) {
+        const file = req.files[i];
+        const meta = galleryMetaArray[i] || {
+          tag: "default",
+          year: new Date().getFullYear(),
+        };
+
+        const fileName = `vehicles/${uuidv4()}=${file.originalname}`;
+
+        await s3.send(
+          new PutObjectCommand({
+            Bucket: BUCKET_NAME,
+            Key: fileName,
+            Body: file.buffer,
+            ContentType: file.mimetype,
+          })
+        );
+
+        newGallery.push({
+          url: `https://${BUCKET_NAME}.s3.${BUCKET_REGION}.amazonaws.com/${fileName}`,
+          tag: meta.tag,
+          year: meta.year,
+        });
+      }
+    }
+
+    // --- Prepare MongoDB update object ---
+    const updateObj = { ...updateData };
+
+    const mongoUpdate = { $set: updateObj };
+    if (newGallery.length > 0) {
+      mongoUpdate.$push = { gallery_img: { $each: newGallery } };
+    }
+
+    // --- Update vehicle ---
+    const updatedVehicle = await Vehicle.findByIdAndUpdate(id, mongoUpdate, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!updatedVehicle) {
       return res.status(404).json({ message: "Vehicle not found" });
+    }
 
-    res.status(200).json(updatedVehicle);
+    // Trigger retraining
+    triggerRetraining();
 
-    // Trigger retraining asynchronously
-    triggerRetraining().catch((err) => console.error(err));
+    res.status(200).json({
+      message: "Vehicle updated successfully",
+      data: updatedVehicle,
+    });
   } catch (error) {
-    console.error("Patch Vehicle Error:", error);
+    console.error("UPDATE VEHICLE ERROR:", error);
     res.status(500).json({ message: error.message });
   }
-};
+});
 
 // @route   DELETE /api/vehicles/:id
 // @access  Private/Admin
