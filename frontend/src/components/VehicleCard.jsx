@@ -10,10 +10,12 @@ const VehicleCard = ({
   fuelEff,
   groundC,
   seats,
+  openVehicleFunc,
 }) => {
   return (
     <div className="py-[16px] px-[18px] ">
       <div
+        onClick={openVehicleFunc}
         id="card"
         className="relative hover:scale-105 duration-200 w-full bg-rmlk-dark-light rounded-xs shadow-md border border-rmlk-dark-light overflow-hidden min-h-[290px]"
       >

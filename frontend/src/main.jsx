@@ -23,6 +23,7 @@ import Dashboard from "./pages/Admin/Dashboard.jsx";
 import AddVehicles from "./pages/Admin/Vehicles/Add/AddVehicles.jsx";
 import EditVehicle from "./pages/Admin/Vehicles/Edit/EditVehicle.jsx";
 import RecommendationForm from "./pages/Recommendation/RecommendationForm.jsx";
+import VehicleDetails from "./pages/Recommendation/VehicleDetails.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -64,6 +65,10 @@ const router = createBrowserRouter(
             <EditVehicle />
           </AdminRoute>
         }
+      />
+      <Route
+        path="recommendation/result/vehicle/:id"
+        element={<VehicleDetails />}
       />
     </Route>
   )

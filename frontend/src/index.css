@@ -19,6 +19,8 @@
   --color-rmlk-dark-lght: #2a2a2b;
   --font-rmlk-secondary: "Golos Text", sans-serif;
   --default-font-family: "Anybody", sans-serif;
+  --color-riyasewana-blue:#039be6;
+  --color-ikman-green:#149777;
 }
 
 * {
@@ -33,7 +35,7 @@
   cursor: pointer;
   width: 5px;
   height: 8px;
-  background-color: var(--color-rmlk-dark-lghter);
+  background-color: none;
   border-radius: 10px;
 }
 

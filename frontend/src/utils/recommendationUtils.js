@@ -1,4 +1,11 @@
+import { useGetBodyTypesQuery } from "../app/api/bodyTypesApiSlice";
+
 export const recommendationUtils = () => {
+  const {
+    data: bodyTypesData,
+    isLoading: loadingBt,
+    isError: errorBt,
+  } = useGetBodyTypesQuery();
   const roadConditionList = [
     { answer: "I live in a city with well-maintained roads.", value: "city" },
     {
@@ -30,9 +37,51 @@ export const recommendationUtils = () => {
     { answer: "I have no specific fuel type preference.", value: "any" },
   ];
 
+  const GcRecommendation = [
+    {
+      ground_clearance: "low",
+      description: "Suitable for well-maintained urban roads.",
+    },
+    {
+      ground_clearance: "medium",
+      description: " Suitable for suburban and moderately maintained roads.",
+    },
+    {
+      ground_clearance: "high",
+      description:
+        "Ideal for rough, unpaved roads and light off-road conditions.",
+    },
+    {
+      ground_clearance: "very high",
+      description:
+        "Best for rocky, mountainous terrains and heavy off-roading.",
+    },
+  ];
+
+  const bodyTypeRecommendation = bodyTypesData?.map((bt) => [
+    { body_Type: bt.bodytype, description: bt.Description },
+  ]);
+  const transmissionRecommendation = [
+    {
+      transmisssion: "manual",
+      description:
+        "Offers greater control and is often preferred for off-road and performance driving.",
+    },
+    {
+      transmisssion: "automatic",
+      description:
+        "Provides ease of use and convenience, especially in heavy traffic conditions.",
+    },
+  ];
+
   return {
     roadConditionList,
     trafficConditionList,
     fuelTypeList,
+    GcRecommendation,
+    bodyTypeRecommendation,
+    loadingBt,
+    errorBt,
+    transmissionRecommendation,
   };
 };

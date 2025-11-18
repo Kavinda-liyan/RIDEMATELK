@@ -2,7 +2,7 @@ import VehicleCard from "../../components/VehicleCard";
 import { useSetRecommendations } from "../../hooks/useSetRecommendations";
 import { recommendationUtils } from "../../utils/recommendationUtils";
 import { vehicleUtils } from "../../utils/vehicleUtils";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useGetVehicleByFilterQuery } from "../../app/api/vehiclesApiSlice";
 import imgPlaceholder from "../../assets/placeholderimg.svg";
 import { useState, useEffect } from "react";
@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 const RecommendationForm = () => {
   const location = useLocation();
   const { userInfo } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
 
   const [displayedVehicle, setDisplayedVehicle] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
@@ -82,7 +83,6 @@ const RecommendationForm = () => {
                   <select
                     id="bodyTypes"
                     name="bodyTypes"
-                    
                     value={setRecommendationsHook.bodyType}
                     onChange={(e) =>
                       setRecommendationsHook.setBodyType(e.target.value)
@@ -109,7 +109,6 @@ const RecommendationForm = () => {
                   <select
                     id="bodyTypes"
                     name="bodyTypes"
-                    
                     value={setRecommendationsHook.bodyType}
                     onChange={(e) =>
                       setRecommendationsHook.setBodyType(e.target.value)
@@ -153,7 +152,7 @@ const RecommendationForm = () => {
           ) : recommendations.length > 0 ? (
             displayedVehicle.map((vehicle) => (
               <VehicleCard
-                key={vehicle._id}
+                key={vehicle.id}
                 Model={vehicle["Model"]?.toUpperCase()}
                 Manufacturer={vehicle["Manufacturer"]?.toUpperCase()}
                 bodytype={vehicle["Body Type"]}
@@ -166,6 +165,9 @@ const RecommendationForm = () => {
                 fuelEff={vehicle["EFF (km/l)/(km/kwh)"]}
                 groundC={vehicle["Ground Clearance (range)"]}
                 seats={vehicle["Seating Capacity"]}
+                openVehicleFunc={() =>
+                  navigate(`/recommendation/result/vehicle/${vehicle.id}`)
+                }
               />
             ))
           ) : (
