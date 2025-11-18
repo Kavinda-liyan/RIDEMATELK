@@ -5,6 +5,7 @@ import { recommendationUtils } from "../../utils/recommendationUtils";
 import { useSelector } from "react-redux";
 import VehicleCard from "../../components/VehicleCard";
 import Rating from "./Rating";
+import AverageRatingField from "./AverageRatingField";
 
 const VehicleDetails = () => {
   const { userInfo } = useSelector((state) => state.auth);
@@ -44,16 +45,15 @@ const VehicleDetails = () => {
       );
     }
   }
-  
 
   const GCDescription =
     matchedGC?.description || "No ground clearance info available.";
 
   return (
-    <div className="max-h-[100dvh] bg-rmlk-dark pt-[45px] px-[60px] pb-[16px] font-rmlk-secondary text-white">
+    <div className="min-h-[100dvh] bg-rmlk-dark pt-[45px] px-[60px] pb-[16px] font-rmlk-secondary text-white">
       <div className="grid grid-cols-12 gap-[16px] h-full">
         {/* LEFT SIDE */}
-        <div className="col-span-8 bg-rmlk-dark-light h-[88dvh] flex rounded-md shadow-md overflow-y-scroll">
+        <div className="col-span-8 bg-rmlk-dark-light  flex rounded-md shadow-md ">
           {vehicleLoading ? (
             <div className="h-full w-full flex items-center justify-center">
               <p className="text-white text-[16px]">
@@ -183,6 +183,9 @@ const VehicleDetails = () => {
                   </table>
                 </div>
               </div>
+              <div className="my-[4px]">
+                <AverageRatingField vehicleId={vehicleData._id} />
+              </div>
 
               {/* Vehicle Description */}
               <div className="mt-[16px]">
@@ -238,9 +241,11 @@ const VehicleDetails = () => {
                 </div>
               </div>
               <div className="my-[8px] h-[1px] w-full bg-rmlk-dark-lighter"></div>
-              <div className="flex-grow">
-                <div className="mt-[8px] flex  gap-[8px]">Ratings</div>
-                <Rating />
+              <div className="flex-grow border-[1.5px] p-[16px] border-rmlk-dark-lighter rounded-md">
+                <div className="mt-[8px] flex  gap-[8px]">
+                  <h3 className="text-[18px]">Ratings</h3>
+                </div>
+                <Rating vehicleId={vehicleData._id} />
               </div>
             </div>
           ) : null}

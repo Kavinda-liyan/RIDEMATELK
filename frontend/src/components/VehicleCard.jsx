@@ -1,5 +1,6 @@
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import CardRatings from "../pages/Recommendation/cardRatings";
 
 const VehicleCard = ({
   imgPlaceholder,
@@ -11,7 +12,9 @@ const VehicleCard = ({
   groundC,
   seats,
   openVehicleFunc,
+  vid,
 }) => {
+  const fuel = fueltype.toLowerCase();
   return (
     <div className="py-[16px] px-[18px] ">
       <div
@@ -33,26 +36,42 @@ const VehicleCard = ({
             {Model}
           </h3>
         </div>
-        <div className="p-[16px]">
+        <div className="p-[16px] w-full">
           <h4 className="text-left text-[12px] text-amber-400 font-rmlk-secondary mb-[4px]">
             <strong>Manufacturer</strong> : {Manufacturer}
           </h4>
+          <div className="my-[8px] flex items-center justify-start">
+            <div className="">
+              <CardRatings vehicleId={vid} />
+            </div>
+          </div>
 
-          <div className="text-left text-[12px] font-rmlk-secondary text-white">
-            <p className="w-fit mb-[2px]">
-              <strong>Body Type</strong> : {bodytype}
+          <div className="text-left text-[10px] font-rmlk-secondary text-white flex flex-wrap gap-[8px]">
+            <p className="w-fit mb-[2px] bg-teal-600 inline-block px-[4px] py-[2px] rounded-sm font-semibold">
+              {bodytype.toUpperCase()}
+            </p>
+            <p
+              className={`w-fit mb-[2px]  inline-block px-[4px] py-[2px] rounded-sm font-semibold ${
+                fuel === "petrol"
+                  ? "bg-amber-600"
+                  : fuel === "diesel"
+                  ? "bg-red-600"
+                  : fuel === "electric"
+                  ? "bg-blue-600"
+                  : "bg-green-600"
+              }`}
+            >
+              {fueltype.toUpperCase()}
+            </p>
+            <p className="w-fit mb-[2px] bg-sky-600 inline-block px-[4px] py-[2px] rounded-sm font-semibold">
+              {seats} seats
             </p>
             <p className="w-fit mb-[2px]">
-              <strong>Fuel Type</strong> : {fueltype}
-            </p>
-            <p className="w-fit mb-[2px]">
-              <strong>Fuel Efficiency</strong> : {fuelEff}
+              <strong>Fuel Efficiency</strong> : {fuelEff}{" "}
+              {fuel === "electric" ? "km/kwh" : "km/l"}
             </p>
             <p className="w-fit mb-[2px]">
               <strong>Ground Clearance</strong> : {groundC} mm
-            </p>
-            <p className="w-fit mb-[2px]">
-              <strong>Seating Capacity</strong> : {seats}
             </p>
           </div>
         </div>

@@ -7,6 +7,7 @@ import { useGetVehicleByFilterQuery } from "../../app/api/vehiclesApiSlice";
 import imgPlaceholder from "../../assets/placeholderimg.svg";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import AverageRatingField from "./AverageRatingField";
 
 const RecommendationForm = () => {
   const location = useLocation();
@@ -168,7 +169,10 @@ const RecommendationForm = () => {
                 openVehicleFunc={() =>
                   navigate(`/recommendation/result/vehicle/${vehicle.id}`)
                 }
-              />
+                vid={vehicle.id}
+              >
+                
+              </VehicleCard>
             ))
           ) : (
             <p className="text-white">No recommendations found.</p>
