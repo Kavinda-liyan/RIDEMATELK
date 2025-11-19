@@ -2,12 +2,14 @@ import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./slices/authSlice.js";
 import { apiSlice } from "./slices/apiSlice.js";
 import paginationReducer from "./slices/paginationSlice.js";
+import recommendationReducer from "./slices/recommendationSlice.js";
 
 const store = configureStore({
   reducer: {
     auth: authReducer,
     pagination: paginationReducer,
     [apiSlice.reducerPath]: apiSlice.reducer,
+    recommendation: recommendationReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiSlice.middleware),

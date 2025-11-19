@@ -6,6 +6,7 @@ import {
   faCaretLeft,
   faCaretRight,
   faEdit,
+  faFolder,
   faPlus,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
@@ -53,6 +54,7 @@ const AllVehicles = () => {
     "Last modified",
     "Edit",
     "Delete",
+    "view"
   ];
 
   const useDeleteVehicleHook = useDeleteVehicle();
@@ -201,6 +203,17 @@ const AllVehicles = () => {
                       className="bg-rmlk-dark-lighter p-[6px] rounded-md shadow-md mx-[2px] cursor-pointer hover:bg-rmlk-dark-lighter/50 duration-200"
                     >
                       <FontAwesomeIcon icon={faTrash} />
+                    </button>
+                  </td>
+                  <td className="p-2">
+                    <button
+                      onClick={() =>
+                        navigate(`/recommendation/result/vehicle/${vehicle._id}`)
+                      }
+                      id="open"
+                      className="p-[6px] mx-[2px] bg-green-600 rounded-md shadow-md cursor-pointer hover:bg-green-500 duration-200"
+                    >
+                      <FontAwesomeIcon icon={faFolder} />
                     </button>
                   </td>
                 </tr>

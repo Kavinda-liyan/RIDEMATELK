@@ -1,13 +1,27 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
+
 import {
   useAddOrUpdateRatingMutation,
   useGetVehicleAverageQuery,
   useGetVehicleRatingsQuery,
 } from "../app/api/ratingsApiSlice";
+
+import { useGetAllUsersQuery } from "../app/api/usersApiSlice";
+
 import { toast } from "react-toastify";
 
 export const useSetRatings = (vehicleId) => {
+  const { userInfo } = useSelector((state) => state.auth);
+
+  const {
+    data: usersData,
+    isLoading: usersLoading,
+    isError: usersError,
+  } = useGetAllUsersQuery();
+
   const [addOrUpdateRating] = useAddOrUpdateRatingMutation();
+
   const {
     data: ratingData,
     isLoading: averageRatingLoading,
@@ -27,6 +41,12 @@ export const useSetRatings = (vehicleId) => {
 
   const handleSubmit = async () => {
     try {
+      if (!userInfo) {
+        toast.error("You must be logged in to submit a rating.");
+        
+        return;
+      }
+
       if (!rating) {
         toast.error("Please select a rating before submitting.");
         return;
@@ -54,5 +74,8 @@ export const useSetRatings = (vehicleId) => {
     allRatingData,
     allRatingsError,
     allRatingsLoading,
+    usersData,
+    usersLoading,
+    usersError,
   };
 };

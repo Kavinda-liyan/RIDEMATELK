@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import NavLinks from "./Assets/NavLinks";
 import rmlk_logo_dark from "../assets/rmlk_logo_dark.svg";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown, faUserAlt } from "@fortawesome/free-solid-svg-icons";
 import { useSelector, useDispatch } from "react-redux";
@@ -11,6 +11,7 @@ import { useLogoutMutation } from "../app/api/usersApiSlice.js";
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   const [LogoutApi] = useLogoutMutation();
   const dispatch = useDispatch();
@@ -23,6 +24,18 @@ const Navigation = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  });
 
   const handleDropdown = () => {
     setIsDropdownOpen((prev) => !prev);
@@ -50,22 +63,20 @@ const Navigation = () => {
   ];
 
   const userLinks = [
-    { path: "/profile", user_link_des: "Profile" },
+    { path: "/profile", link_des: "Profile" },
     { path: "/favourite", link_des: "Favourite" },
   ];
   return (
     <>
       <nav
-        className={`w-full h-[45px]  fixed bg-gradient-to-b transition-all duration-300 z-10 ${
-          isScrolled
-            ? "bg-rmlk-dark duration-300"
-            : "from-rmlk-dark/100 to-rmlk-dark/0 duration-300"
-        }`}
+        className={`w-full h-[50px]  fixed bg-gradient-to-b transition-all  z-10 bg-rmlk-dark duration-300}`}
       >
         <div className="pl-[60px] pr-[60px] py-[8px] h-full grid grid-cols-12">
           <div className="col-span-2 flex justify-start">
             <div className="font-rmlk-secondary font-bold tracking-wider text-white flex items-center justify-center ">
-              <img className="h-[12px]" src={rmlk_logo_dark} alt="logo" />
+              <Link to={"/home"}>
+                <img className="h-[12px]" src={rmlk_logo_dark} alt="logo" />
+              </Link>
             </div>
           </div>
           <div className="col-span-8 flex justify-center items-center">
@@ -91,7 +102,7 @@ const Navigation = () => {
               ) : (
                 <Link
                   to={"/signin"}
-                  className="h-full hover:cursor-pointer text-white font-light text-[12px] px-[16px] py-[6px] border-[1.5px] rounded-full hover:text-white/50 duration-200"
+                  className="h-full hover:cursor-pointer bg-white text-rmlk-dark bg-iv text-[12px] px-[16px] py-[8px] border-[1.5px] rounded-sm shadow-md hover:bg-white/80  duration-200 font-rmlk-secondary font-semibold"
                 >
                   <FontAwesomeIcon icon={faUserAlt} /> Sign In
                 </Link>
@@ -100,15 +111,17 @@ const Navigation = () => {
           </div>
         </div>
         <div
+          ref={dropdownRef}
           className={`${
             isDropdownOpen ? "" : "hidden"
-          } absolute top-[40px] right-[65px] bg-rmlk-dark-lighter  rounded-md shadow-md overflow-hidden border-[1.5px] border-rmlk-dark-lighter`}
+          } absolute top-[40px] right-[65px] bg-rmlk-dark-light  rounded-sm shadow-md overflow-hidden border-[1.5px] border-rmlk-dark-lighter font-rmlk-secondary text-[12px]
+           `}
         >
-          <ul className=" text-[16px] text-white">
+          <ul className=" text-[14px] text-white">
             {userLinks.map(({ path, link_des }, index) => (
               <li key={index}>
                 <Link
-                  className=" px-[18px] py-[10px] hover:cursor-pointer hover:bg-rmlk-dark-light duration-200 w-full block"
+                  className=" text-left px-[24px] py-[10px] hover:cursor-pointer hover:bg-rmlk-dark-lighter duration-200 w-full block font-rmlk-secondary"
                   to={path}
                   onClick={handleLinkClick}
                 >
@@ -119,7 +132,7 @@ const Navigation = () => {
 
             <li>
               <button
-                className="px-[18px] py-[10px] hover:cursor-pointer hover:bg-rmlk-dark-light duration-200 w-full"
+                className="px-[24px] py-[10px] hover:cursor-pointer hover:bg-rmlk-dark-lighter duration-200 w-full text-left"
                 onClick={() => {
                   handleLogout();
                   handleLinkClick();

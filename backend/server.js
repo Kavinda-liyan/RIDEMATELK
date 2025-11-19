@@ -5,6 +5,7 @@ import vehicleRoutes from "./routes/vehicleRoutes.js";
 import recommendationRoutes from "./routes/recommendationRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import ratingRoutes from "./routes/ratingRoutes.js";
+import favouriteRoutes from "./routes/favouriteRoutes.js";
 import cookieParser from "cookie-parser";
 
 dotenv.config();
@@ -27,6 +28,7 @@ app.use("/api/vehicles", vehicleRoutes);
 app.use("/api/recommendations", recommendationRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/ratings", ratingRoutes);
+app.use("/api/favorites", favouriteRoutes);
 
 const PORT = process.env.PORT || 5000;
 

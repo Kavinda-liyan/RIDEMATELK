@@ -24,7 +24,7 @@ router
   .put(authenticate, updateUser);
 
 // Admin Routes
-router.route("/").get(authenticate, authAdmin, getUsers);
+router.route("/").get(getUsers);
 router.route("/:id").delete(authenticate, authAdmin, deleteUser);
 
 export default router;

@@ -36,8 +36,8 @@ const AverageRatingField = ({ vehicleId }) => {
               <FontAwesomeIcon icon={faStar} />
             </span>
           ))}
-          <span className="mx-[16px] text-white/50">{average}/5</span>
-          <span className="mx-[16px] text-white/50">({ratingCount})</span>
+          <span className="mx-[8px] text-white/50 flex items-center">{average}/5</span>
+          <span className="mx-[4px] text-white/50 flex items-center">({ratingCount})</span>
         </div>
       )}
     </div>

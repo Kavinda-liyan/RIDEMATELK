@@ -6,14 +6,30 @@ import { useSelector } from "react-redux";
 import VehicleCard from "../../components/VehicleCard";
 import Rating from "./Rating";
 import AverageRatingField from "./AverageRatingField";
+import { useAllRecommendations } from "../../hooks/useAllRecommendations";
+import { useLocation } from "react-router-dom";
 
 const VehicleDetails = () => {
+  const {
+    loadingVehicle,
+    errorVehicle,
+    displayedVehicle,
+    navigate,
+    recommendations,
+  } = useAllRecommendations();
+
   const { userInfo } = useSelector((state) => state.auth);
   const { vehicleData, vehicleError, vehicleLoading } =
     useViewRecommendedVehicle();
 
   const { bodyTypeRecommendation, errorBt, loadingBt, GcRecommendation } =
     recommendationUtils();
+
+  const { state } = useLocation();
+  const restRecommendations = state?.recommendations || [];
+  const sidebarVehicles = restRecommendations.filter(
+    (v) => v.id !== vehicleData?._id
+  );
 
   const flatBodyTypes = bodyTypeRecommendation?.flat() || [];
 
@@ -51,9 +67,13 @@ const VehicleDetails = () => {
 
   return (
     <div className="min-h-[100dvh] bg-rmlk-dark pt-[45px] px-[60px] pb-[16px] font-rmlk-secondary text-white">
-      <div className="grid grid-cols-12 gap-[16px] h-full">
+      <div
+        className={`grid grid-cols-12 gap-[16px] h-full  ${
+          userInfo && userInfo.isAdmin ? "" : "px-[60px]"
+        }`}
+      >
         {/* LEFT SIDE */}
-        <div className="col-span-8 bg-rmlk-dark-light  flex rounded-md shadow-md ">
+        <div className="col-span-12 bg-rmlk-dark-light  flex rounded-md shadow-md ">
           {vehicleLoading ? (
             <div className="h-full w-full flex items-center justify-center">
               <p className="text-white text-[16px]">
@@ -77,7 +97,7 @@ const VehicleDetails = () => {
               {/* CAR DETAILS */}
               <div className="h-full w-full flex gap-[16px] items-center ">
                 {/* Vehicle Image */}
-                <div className="w-[55%] relative bg-rmlk-dark-lighter rounded-xs overflow-hidden shadow-md group">
+                <div className="w-[60%] relative bg-rmlk-dark-lighter rounded-xs overflow-hidden shadow-md group">
                   <img
                     src={
                       vehicleData?.gallery_img?.length > 0
@@ -85,7 +105,7 @@ const VehicleDetails = () => {
                         : imgPlaceholder
                     }
                     alt="Vehicle"
-                    className="h-full object-cover aspect-video group-hover:scale-110 transition-all duration-300"
+                    className="w-full object-cover aspect-video group-hover:scale-110 transition-all duration-300"
                   />
                   <div className="w-full text-center absolute z-[1] bottom-0 bg-black/50">
                     <h2 className="text-[18px] group-hover:text-[22px] transition-all duration-300 font-semibold">
@@ -96,7 +116,7 @@ const VehicleDetails = () => {
                 </div>
 
                 {/* Vehicle Specs Table */}
-                <div className="w-[45%] text-left text-[12px] h-full">
+                <div className="w-[40%] text-left  h-full">
                   <table className="w-full text-left text-[12px] border-separate border-spacing-y-[6px]">
                     <tbody>
                       <tr className="border-b border-white">
@@ -181,10 +201,10 @@ const VehicleDetails = () => {
                       </tr>
                     </tbody>
                   </table>
+                  <div className="my-[4px]">
+                    <AverageRatingField vehicleId={vehicleData._id} />
+                  </div>
                 </div>
-              </div>
-              <div className="my-[4px]">
-                <AverageRatingField vehicleId={vehicleData._id} />
               </div>
 
               {/* Vehicle Description */}
@@ -249,11 +269,6 @@ const VehicleDetails = () => {
               </div>
             </div>
           ) : null}
-        </div>
-
-        {/* RIGHT SIDE */}
-        <div className="col-span-4 bg-rmlk-dark-light h-full rounded-md shadow-md">
-          {/* Summary section goes here */}
         </div>
       </div>
     </div>

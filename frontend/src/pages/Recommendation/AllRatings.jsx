@@ -1,12 +1,17 @@
-import { useSelector } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSetRatings } from "../../hooks/useSetRatings";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
 
-const AllRatings = (vehicleId) => {
-  const { userInfo } = useSelector((state) => state.auth);
+const AllRatings = ({ vehicleId }) => {
   const ratingHook = useSetRatings(vehicleId);
-  const userId = userInfo?._id;
 
-  const { allRatingData, allRatingsLoading, allRatingsError } = ratingHook;
+  const {
+    allRatingData,
+    allRatingsLoading,
+    allRatingsError,
+    usersData,
+    counts,
+  } = ratingHook;
 
   return (
     <div>
@@ -15,9 +20,58 @@ const AllRatings = (vehicleId) => {
       ) : allRatingsError ? (
         <p className="text-sm text-white mt-2">Error loading ratings.</p>
       ) : (
-        allRatingData &&
         allRatingData?.length > 0 && (
-          <div className="h-[200px] p-[16px] border border-rmlk-dark-lighter rounded-md overflow-y-auto"></div>
+          <div className="h-[200px] p-[16px] border border-rmlk-dark-lighter rounded-md overflow-y-auto">
+            {allRatingData.map((rating) => {
+              const matchedUser = usersData?.find(
+                (u) => u._id === rating.userId._id
+              );
+              const words = matchedUser?.username
+                ? matchedUser.username.split(" ")
+                : [];
+              const firstLetter =
+                words.length > 0 ? words[0].charAt(0).toUpperCase() : "";
+              const secondLetter =
+                words.length > 1 ? words[1].charAt(0).toUpperCase() : "";
+              const initials = firstLetter + secondLetter;
+
+              return (
+                <div key={rating._id} className=" p-[8px] rounded-md">
+                  <div className="flex gap-[16px] items-center mb-[4px]">
+                    <div className="flex items-center justify-center  rounded-full text-[10px] font-rmlk-secondary font-semibold bg-blue-500 w-[25px] h-[25px]">
+                      {matchedUser?.username ? initials : "UK"}
+                    </div>
+                    <span className="text-white font-semibold text-[14px]">
+                      {matchedUser?.username || "Unknown User"}
+                    </span>
+                  </div>
+                  <div className="ml-[42px]">
+                    <p className="text-white text-[12px] mb-[4px]">
+                      {rating.review}
+                    </p>
+                    <div className="w-full flex gap-[8px] jsustify-start items-center">
+                      {counts.map((count) => (
+                        <span
+                          key={count}
+                          className={`text-[12px] duration-200 transition-all ${
+                            count <= Math.round(rating.rating)
+                              ? "text-yellow-400"
+                              : "text-gray-500"
+                          }`}
+                        >
+                          <FontAwesomeIcon icon={faStar} />
+                        </span>
+                      ))}
+                      <span className="text-yellow-400 font-semibold text-[10px]">
+                        ( {rating.rating} / 5)
+                      </span>
+                    </div>
+                  </div>
+                  <div className="w-full h-[1px] bg-rmlk-dark-lighter my-[16px]"></div>
+                </div>
+              );
+            })}
+          </div>
         )
       )}
     </div>

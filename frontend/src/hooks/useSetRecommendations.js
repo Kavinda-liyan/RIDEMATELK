@@ -1,9 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useGetBodyTypesQuery } from "../app/api/bodyTypesApiSlice";
 import { useGetRecommendationsMutation } from "../app/api/recommendVehiclesApiSlice";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { set } from "mongoose";
 export const useSetRecommendations = () => {
+  const {
+    data: bodyTypesData = [],
+    isLoading: bodyTypesLoading,
+    isError: bodyTypesError,
+  } = useGetBodyTypesQuery();
   const navigate = useNavigate();
 
   const [
@@ -22,6 +28,18 @@ export const useSetRecommendations = () => {
   const [fuelType, setFuelType] = useState("");
   const [trafficCondition, setTrafficCondition] = useState("");
   const [recommendations, setRecommendations] = useState([]);
+  const [bodyTypeDescription, setBodyTypeDescription] = useState("");
+
+  useEffect(() => {
+    if (bodyType) {
+      const selectedBodyType = bodyTypesData.find(
+        (b) => b.bodytype === bodyType
+      );
+      setBodyTypeDescription(selectedBodyType?.Description || "");
+    } else {
+      setBodyTypeDescription("");
+    }
+  }, [bodyType, bodyTypesData]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -76,5 +94,8 @@ export const useSetRecommendations = () => {
     setTrafficCondition,
     handleSubmit,
     recommendations,
+    errorRecommendations,
+    loadingRecommendations,
+    bodyTypeDescription,
   };
 };
