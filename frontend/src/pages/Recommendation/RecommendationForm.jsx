@@ -21,7 +21,7 @@ const RecommendationForm = () => {
 
   return (
     <>
-      <div className="bg-rmlk-dark pt-[45px] px-[60px] min-h-[100dvh] ">
+      <div className="bg-rmlk-dark pt-[50px] px-[60px] min-h-[100dvh] ">
         <div
           id="vehicleContainer"
           className={`p-[16px] grid  gap-[16px] overflow-y-auto h-[75vh] mt-[45px] ${

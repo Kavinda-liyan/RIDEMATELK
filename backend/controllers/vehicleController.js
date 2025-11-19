@@ -241,26 +241,6 @@ const createVehicle = async (req, res) => {
     // Handle multiple gallery files
     let galleryImages = [];
 
-    // if (req.files && req.files.length > 0) {
-    //   for (const file of req.files) {
-    //     const fileName = `vehicles/${uuidv4()}=${file.originalname}`;
-    //     await s3.send(
-    //       new PutObjectCommand({
-    //         Bucket: BUCKET_NAME,
-    //         Key: fileName,
-    //         Body: file.buffer,
-    //         ContentType: file.mimetype,
-    //       })
-    //     );
-
-    //     galleryImages.push({
-    //       url: `https://${BUCKET_NAME}.s3.${BUCKET_REGION}.amazonaws.com/${fileName}`,
-    //       tag: tag || "default",
-    //       year: year || new Date().getFullYear(),
-    //     });
-    //   }
-    // }
-
     if (req.files && req.files.length > 0) {
       for (let idx = 0; idx < req.files.length; idx++) {
         const file = req.files[idx];

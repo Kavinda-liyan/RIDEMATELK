@@ -53,7 +53,7 @@ const Recommendation = () => {
 
   return (
     <section
-      className="h-dvh bg-rmlk-dark pl-[60px] pr-[60px] pt-[45px]"
+      className="h-dvh bg-rmlk-dark pl-[60px] pr-[60px] pt-[50px]"
       id="Recommendation"
     >
       <div className="h-full w-full flex items-center justify-center text-white">

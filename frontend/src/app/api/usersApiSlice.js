@@ -31,6 +31,22 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       }),
       provideTags: ["User"],
     }),
+    updateUser: builder.mutation({
+      query: (data) => {
+        const formData = new FormData();
+        if (data.username) formData.append("username", data.username);
+        if (data.email) formData.append("email", data.email);
+        if (data.password) formData.append("password", data.password);
+        if (data.profilePicture)
+          formData.append("profilePicture", data.profilePicture); // File object
+        return {
+          url: `${USERS_URL}/profile`,
+          method: "PATCH",
+          body: formData,
+        };
+      },
+      invalidatesTags: ["User"],
+    }),
   }),
 });
 
@@ -39,4 +55,5 @@ export const {
   useLogoutMutation,
   useRegisterMutation,
   useGetAllUsersQuery,
+  useUpdateUserMutation,
 } = usersApiSlice;

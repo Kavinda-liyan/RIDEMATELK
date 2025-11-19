@@ -2,6 +2,15 @@ import asyncHandler from "../middlewares/asyncHandler.js";
 import User from "../models/userModel.js";
 import generateToken from "../utils/generateToken.js";
 import bcrypt from "bcryptjs";
+import s3 from "../config/S3Client.js";
+import { PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { v4 as uuidv4 } from "uuid";
+import multer from "multer";
+import dotenv from "dotenv";
+dotenv.config();
+const { BUCKET_NAME, BUCKET_REGION } = process.env;
+
+const upload = multer();
 
 // @desc    Register a new user
 // @route   POST /api/users/register
@@ -120,25 +129,54 @@ const getUser = asyncHandler(async (req, res) => {
 // @access  Private/Admin
 const updateUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
+  if (!user) return res.status(404).json({ message: "User not found" });
 
-  if (user) {
-    user.username = req.body.username || user.username;
-    user.email = req.body.email || user.email;
+  const { username, email, password } = req.body;
 
-    if (req.body.password) {
-      user.password = req.body.password;
-    }
-    const updatedUser = await user.save();
-    res.status(200).json({
-      _id: updatedUser._id,
-      username: updatedUser.username,
-      email: updatedUser.email,
-      isAdmin: updatedUser.isAdmin,
-    });
-  } else {
-    res.status(404).send("User not found");
-    throw new Error("User not found");
+  if (username) user.username = username;
+  if (email) user.email = email;
+
+  if (password) {
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(password, salt);
   }
+
+  // Handle profile picture upload
+  if (req.file) {
+    // Delete old S3 file if exists
+    if (user.profilePicture) {
+      const oldKey = user.profilePicture.split(
+        `https://${BUCKET_NAME}.s3.${BUCKET_REGION}.amazonaws.com/`
+      )[1];
+      if (oldKey)
+        await s3.send(
+          new DeleteObjectCommand({ Bucket: BUCKET_NAME, Key: oldKey })
+        );
+    }
+
+    const fileName = `profile-pictures/${uuidv4()}=${req.file.originalname}`;
+    await s3.send(
+      new PutObjectCommand({
+        Bucket: BUCKET_NAME,
+        Key: fileName,
+        Body: req.file.buffer,
+        ContentType: req.file.mimetype,
+        ACL: "public-read",
+      })
+    );
+
+    user.profilePicture = `https://${BUCKET_NAME}.s3.${BUCKET_REGION}.amazonaws.com/${fileName}`;
+  }
+
+  const updatedUser = await user.save();
+
+  res.status(200).json({
+    _id: updatedUser._id,
+    username: updatedUser.username,
+    email: updatedUser.email,
+    profilePicture: updatedUser.profilePicture,
+    isAdmin: updatedUser.isAdmin,
+  });
 });
 
 // @desc    Delete user

@@ -121,5 +121,6 @@ export const useAllRecommendations = () => {
     handleAddFavorite,
     handleRemoveFavorite,
     favoritsUserIds,
+    navigate
   };
 };

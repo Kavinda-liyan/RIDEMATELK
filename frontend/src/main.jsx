@@ -24,6 +24,8 @@ import AddVehicles from "./pages/Admin/Vehicles/Add/AddVehicles.jsx";
 import EditVehicle from "./pages/Admin/Vehicles/Edit/EditVehicle.jsx";
 import RecommendationForm from "./pages/Recommendation/RecommendationForm.jsx";
 import VehicleDetails from "./pages/Recommendation/VehicleDetails.jsx";
+import UserRoute from "./components/Routes/UserRoute.jsx";
+import Profile from "./pages/User/Profile.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -69,6 +71,14 @@ const router = createBrowserRouter(
       <Route
         path="recommendation/result/vehicle/:id"
         element={<VehicleDetails />}
+      />
+      <Route
+        path="/profile"
+        element={
+          <UserRoute>
+            <Profile />
+          </UserRoute>
+        }
       />
     </Route>
   )
