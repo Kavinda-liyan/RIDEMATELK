@@ -37,6 +37,16 @@ export const useLogin = () => {
     });
 
     try {
+      if (!email) {
+        toast.error("Email field is empty !");
+        setError((prev) => ({ ...prev, emailError: "Email required" }));
+        return;
+      }
+      if (!password) {
+        toast.error("Password field is empty !");
+        setError((prev) => ({ ...prev, passwordError: "Password required" }));
+        return;
+      }
       if (!password || !email) {
         toast.error("Email or password field is empty !");
         setError({

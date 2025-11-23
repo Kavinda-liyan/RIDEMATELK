@@ -26,6 +26,7 @@ import RecommendationForm from "./pages/Recommendation/RecommendationForm.jsx";
 import VehicleDetails from "./pages/Recommendation/VehicleDetails.jsx";
 import UserRoute from "./components/Routes/UserRoute.jsx";
 import Profile from "./pages/User/Profile.jsx";
+import AllUsers from "./pages/Admin/Users/AllUsers.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -65,6 +66,14 @@ const router = createBrowserRouter(
         element={
           <AdminRoute>
             <EditVehicle />
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/admin/allusers"
+        element={
+          <AdminRoute>
+            <AllUsers />
           </AdminRoute>
         }
       />

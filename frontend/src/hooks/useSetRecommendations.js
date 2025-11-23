@@ -3,7 +3,6 @@ import { useGetBodyTypesQuery } from "../app/api/bodyTypesApiSlice";
 import { useGetRecommendationsMutation } from "../app/api/recommendVehiclesApiSlice";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { set } from "mongoose";
 export const useSetRecommendations = () => {
   const {
     data: bodyTypesData = [],

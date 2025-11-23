@@ -30,8 +30,13 @@ app.use("/api/users", userRoutes);
 app.use("/api/ratings", ratingRoutes);
 app.use("/api/favorites", favouriteRoutes);
 
-const PORT = process.env.PORT || 5000;
+if (process.env.NODE_ENV === "test") {
+  console.log("Test environment detected — skipping app.listen");
+} else {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+export default app;

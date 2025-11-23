@@ -1,5 +1,6 @@
 import { useGetVehicleByFilterQuery } from "../app/api/vehiclesApiSlice";
 import { useGetAllUsersQuery } from "../app/api/usersApiSlice";
+import { useMemo } from "react";
 
 export const useDashboardComponents = () => {
   const {
@@ -19,9 +20,10 @@ export const useDashboardComponents = () => {
   //Cal fuel Types
 
   //getting each fuel types
-  const AvailableFuelTypes = Array.isArray(vehicleData)
-    ? [...new Set(vehicleData.map((v) => v["Fuel Type"].toLowerCase()))]
-    : [];
+  const AvailableFuelTypes = useMemo(() => {
+    if (!Array.isArray(vehicleData)) return [];
+    return [...new Set(vehicleData.map((v) => v["Fuel Type"].toLowerCase()))];
+  }, [vehicleData]);
 
   const vehicleCounts = {};
 
@@ -39,9 +41,12 @@ export const useDashboardComponents = () => {
   }));
 
   //getting each vehicle Manufacturer
-  const AvailableManufacturers = Array.isArray(vehicleData)
-    ? [...new Set(vehicleData.map((v) => v["Manufacturer"].toLowerCase()))]
-    : [];
+  const AvailableManufacturers = useMemo(() => {
+    if (!Array.isArray(vehicleData)) return [];
+    return [
+      ...new Set(vehicleData.map((v) => v["Manufacturer"].toLowerCase())),
+    ];
+  }, [vehicleData]);
 
   console.log(AvailableManufacturers);
   const manufacturerCounts = {};

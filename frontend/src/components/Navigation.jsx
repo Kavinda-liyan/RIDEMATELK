@@ -69,24 +69,24 @@ const Navigation = () => {
   return (
     <>
       <nav
-        className={`w-full h-[50px]  fixed bg-gradient-to-b transition-all  z-10 bg-rmlk-dark duration-300}`}
+        className={`w-full fixed h-[50px] bg-gradient-to-b transition-all  z-10 bg-rmlk-dark duration-300}`}
       >
-        <div className="pl-[60px] pr-[60px] py-[8px] h-full grid grid-cols-12">
-          <div className="col-span-2 flex justify-start">
+        <div className="pl-[60px] pr-[60px] py-[8px] h-full flex justify-between items-center">
+          <div className=" flex justify-start">
             <div className="font-rmlk-secondary font-bold tracking-wider text-white flex items-center justify-center ">
               <Link to={"/home"}>
                 <img className="h-[12px]" src={rmlk_logo_dark} alt="logo" />
               </Link>
             </div>
           </div>
-          <div className="col-span-8 flex justify-center items-center">
+          <div className="flex justify-center items-center">
             <ul className="navs flex gap-[32px] text-[12px] font-light">
               {navLinks.map(({ path, link_des }, index) => (
                 <NavLinks key={index} path={path} navlink={link_des} />
               ))}
             </ul>
           </div>
-          <div className="col-span-2 flex justify-end items-center">
+          <div className=" flex justify-end items-center">
             <div className="">
               {userInfo ? (
                 <>

@@ -17,6 +17,7 @@ import BreadCrumb from "../../components/BreadCrumb";
 import { useDashboardComponents } from "../../hooks/useDashboardComponents";
 import CountUp from "react-countup";
 import DashboardPillers from "../../components/Assets/DashboardPillers";
+import { useMemo } from "react";
 
 const Dashboard = () => {
   const useDashBoardHook = useDashboardComponents();
@@ -24,6 +25,61 @@ const Dashboard = () => {
   const barData = useDashBoardHook.manufacturerBarData;
 
   const COLORS = ["#FF6384", "#36A2EB", "#FFCE56", "#4CAF50"];
+
+  const pieChartMemo = useMemo(
+    () => (
+      <ResponsiveContainer width="100%" height="200">
+        <PieChart>
+          <Pie
+            fontSize={"12px"}
+            data={pieData}
+            cx="50%"
+            cy="50%"
+            labelLine={false}
+            outerRadius={60}
+            fill="#8884d8"
+            dataKey="value"
+            label={({ name, percent }) =>
+              `${name} ${(percent * 100).toFixed(0)}%`
+            }
+          >
+            {pieData.map((entry, index) => (
+              <Cell
+                key={`cell-${index}`}
+                fill={COLORS[index % COLORS.length]}
+              />
+            ))}
+          </Pie>
+          <Tooltip
+            contentStyle={{
+              fontSize: "12px",
+              backgroundColor: "#fff",
+              border: "none",
+              borderRadius: "8px",
+              color: "#000",
+            }}
+          />
+        </PieChart>
+      </ResponsiveContainer>
+    ),
+    [pieData]
+  );
+
+  const barChartMemo = useMemo(
+    () => (
+      <ResponsiveContainer width="100%" height={200}>
+        <BarChart data={barData}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" tick={{ fontSize: 12, fill: "#ccc" }} />
+          <YAxis tick={{ fontSize: 12, fill: "#ccc" }} />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="value" fill="#36A2EB" />
+        </BarChart>
+      </ResponsiveContainer>
+    ),
+    [barData]
+  );
 
   return (
     <PageWrapper>
@@ -51,39 +107,7 @@ const Dashboard = () => {
               in database
             </h3>
             <div className="flex justify-center items-center">
-              <ResponsiveContainer width="100%" height="200">
-                <PieChart>
-                  <Pie
-                    fontSize={"12px"}
-                    data={pieData}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    outerRadius={60}
-                    fill="#8884d8"
-                    dataKey="value"
-                    label={({ name, percent }) =>
-                      `${name} ${(percent * 100).toFixed(0)}%`
-                    }
-                  >
-                    {pieData.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={COLORS[index % COLORS.length]}
-                      />
-                    ))}
-                  </Pie>
-                  <Tooltip
-                    contentStyle={{
-                      fontSize: "12px",
-                      backgroundColor: "#fff",
-                      border: "none",
-                      borderRadius: "8px",
-                      color: "#000",
-                    }}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
+              {pieChartMemo}
             </div>
           </motion.div>
         </div>
@@ -96,16 +120,7 @@ const Dashboard = () => {
           <h3 className="text-[14px] text-center text-white/90 font-rmlk-secondary mb-2">
             Vehicle Count by Manufacturer
           </h3>
-          <ResponsiveContainer width="100%" height={200}>
-            <BarChart data={barData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" tick={{ fontSize: 12, fill: "#ccc" }} />
-              <YAxis tick={{ fontSize: 12, fill: "#ccc" }} />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="value" fill="#36A2EB" />
-            </BarChart>
-          </ResponsiveContainer>
+          {barChartMemo}
         </motion.div>
       </div>
       <div className="grid grid-cols-12">

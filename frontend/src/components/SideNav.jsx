@@ -8,15 +8,17 @@ import {
   faHomeAlt,
   faStar,
   faUsers,
+  faCaretRight,
+  faUserAltSlash,
+  faUserLock,
 } from "@fortawesome/free-solid-svg-icons";
+import { useSelector } from "react-redux";
 
 const SideNav = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isSidenavOpen, setIsSidenavOpen] = useState(false);
 
-  const handleSidenav = () => {
-    setIsSidenavOpen((prev) => !prev);
-  };
+  const { userInfo } = useSelector((state) => state.auth);
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 150);
@@ -24,47 +26,50 @@ const SideNav = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-  return (
-    <nav className="fixed">
-      <div className={`h-[100dvh] w-[200px] z-30  `}>
-        {/* <div className="  relative top-2 pl-[60px] text-[12px]">
-          <button
-            onClick={handleSidenav}
-            className="group hover:cursor-pointer flex items-center gap-2 bg-rmlk-dark-light border-[1.5px] border-rmlk-dark-lighter text-white w-[40px] hover:w-[140px] px-[8px] py-[4px] rounded-md shadow-md overflow-hidden duration-300 hover:bg-rmlk-dark-lighter/80"
-          >
-            <FontAwesomeIcon icon={faBars} className="min-w-[20px]" />
-            <span className="opacity-0 group-hover:opacity-100 group-hover:translate-x-0 -translate-x-5 duration-300 whitespace-nowrap">
-              Admin Panel
-              <FontAwesomeIcon icon={faCaretRight} />
-            </span>
-          </button>
-        </div> */}
-        <div
-          className={`relative h-full 
-             left-[0px] opacity-100
-           duration-300 transition-all ease-in-out`}
-        >
-          <div className="flex  justify-start  h-full bg-rmlk-dark ">
-            <ul className="text-[12px] flex flex-col gap-[16px] pl-[56px] py-[8px] w-full text-white pt-[60px]">
-              <li className=" text-white px-[4px] py-[4px]  rounded-md  duration-200 hover:cursor-pointer group">
-                <FontAwesomeIcon className="pr-[4px]" icon={faBars} /> Admin
-                Panel
-              </li>
 
-              <NavLinks path={"/admin/dashboard"} navlink={"Dashboard"}>
-                <FontAwesomeIcon className="pr-[4px]" icon={faDashboard} />{" "}
+  return (
+    <nav className="fixed left-0 z-50 mt-[50px]">
+      {/* SIDEBAR MAIN WRAPPER */}
+      <div
+        className={`h-[100dvh] bg-rmlk-dark duration-300 
+          w-[220px]
+        `}
+      >
+        <div className="h-full pt-[8px] flex flex-col gap-[20px] pl-[20px] pr-[20px]">
+          <div className="font-rmlk-secondary p-[8px] rounded-sm bg-rmlk-dark-light shadow-md">
+            <h3 className="p-[4px] text-[18px] font-semibold">Admin Panel</h3>
+            <div className="flex items-center">
+              <FontAwesomeIcon
+                icon={faUserLock}
+                className="text-[12px] mr-[2px]"
+              />
+              <h2 className="p-[4px] text-[12px]">{userInfo.username}</h2>
+            </div>
+          </div>
+          <div className="p-[8px] rounded-sm bg-rmlk-dark-light shadow-md">
+            <ul
+              className={`text-[12px] flex flex-col gap-4  py-[16px] text-white transition-all duration-300
+            
+          `}
+            >
+              <NavLinks path="/admin/dashboard" navlink="Dashboard">
+                <FontAwesomeIcon className="pr-2" icon={faDashboard} />
               </NavLinks>
-              <NavLinks path={"/home"} navlink={"Home"}>
-                <FontAwesomeIcon className="pr-[4px]" icon={faHomeAlt} />{" "}
+
+              <NavLinks path="/home" navlink="Home">
+                <FontAwesomeIcon className="pr-2" icon={faHomeAlt} />
               </NavLinks>
-              <NavLinks path={"/admin/allvehicles"} navlink={"All Vehicles"}>
-                <FontAwesomeIcon className="pr-[4px]" icon={faCarSide} />{" "}
+
+              <NavLinks path="/admin/allvehicles" navlink="All Vehicles">
+                <FontAwesomeIcon className="pr-2" icon={faCarSide} />
               </NavLinks>
-              <NavLinks path={""} navlink={"All Users"}>
-                <FontAwesomeIcon className="pr-[4px]" icon={faUsers} />{" "}
+
+              <NavLinks path="/admin/allusers" navlink="All Users">
+                <FontAwesomeIcon className="pr-2" icon={faUsers} />
               </NavLinks>
-              <NavLinks path={""} navlink={"Reviews"}>
-                <FontAwesomeIcon className="pr-[4px]" icon={faStar} />{" "}
+
+              <NavLinks path="" navlink="Reviews">
+                <FontAwesomeIcon className="pr-2" icon={faStar} />
               </NavLinks>
             </ul>
           </div>

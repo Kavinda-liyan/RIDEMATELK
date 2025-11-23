@@ -3,6 +3,7 @@ import authbanner from "../../assets/Authbanner.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faEye } from "@fortawesome/free-solid-svg-icons";
 import { useRegister } from "../../hooks/useRegister";
+import { use } from "react";
 const Signup = () => {
   const useRegisterHook = useRegister();
   return useRegisterHook.isLoading ? (
@@ -41,9 +42,18 @@ const Signup = () => {
                     value={useRegisterHook.username}
                     onChange={(e) => {
                       useRegisterHook.setuserName(e.target.value);
+                      useRegisterHook.setRegError({
+                        ...useRegisterHook.Regerror,
+                        usernameError: "",
+                      });
                     }}
                     className="bg-rmlk-dark-lighter text-[12px] p-[6px] rounded-md"
                   ></input>
+                  {useRegisterHook.Regerror.usernameError && (
+                    <p className="text-[12px] py-[4px] text-red-600">
+                      {useRegisterHook.Regerror.usernameError}
+                    </p>
+                  )}
                 </div>
                 <div className="flex flex-col mb-[8px]">
                   <label className="my-[2px]">Email</label>
@@ -54,9 +64,18 @@ const Signup = () => {
                     value={useRegisterHook.email}
                     onChange={(e) => {
                       useRegisterHook.setEmail(e.target.value);
+                      useRegisterHook.setRegError({
+                        ...useRegisterHook.Regerror,
+                        emailError: "",
+                      });
                     }}
                     className="bg-rmlk-dark-lighter text-[12px] p-[6px] rounded-md"
                   ></input>
+                  {useRegisterHook.Regerror.emailError && (
+                    <p className="text-[12px] py-[4px] text-red-600">
+                      {useRegisterHook.Regerror.emailError}
+                    </p>
+                  )}
                 </div>
                 <div className="flex flex-col mb-[8px] relative">
                   <label className="my-[2px]">Password</label>
@@ -69,6 +88,10 @@ const Signup = () => {
                     value={useRegisterHook.password}
                     onChange={(e) => {
                       useRegisterHook.setPassword(e.target.value);
+                      useRegisterHook.setRegError({
+                        ...useRegisterHook.Regerror,
+                        passwordError: "",
+                      });
                     }}
                     className="bg-rmlk-dark-lighter text-[12px] p-[6px] rounded-md"
                   ></input>
@@ -82,6 +105,11 @@ const Signup = () => {
                   >
                     <FontAwesomeIcon icon={faEye} />
                   </button>
+                  {useRegisterHook.Regerror.passwordError && (
+                    <p className="text-[12px] py-[4px] text-red-600">
+                      {useRegisterHook.Regerror.passwordError}
+                    </p>
+                  )}
                 </div>
                 <div className="flex flex-col mb-[8px] relative">
                   <label htmlFor="confirmPassword" className="my-[2px]">
@@ -116,8 +144,14 @@ const Signup = () => {
                   >
                     <FontAwesomeIcon icon={faEye} />
                   </button>
+                  {useRegisterHook.Regerror.confirmPasswordError && (
+                    <p className="text-[12px] py-[4px] text-red-600">
+                      {useRegisterHook.Regerror.confirmPasswordError}
+                    </p>
+                  )}
                 </div>
                 <div className="flex flex-col mt-[24px] ">
+                  
                   <button
                     type="submit"
                     className="bg-blue-500 hover:bg-blue-400 hover:cursor-pointer duration-200 py-[4px] rounded-md shadow-md"

@@ -12,6 +12,15 @@ export const useRegister = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [visiblePassword, setVisiblePassword] = useState(false);
   const [visibleConfirmPassword, setVisibleConfirmPassword] = useState(false);
+  const [Regerror, setRegError] = useState([
+    {
+      emailError: "",
+      passwordError: "",
+      usernameError: "",
+      confirmPasswordError: "",
+      allFieldsError: "",
+    },
+  ]);
 
   const [register, { isLoading, isError, error }] = useRegisterMutation();
   const { userInfo } = useSelector((state) => state.auth);
@@ -29,12 +38,43 @@ export const useRegister = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!username || !email || !password || !confirmPassword) {
+    
+
+    if (!username && !email && !password && !confirmPassword) {
       toast.error("Please fill in all the empty fields !");
+      setRegError((prev) => ({
+        ...prev,
+        allFieldsError: "All fields are required",
+      }));
+      return;
+    }
+    if (!username) {
+      toast.error("Username field is empty !");
+      setRegError((prev) => ({ ...prev, usernameError: "Username required" }));
+      return;
+    }
+    if (!email) {
+      toast.error("Email field is empty !");
+      setRegError((prev) => ({ ...prev, emailError: "Email required" }));
+      return;
+    }
+    if (!password) {
+      toast.error("Password field is empty !");
+      setRegError((prev) => ({ ...prev, passwordError: "Password required" }));
+      return;
+    }
+    if (!confirmPassword) {
+      toast.error("Confirm Password field is empty !");
+      setRegError((prev) => ({
+        ...prev,
+        confirmPasswordError: "Confirm Password required",
+      }));
+      return;
     }
 
     if (password !== confirmPassword) {
       toast.error("Password not match !");
+      return;
     }
 
     try {
@@ -65,5 +105,7 @@ export const useRegister = () => {
     isLoading,
     isError,
     error,
+    Regerror,
+    setRegError,
   };
 };

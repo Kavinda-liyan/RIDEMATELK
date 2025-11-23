@@ -39,6 +39,8 @@ export const useSetRatings = (vehicleId) => {
   const [hover, setHover] = useState(0);
   const [review, setReview] = useState("");
 
+  console.log("Rating Data:", ratingData);
+
   const handleSubmit = async () => {
     try {
       if (!userInfo) {

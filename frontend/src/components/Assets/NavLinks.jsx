@@ -9,7 +9,7 @@ const NavLinks = ({ path, navlink, children }) => {
         
         <Link
           to={`${path}`}
-          className={`text-white tracking-widest hover:text p-[4px] ${
+          className={`text-white w-full tracking-widest hover:text p-[4px] ${
             location.pathname === `${path}` ? "active" : ""
           }`}
         >
