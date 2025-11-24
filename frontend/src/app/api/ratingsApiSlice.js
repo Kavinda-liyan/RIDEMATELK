@@ -31,6 +31,13 @@ export const ratingApiSlice = apiSlice.injectEndpoints({
         { type: "Rating", id: vehicleId },
       ],
     }),
+    getAllRatings: builder.query({
+      query: () => ({
+        url: `${RATINGS_URL}`,
+        method: "GET",
+      }),
+      providesTags: ["Rating"],
+    }),
   }),
 });
 
@@ -38,4 +45,5 @@ export const {
   useGetVehicleRatingsQuery,
   useGetVehicleAverageQuery,
   useAddOrUpdateRatingMutation,
+  useGetAllRatingsQuery,
 } = ratingApiSlice;

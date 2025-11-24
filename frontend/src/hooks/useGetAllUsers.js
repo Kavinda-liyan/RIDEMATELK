@@ -1,4 +1,5 @@
 import { useGetAllUsersQuery } from "../app/api/usersApiSlice";
+import { useGetAllRatingsQuery } from "../app/api/ratingsApiSlice";
 export const useGetAllUsers = () => {
   const {
     data: allUserData,
@@ -6,7 +7,28 @@ export const useGetAllUsers = () => {
     isError: allUserError,
   } = useGetAllUsersQuery();
 
-  const UserTitle = ["ID", "Name", "Email", "Role", "Reviews"];
+  const {
+    data: ratingData,
+    isLoading: ratingLoading,
+    error: ratingError,
+  } = useGetAllRatingsQuery();
 
-  return { allUserData, allUserLoading, allUserError, UserTitle };
+  const UserTitle = [
+    "ID",
+    "Name",
+    "Email",
+    "Role",
+    "Reviews",
+    "Reviewed Vehicles",
+  ];
+
+  return {
+    allUserData,
+    allUserLoading,
+    allUserError,
+    UserTitle,
+    ratingData,
+    ratingError,
+    ratingLoading,
+  };
 };

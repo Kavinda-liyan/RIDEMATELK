@@ -74,4 +74,21 @@ const getAvarageRating = asyncHandler(async (req, res) => {
   }
 });
 
-export { addOrUpdateRating, getVehicleRatings, getAvarageRating };
+//@desc Get All Ratings GET /api/ratings/
+const getAllRatings = asyncHandler(async (req, res) => {
+  try {
+    const ratings = await UserRating.find({})
+      .populate("userId", "name")
+      .populate("vehicleId", "model");
+    res.status(200).json(ratings);
+  } catch (error) {
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
+});
+
+export {
+  addOrUpdateRating,
+  getVehicleRatings,
+  getAvarageRating,
+  getAllRatings,
+};
