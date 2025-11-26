@@ -178,6 +178,7 @@ const EditVehicleForm = () => {
                       name="model"
                       type="text"
                       placeholder={editVehicleHook.model}
+                      value={editVehicleHook.model}
                       onChange={(e) => {
                         editVehicleHook.setModel(e.target.value);
                       }}

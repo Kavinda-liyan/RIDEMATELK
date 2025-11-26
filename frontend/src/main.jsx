@@ -27,6 +27,10 @@ import VehicleDetails from "./pages/Recommendation/VehicleDetails.jsx";
 import UserRoute from "./components/Routes/UserRoute.jsx";
 import Profile from "./pages/User/Profile.jsx";
 import AllUsers from "./pages/Admin/Users/AllUsers.jsx";
+import ReviewedVehicles from "./pages/Admin/Vehicles/reviews/ReviewedVehicles.jsx";
+import UpdateProfile from "./pages/User/UpdateProfile.jsx";
+import Favourites from "./pages/User/Favourites.jsx";
+
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -78,6 +82,14 @@ const router = createBrowserRouter(
         }
       />
       <Route
+        path="/admin/allvehicles/reviewed"
+        element={
+          <AdminRoute>
+            <ReviewedVehicles />
+          </AdminRoute>
+        }
+      />
+      <Route
         path="recommendation/result/vehicle/:id"
         element={<VehicleDetails />}
       />
@@ -86,6 +98,22 @@ const router = createBrowserRouter(
         element={
           <UserRoute>
             <Profile />
+          </UserRoute>
+        }
+      />
+      <Route
+        path="/profile/update"
+        element={
+          <UserRoute>
+            <UpdateProfile />
+          </UserRoute>
+        }
+      />
+      <Route
+        path="/favourite"
+        element={
+          <UserRoute>
+            <Favourites />
           </UserRoute>
         }
       />

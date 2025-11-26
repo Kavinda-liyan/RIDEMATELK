@@ -19,7 +19,7 @@ const ViewVehicle = () => {
       data: viewEditedVehicleHook.seatingCapacity || "N/A",
     },
     {
-      field: "Ground Clearance (range)",
+      field: "Ground Clearance",
       data: viewEditedVehicleHook.groundClearance + " mm" || "N/A",
     },
     {

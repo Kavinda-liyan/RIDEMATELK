@@ -63,7 +63,7 @@ export const useEditVehicle = () => {
     setFuelType(vehicle["Fuel Type"]);
     setBodytype(vehicle["Body Type"]);
     setSeatingCapacity(vehicle["Seating Capacity"]);
-    setFuelEfficiency(vehicle["Fuel Efficiency"]);
+    setFuelEfficiency(vehicle["EFF (km/l)/(km/kwh)"]);
     setGroundClearance(vehicle["Ground Clearance (range)"]);
     setInfoTag(vehicle.info_links?.tag);
     setInfoLink(vehicle.info_links?.link);

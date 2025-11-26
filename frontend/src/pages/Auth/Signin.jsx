@@ -16,9 +16,9 @@ const Signin = () => {
   }
 
   return (
-    <div className="h-dvh pl-[60px] pr-[60px] bg-rmlk-dark font-rmlk-secondary flex justify-center items-center">
-      <div className="grid grid-cols-12 h-[90%] py-[24px] px-[120px] w-[80%] ">
-        <div className="h-full col-span-6 overflow-hidden shadow-md relative">
+    <div className="h-dvh pl-[60px] pr-[60px] max-[912px]:pl-[16px] max-[912px]:pr-[16px] bg-rmlk-dark font-rmlk-secondary flex justify-center items-center">
+      <div className="grid grid-cols-12 h-[90%] py-[24px] px-[120px] w-[80%] max-[912px]:px-[16px] max-[912px]:w-full ">
+        <div className="h-full col-span-6 overflow-hidden shadow-md relative max-[912px]:col-span-12">
           <Link
             replace={true}
             to={"/"}
@@ -28,7 +28,7 @@ const Signin = () => {
           </Link>
           <img src={authbanner} alt="authbanner" />
         </div>
-        <div className="col-span-6 h-full w-full bg-rmlk-dark-light  shadow-md  ">
+        <div className="col-span-6 h-full w-full bg-rmlk-dark-light  shadow-md max-[912px]:col-span-12 ">
           <div className="flex justify-center h-full w-full flex-col py-[16px] px-[30px] text-white text-left ">
             <h3 className="text-[36px]  text-white">Sign In</h3>
             <p>To access more features.</p>

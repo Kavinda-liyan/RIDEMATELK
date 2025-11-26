@@ -82,6 +82,7 @@ const authUser = asyncHandler(async (req, res) => {
     username: existingUser.username,
     email: existingUser.email,
     isAdmin: existingUser.isAdmin,
+    profilePicture: existingUser.profilePicture,
   });
 });
 
@@ -117,6 +118,7 @@ const getUser = asyncHandler(async (req, res) => {
       username: user.username,
       email: user.email,
       isAdmin: user.isAdmin,
+      profilePicture: user.profilePicture,
     });
   } else {
     res.status(404).send("User not found");
@@ -131,37 +133,41 @@ const updateUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
   if (!user) return res.status(404).json({ message: "User not found" });
 
+  // Only update fields if they exist in req.body
   const { username, email, password } = req.body;
 
-  if (username) user.username = username;
-  if (email) user.email = email;
+  if (username !== undefined) user.username = username;
+  if (email !== undefined) user.email = email;
 
   if (password) {
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(password, salt);
   }
 
-  // Handle profile picture upload
+  // Handle profile picture upload (if file exists)
   if (req.file) {
-    // Delete old S3 file if exists
+    // Delete old image from S3 if exists
     if (user.profilePicture) {
-      const oldKey = user.profilePicture.split(
-        `https://${BUCKET_NAME}.s3.${BUCKET_REGION}.amazonaws.com/`
-      )[1];
-      if (oldKey)
+      const oldKey = user.profilePicture.split(".com/")[1];
+      if (oldKey) {
         await s3.send(
-          new DeleteObjectCommand({ Bucket: BUCKET_NAME, Key: oldKey })
+          new DeleteObjectCommand({
+            Bucket: BUCKET_NAME,
+            Key: oldKey,
+          })
         );
+      }
     }
 
-    const fileName = `profile-pictures/${uuidv4()}=${req.file.originalname}`;
+    // Upload new image
+    const fileName = `profile-pictures/${uuidv4()}-${req.file.originalname}`;
     await s3.send(
       new PutObjectCommand({
         Bucket: BUCKET_NAME,
         Key: fileName,
         Body: req.file.buffer,
         ContentType: req.file.mimetype,
-        ACL: "public-read",
+        // ACL: "public-read",
       })
     );
 
@@ -174,8 +180,8 @@ const updateUser = asyncHandler(async (req, res) => {
     _id: updatedUser._id,
     username: updatedUser.username,
     email: updatedUser.email,
-    profilePicture: updatedUser.profilePicture,
     isAdmin: updatedUser.isAdmin,
+    profilePicture: updatedUser.profilePicture,
   });
 });
 
@@ -196,6 +202,26 @@ const deleteUser = asyncHandler(async (req, res) => {
     throw new Error("User not found");
   }
 });
+
+//@desc Make Admin
+//route PUT /api/users/admin/:id
+//access Private/Admin
+const makeAdmin = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id);
+  if (user) {
+    user.isAdmin = true;
+    const updatedUser = await user.save();
+    res.status(200).json({
+      _id: updatedUser._id,
+      username: updatedUser.username,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+    });
+  } else {
+    res.status(404).send("User not found");
+  }
+});
+//@desc Revoke Admin
 
 export {
   createUser,

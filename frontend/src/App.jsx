@@ -18,7 +18,7 @@ function App() {
       <ToastContainer position="top-right" autoClose={3000} />
       {!hideLayout && <Navigation />}
 
-      <div className="flex min-h-screen bg-gray-100 relative">
+      <div className="flex min-h-screen bg-gray-100 relative ">
         
        
 
