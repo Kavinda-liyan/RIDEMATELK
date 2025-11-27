@@ -26,10 +26,13 @@ const ViewVehicle = () => {
       field: "Transmission",
       data: viewEditedVehicleHook.transmissionArr.join(" , ") || "N/A",
     },
+    {
+      field:"Gallery Images", data: viewEditedVehicleHook.galleryImages.length + " image(s)" || "N/A"
+    }
   ];
 
   return (
-    <div className="col-span-5 bg-rmlk-dark-light rounded-md shadow-md max-h-[420px] overflow-y-scroll my-[16px] p-[16px] text-white font-rmlk-secondary">
+    <div className="col-span-5 bg-rmlk-dark-light rounded-md shadow-md max-h-[420px] max-[2160px]:max-h-[786px] overflow-y-scroll my-[16px] p-[16px] text-white font-rmlk-secondary">
       <div className="flex flex-col gap-[16px]">
         <div className="rounded-md bg-rmlk-dark-lighter shadow-md">
           <h3 className={"text-[16px] p-[4px] font-semibold text-center"}>

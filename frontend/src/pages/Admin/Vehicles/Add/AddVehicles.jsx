@@ -17,13 +17,13 @@ const AddVehicles = () => {
       />
 
       <div className="grid grid-cols-12 gap-[20px]">
-        <div className="col-span-4 max-h-[420px] overflow-y-scroll">
+        <div className="col-span-4 max-h-[420px] max-[2160px]:max-h-[768px] overflow-y-scroll">
           <div className="grid grid-rows-12 gap-[20px]">
             <AddBodyTypesForm />
             <AddManufacturerForm />
           </div>
         </div>
-        <div className="col-span-8 max-h-[420px] overflow-y-scroll">
+        <div className="col-span-8 max-h-[420px] max-[2160px]:max-h-[768px] overflow-y-scroll">
           <AddVehiclesForm />
         </div>
       </div>

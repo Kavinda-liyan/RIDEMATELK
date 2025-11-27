@@ -54,7 +54,7 @@ const AllVehicles = () => {
     "Last modified",
     "Edit",
     "Delete",
-    "view"
+    "view",
   ];
 
   const useDeleteVehicleHook = useDeleteVehicle();
@@ -110,9 +110,11 @@ const AllVehicles = () => {
     />
   );
 
+
   return (
     <PageWrapper>
       <>{deleteModel}</>
+
       <BreadCrumb links={[{ label: "Vehicles", to: "/admin/allvehicles" }]} />
       <div className="bg-rmlk-dark-light p-[16px] rounded-md shadow-md flex flex-wrap gap-[20px] items-center font-rmlk-secondary text-[12px] text-white">
         <div className="flex items-center">
@@ -158,13 +160,13 @@ const AllVehicles = () => {
                 </td>
               </tr>
             ) : data?.vehicles?.length > 0 ? (
-              data.vehicles.map((vehicle,index) => (
+              data.vehicles.map((vehicle, index) => (
                 <tr
                   key={vehicle._id}
                   className="text-[12px] font-rmlk-secondary transition-all duration-200 "
                   onClick={() => handleVehicleClick()}
                 >
-                  <td className="p-2">{index+1}</td>
+                  <td className="p-2">{index + 1}</td>
                   <td className="p-2">{vehicle["Manufacturer"]}</td>
 
                   <td className={`p-2 `}>{vehicle["Model"]}</td>
@@ -208,7 +210,9 @@ const AllVehicles = () => {
                   <td className="p-2">
                     <button
                       onClick={() =>
-                        navigate(`/recommendation/result/vehicle/${vehicle._id}`)
+                        navigate(
+                          `/recommendation/result/vehicle/${vehicle._id}`
+                        )
                       }
                       id="open"
                       className="p-[6px] mx-[2px] bg-green-600 rounded-md shadow-md cursor-pointer hover:bg-green-500 duration-200"
