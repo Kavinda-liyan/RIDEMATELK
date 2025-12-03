@@ -46,6 +46,20 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["User"],
     }),
+    addTrustedBatch: builder.mutation({
+      query: (id) => ({
+        url: `${USERS_URL}/trusted/${id}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["User"],
+    }),
+    removeTrustedBatch: builder.mutation({
+      query: (id) => ({
+        url: `${USERS_URL}/untrusted/${id}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["User"],
+    }),
   }),
 });
 
@@ -56,4 +70,6 @@ export const {
   useGetAllUsersQuery,
   useUpdateUserMutation,
   useDeleteUserMutation,
+  useAddTrustedBatchMutation,
+  useRemoveTrustedBatchMutation,
 } = usersApiSlice;

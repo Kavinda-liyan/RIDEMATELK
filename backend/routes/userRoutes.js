@@ -7,6 +7,8 @@ import {
   logOutUser,
   deleteUser,
   updateUser,
+  addTrustedBatch,
+  removeTrustedBatch,
 } from "../controllers/userController.js";
 import { authAdmin, authenticate } from "../middlewares/authMiddleware.js";
 import multer from "multer";
@@ -28,5 +30,9 @@ router
 // Admin Routes
 router.route("/").get(getUsers);
 router.route("/:id").delete(authenticate, authAdmin, deleteUser);
+router.route("/trusted/:id").patch(authenticate, authAdmin, addTrustedBatch);
+router
+  .route("/untrusted/:id")
+  .patch(authenticate, authAdmin, removeTrustedBatch);
 
 export default router;

@@ -203,6 +203,44 @@ const deleteUser = asyncHandler(async (req, res) => {
   }
 });
 
+//@desc Add TrustedBatch
+//route PATCH /api/users/trusted/:id
+//access Private/Admin
+const addTrustedBatch = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id);
+  if (user && !user.isTrustedBatch) {
+    user.isTrustedBatch = true;
+    const updatedUser = await user.save();
+    res.status(200).json({
+      _id: updatedUser._id,
+      username: updatedUser.username,
+      email: updatedUser.email,
+      isTrustedBatch: updatedUser.isTrustedBatch,
+    });
+  } else {
+    res.status(404).send("User not found");
+  }
+});
+
+//@desc Remove TrustedBatch
+//route PATCH /api/users/untrusted/:id
+//access Private/Admin
+const removeTrustedBatch = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id);
+  if (user && user.isTrustedBatch) {
+    user.isTrustedBatch = false;
+    const updatedUser = await user.save();
+    res.status(200).json({
+      _id: updatedUser._id,
+      username: updatedUser.username,
+      email: updatedUser.email,
+      isTrustedBatch: updatedUser.isTrustedBatch,
+    });
+  } else {
+    res.status(404).send("User not found");
+  }
+});
+
 //@desc Make Admin
 //route PUT /api/users/admin/:id
 //access Private/Admin
@@ -231,4 +269,6 @@ export {
   getUser,
   updateUser,
   deleteUser,
+  addTrustedBatch,
+  removeTrustedBatch,
 };
