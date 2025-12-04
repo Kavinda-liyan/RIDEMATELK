@@ -78,8 +78,8 @@ const getAvarageRating = asyncHandler(async (req, res) => {
 const getAllRatings = asyncHandler(async (req, res) => {
   try {
     const ratings = await UserRating.find({})
-      .populate("userId", "name")
-      .populate("vehicleId", "model");
+      .populate("userId", "username email profilePicture isTrustedBatch")
+      .populate("vehicleId", "Model Manufacturer gallery_img");
     res.status(200).json(ratings);
   } catch (error) {
     res.status(500).json({ message: "Server Error", error: error.message });

@@ -69,7 +69,7 @@ const SideNav = () => {
                 <FontAwesomeIcon className="pr-2" icon={faUsers} />
               </NavLinks>
 
-              <NavLinks path="/admin/allvehicles/reviewed" navlink="Reviews">
+              <NavLinks path="/admin/reviews" navlink="Reviews">
                 <FontAwesomeIcon className="pr-2" icon={faStar} />
               </NavLinks>
             </ul>

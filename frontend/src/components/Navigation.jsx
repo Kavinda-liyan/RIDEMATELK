@@ -69,7 +69,7 @@ const Navigation = () => {
   return (
     <>
       <nav
-        className={`w-full fixed h-[50px] bg-gradient-to-b transition-all  z-10 bg-rmlk-dark duration-300}`}
+        className={`w-full fixed h-[50px] bg-gradient-to-b transition-all  z-10 bg-rmlk-dark/40 duration-300 shadow-md backdrop-blur-md`}
       >
         <div className="pl-[60px] pr-[60px] py-[8px] h-full flex justify-between items-center">
           <div className=" flex justify-start">

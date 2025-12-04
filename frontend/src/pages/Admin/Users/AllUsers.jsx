@@ -172,7 +172,7 @@ const AllUsers = () => {
                               showFullID === user._id ? null : user._id
                             )
                           }
-                          className="bg-blue-600 px-[8px] py-[4px] flex items-center text-[8px] font-semibold rounded-sm shadow-md cursor-pointer"
+                          className="bg-blue-600 hover:bg-blue-500 duration-200 px-[4px] py-[4px] flex items-center text-[8px] font-semibold rounded-sm shadow-md cursor-pointer"
                         >
                           {showFullID === user._id ? (
                             <FontAwesomeIcon icon={faEyeLowVision} />
@@ -201,7 +201,7 @@ const AllUsers = () => {
                               showFullEmail === user.email ? null : user.email
                             )
                           }
-                          className="bg-blue-600 px-[8px] py-[4px] flex items-center text-[8px] font-semibold rounded-sm shadow-md cursor-pointer"
+                          className="bg-blue-600 hover:bg-blue-500 duration-200 px-[4px] py-[4px] flex items-center text-[8px] font-semibold rounded-sm shadow-md cursor-pointer"
                         >
                           {showFullEmail === user.email ? (
                             <FontAwesomeIcon icon={faEyeLowVision} />
@@ -213,7 +213,7 @@ const AllUsers = () => {
                     </td>
                     <td className={`px-[8px] py-[16px]`}>
                       <span
-                        className={`text-[10px] font-semibold py-[2px] px-[4px]  rounded-sm shadow-sm ${
+                        className={`text-[10px] font-semibold py-[2px] px-[8px]  rounded-full shadow-sm ${
                           user.isAdmin ? "bg-green-600 " : "bg-blue-600"
                         }`}
                       >
@@ -222,7 +222,7 @@ const AllUsers = () => {
                     </td>
                     <td className="px-[8px] py-[16px]">
                       {user.isTrustedBatch ? (
-                        <span className="text-[10px] bg-amber-600 px-[4px] py-[2px] rounded-sm shadow-md font-semibold ">
+                        <span className="text-[10px] bg-amber-600 px-[8px] py-[2px] rounded-full shadow-md font-semibold ">
                           <FontAwesomeIcon icon={faMedal} /> Top User
                         </span>
                       ) : (

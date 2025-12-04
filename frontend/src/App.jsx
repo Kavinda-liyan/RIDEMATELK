@@ -24,7 +24,7 @@ function App() {
 
         {userInfo?.isAdmin && (
           <aside
-            className={`bg-gray-800 text-white w-[220px] overflow-hidden transition-all duration-500`}
+            className={`bg-rmlk-dark text-white w-[220px] overflow-hidden transition-all duration-500`}
           >
             <SideNav />
           </aside>

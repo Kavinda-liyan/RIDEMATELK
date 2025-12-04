@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSetRatings } from "../../hooks/useSetRatings";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
+import imgPlaceholder from "../../assets/placeholderimg.svg";
 
 const AllRatings = ({ vehicleId }) => {
   const ratingHook = useSetRatings(vehicleId);
@@ -36,16 +37,27 @@ const AllRatings = ({ vehicleId }) => {
               const initials = firstLetter + secondLetter;
 
               return (
-                <div key={rating._id} className=" p-[8px] rounded-md">
+                <div
+                  key={rating._id}
+                  className=" p-[8px] rounded-md font-rmlk-secondary"
+                >
                   <div className="flex gap-[16px] items-center mb-[4px]">
-                    <div className="flex items-center justify-center  rounded-full text-[10px] font-rmlk-secondary font-semibold bg-blue-500 w-[25px] h-[25px]">
-                      {matchedUser?.username ? initials : "UK"}
+                    <div className="flex items-center justify-center  rounded-full text-[10px] font-rmlk-secondary font-semibold bg-blue-500 w-[35px] h-[35px]">
+                      <img
+                        src={
+                          matchedUser?.profilePicture
+                            ? matchedUser.profilePicture
+                            : imgPlaceholder
+                        }
+                        alt="profile"
+                        className="w-[35px] h-[35px] rounded-full object-cover"
+                      />
                     </div>
                     <span className="text-white font-semibold text-[14px]">
                       {matchedUser?.username || "Unknown User"}
                     </span>
                   </div>
-                  <div className="ml-[42px]">
+                  <div className="ml-[52px]">
                     <p className="text-white text-[12px] mb-[4px]">
                       {rating.review}
                     </p>
@@ -66,6 +78,13 @@ const AllRatings = ({ vehicleId }) => {
                         ( {rating.rating} / 5)
                       </span>
                     </div>
+                    <p className="text-[10px] mt-[4px] text-white/50">
+                      {isNaN(new Date(rating.updatedAt).getTime())
+                        ? "N/A"
+                        : new Date(rating.updatedAt)
+                            .toISOString()
+                            .split("T")[0]}
+                    </p>
                   </div>
                   <div className="w-full h-[1px] bg-rmlk-dark-lighter my-[16px]"></div>
                 </div>
