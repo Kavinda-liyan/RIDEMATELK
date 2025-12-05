@@ -28,7 +28,7 @@ const SideNav = () => {
   }, []);
 
   return (
-    <nav className="fixed left-0 z-50 mt-[50px] bg-rmlk-dark-light">
+    <nav className="fixed  z-50 mt-[50px] bg-rmlk-dark-light">
       {/* SIDEBAR MAIN WRAPPER */}
       <div
         className={`h-[100dvh] bg-rmlk-dark duration-300 

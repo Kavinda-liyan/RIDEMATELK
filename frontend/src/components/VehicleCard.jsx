@@ -9,7 +9,6 @@ const VehicleCard = ({
   Manufacturer,
   bodytype,
   fueltype,
-  fuelEff,
   groundC,
   seats,
   openVehicleFunc,
@@ -53,7 +52,7 @@ const VehicleCard = ({
               {Model}
             </h3>
           </div>
-          <div className="p-[16px] w-full">
+          <div className="p-[14px] w-full">
             <h4 className="text-left text-[12px] text-amber-400 font-rmlk-secondary mb-[4px]">
               <strong>Manufacturer</strong> : {Manufacturer}
             </h4>
@@ -63,12 +62,12 @@ const VehicleCard = ({
               </div>
             </div>
 
-            <div className="text-left text-[10px] font-rmlk-secondary text-white flex flex-wrap gap-[8px]">
-              <p className="w-fit mb-[2px] bg-teal-600 inline-block px-[4px] py-[2px] rounded-sm font-semibold">
+            <div className="text-left text-[10px] font-rmlk-secondary text-white flex flex-wrap gap-[4px]">
+              <p className="w-fit mb-[2px] bg-teal-600 inline-block px-[4px] py-[2px] rounded-xs font-semibold">
                 {bodytype.toUpperCase()}
               </p>
               <p
-                className={`w-fit mb-[2px]  inline-block px-[4px] py-[2px] rounded-sm font-semibold ${
+                className={`w-fit mb-[2px] text-[10px]  inline-block px-[4px] py-[2px] rounded-xs font-semibold ${
                   fuel === "petrol"
                     ? "bg-amber-600"
                     : fuel === "diesel"

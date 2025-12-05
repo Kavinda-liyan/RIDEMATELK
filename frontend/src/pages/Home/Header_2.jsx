@@ -19,7 +19,10 @@ import Auto from "../../assets/gear_types/Gear Box_Auto.svg";
 import seat2 from "../../assets/seats/seat2.svg";
 import seat4 from "../../assets/seats/seat4.svg";
 
+import { useSelector } from "react-redux";
+
 const Header_2 = () => {
+  const { userInfo } = useSelector((state) => state.auth);
   const bodyTypes = [
     { name: "Micro", img: Micro },
     { name: "Pickup", img: Pickup },
@@ -53,7 +56,10 @@ const Header_2 = () => {
     },
   ];
   return (
-    <section className="h-dvh bg-rmlk-dark grid grid-cols-12 pl-[60px] pr-[60px] pt-[50px] pb-[45px] gap-[20px]" id="Specifications">
+    <section
+      className="h-dvh bg-rmlk-dark grid grid-cols-12 pl-[60px] pr-[60px] pt-[60px] pb-[45px] gap-[20px]"
+      id="Specifications"
+    >
       <div className="col-span-6 h-full">
         <div className=" grid grid-rows-12 h-full gap-[20px]">
           <div className="row-span-5 h-full">
@@ -100,9 +106,9 @@ const Header_2 = () => {
         </div>
       </div>
 
-      <div className="h-full overflow-hidden col-span-6 relative rounded-md shadow-md">
+      <div className="h-full overflow-hidden col-span-6 relative rounded-xs shadow-md">
         <img
-          className="object-cover w-full scale-200  absolute left-[70px]"
+          className={`object-cover w-full ${userInfo.isAdmin?'scale-[250%]':'scale-200'}   absolute left-[70px]`}
           src={headerimg_2}
           alt="header_img_2"
         />

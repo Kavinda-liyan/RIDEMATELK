@@ -64,5 +64,7 @@ export const getFavorites = asyncHandler(async (req, res) => {
     "vehicleId"
   );
 
-  res.status(200).json(favorites);
+  const validFavorites = favorites.filter((fav) => fav.vehicleId !== null);
+
+  res.status(200).json(validFavorites);
 });

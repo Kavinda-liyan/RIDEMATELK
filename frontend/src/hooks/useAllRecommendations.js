@@ -31,9 +31,14 @@ export const useAllRecommendations = () => {
   const [addFavorite] = useAddFavoriteMutation();
   const [removeFavorite] = useRemoveFavoriteMutation();
 
-  const favoriteIds = favoritesData.map(
-    (fav) => fav.vehicleId._id || fav.vehicleId
-  );
+  const favoriteIds = favoritesData
+  .map((fav) =>
+    typeof fav?.vehicleId === "string"
+      ? fav.vehicleId
+      : fav?.vehicleId?._id
+  )
+  .filter(Boolean);
+
   const favoritsUserIds = favoritesData.map((fav) => fav.userId);
   console.log("Favorite User Ids:", favoritsUserIds);
 

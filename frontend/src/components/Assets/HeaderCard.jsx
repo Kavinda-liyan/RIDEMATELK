@@ -14,7 +14,7 @@ const HeaderCard = ({ items, interval = 3500, description, duration }) => {
 
   return (
     <>
-      <div className="card bg-rmlk-dark-light h-full shadow-md rounded-md overflow-hidden">
+      <div className="card bg-rmlk-dark-light h-full shadow-md rounded-xs overflow-hidden">
         <div className="h-[70%] p-[8px]">
           <div className="h-full flex flex-col items-center justify-center overflow-hidden ">
             <AnimatePresence mode="wait">
