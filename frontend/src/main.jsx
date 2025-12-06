@@ -89,7 +89,7 @@ const router = createBrowserRouter(
         }
       />
       <Route
-        path="recommendation/result/vehicle/:id"
+        path="/recommendation/result/vehicle/:id"
         element={<VehicleDetails />}
       />
       <Route

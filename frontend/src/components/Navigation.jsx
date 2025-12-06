@@ -7,6 +7,7 @@ import { faCaretDown, faUserAlt } from "@fortawesome/free-solid-svg-icons";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../app/slices/authSlice.js";
 import { useLogoutMutation } from "../app/api/usersApiSlice.js";
+import imgPlaceholder from "../assets/placeholderimg.svg";
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -66,6 +67,9 @@ const Navigation = () => {
     { path: "/profile", link_des: "Profile" },
     { path: "/favourite", link_des: "Favourite" },
   ];
+
+  const userNames = userInfo.username;
+  const userNameArr = userNames.split(" ");
   return (
     <>
       <nav
@@ -93,9 +97,18 @@ const Navigation = () => {
                   <div>
                     <button
                       onClick={handleDropdown}
-                      className="text-white text-[12px] hover:cursor-pointer hover:text-white/50 duration-200 "
+                      className="text-white text-[12px] hover:cursor-pointer hover:text-rmlk-red duration-200 flex items-center group "
                     >
-                      {userInfo.username} <FontAwesomeIcon icon={faCaretDown} />
+                      <img
+                        className="object-cover h-[30px] w-[30px] rounded-full mr-[8px] border-rmlk-dark-lighter border-[1.5px] group-hover:border-rmlk-red duration-200"
+                        src={
+                          userInfo?.profilePicture
+                            ? userInfo.profilePicture
+                            : imgPlaceholder
+                        }
+                      />
+                      {userNameArr[0]} {userNameArr[userNameArr.length - 1]}{" "}
+                      <FontAwesomeIcon icon={faCaretDown} />
                     </button>
                   </div>
                 </>
@@ -114,7 +127,7 @@ const Navigation = () => {
           ref={dropdownRef}
           className={`${
             isDropdownOpen ? "" : "hidden"
-          } absolute top-[40px] right-[65px] bg-rmlk-dark-light  rounded-sm shadow-md overflow-hidden border-[1.5px] border-rmlk-dark-lighter font-rmlk-secondary text-[12px]
+          } absolute top-[50px] right-[65px] bg-rmlk-dark-light  rounded-sm shadow-md overflow-hidden border-[1.5px] border-rmlk-dark-lighter font-rmlk-secondary text-[12px]
            `}
         >
           <ul className=" text-[14px] text-white">

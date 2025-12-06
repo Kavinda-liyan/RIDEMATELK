@@ -2,6 +2,7 @@ import VehicleCard from "../../components/VehicleCard";
 import imgPlaceholder from "../../assets/placeholderimg.svg";
 import { useAllRecommendations } from "../../hooks/useAllRecommendations";
 import { useSelector } from "react-redux";
+import AdminDashboardButton from "../../components/Assets/AdminDashboardButton";
 
 const RecommendationForm = () => {
   const {
@@ -21,6 +22,7 @@ const RecommendationForm = () => {
 
   return (
     <>
+      {userInfo && userInfo.isAdmin && <AdminDashboardButton />}
       <div className="bg-rmlk-dark pt-[50px] px-[60px] min-h-[100dvh] ">
         <div
           id="vehicleContainer"

@@ -12,6 +12,17 @@ function App() {
   const location = useLocation();
 
   const hideLayout = ["/signin", "/signup"].includes(location.pathname);
+  const isVehicleResult = location.pathname.startsWith(
+    "/recommendation/result/vehicle/"
+  );
+  const hideSidenav =
+    [
+      "/home",
+      "/recommendations",
+      "/recommendations/result",
+      "/recommendation/result/vehicle/:id",
+      "/favourite",
+    ].includes(location.pathname) || isVehicleResult;
 
   return (
     <>
@@ -19,10 +30,7 @@ function App() {
       {!hideLayout && <Navigation />}
 
       <div className="flex min-h-screen bg-gray-100 relative ">
-        
-       
-
-        {userInfo?.isAdmin && (
+        {userInfo?.isAdmin && !hideSidenav && (
           <aside
             className={`bg-rmlk-dark text-white w-[220px] overflow-hidden transition-all duration-500`}
           >
@@ -31,11 +39,6 @@ function App() {
         )}
 
         <main className="flex-1 flex flex-col transition-all duration-500 ">
-         
-            
-
-          
-           
           <div className="flex-grow">
             <Outlet />
           </div>
