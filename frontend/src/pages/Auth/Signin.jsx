@@ -3,6 +3,7 @@ import authbanner from "../../assets/Authbanner.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { useLogin } from "../../hooks/useLogin";
+import AuthWrapper from "../../components/Wrappers/AuthWrapper";
 
 const Signin = () => {
   const useLoginHook = useLogin();
@@ -15,94 +16,103 @@ const Signin = () => {
     );
   }
 
-  return (
-    <div className="h-dvh pl-[60px] pr-[60px] max-[912px]:pl-[16px] max-[912px]:pr-[16px] bg-rmlk-dark font-rmlk-secondary flex justify-center items-center">
-      <div className="grid grid-cols-12 h-[90%] py-[24px] px-[120px] w-[80%] max-[912px]:px-[16px] max-[912px]:w-full ">
-        <div className="h-full col-span-6 overflow-hidden shadow-md relative max-[912px]:col-span-12">
-          <Link
-            replace={true}
-            to={"/"}
-            className="text-white no-underline absolute top-[18px] left-[18px] border  rounded-full w-[30px] h-[30px] flex justify-center items-center bg-rmlk-dark/50 hover:bg-rmlk-dark-lighter duration-200"
-          >
-            <FontAwesomeIcon icon={faArrowLeft} className="text-[12px]" />
-          </Link>
-          <img src={authbanner} alt="authbanner" />
-        </div>
-        <div className="col-span-6 h-full w-full bg-rmlk-dark-light  shadow-md max-[912px]:col-span-12 ">
-          <div className="flex justify-center h-full w-full flex-col py-[16px] px-[30px] text-white text-left ">
-            <h3 className="text-[36px]  text-white">Sign In</h3>
-            <p>To access more features.</p>
-            <hr className="w-full"></hr>
-            <div className="mt-[16px] font-rmlk-secondary text-[12px]">
-              <form className="" onSubmit={useLoginHook.handleSubmit}>
-                <div className="flex flex-col mb-[8px]">
-                  <label className="my-[2px]">Email</label>
+  const backButton = (
+    <Link
+      replace={true}
+      to={"/"}
+      className="text-white no-underline absolute top-[18px] left-[18px] border  rounded-full w-[30px] h-[30px] flex justify-center items-center bg-rmlk-dark/50 hover:bg-rmlk-dark-lighter duration-200"
+    >
+      <FontAwesomeIcon icon={faArrowLeft} className="text-[12px]" />
+    </Link>
+  );
 
-                  <input
-                    type="email"
-                    placeholder="Enter your email..."
-                    value={useLoginHook.email}
-                    onChange={(e) => {
-                      useLoginHook.setEmail(e.target.value);
-                      useLoginHook.setError({
-                        ...useLoginHook.error,
-                        emailError: "",
-                      });
-                    }}
-                    autoComplete={"email"}
-                    className="bg-rmlk-dark-lighter text-[12px] p-[6px] rounded-md"
-                  ></input>
-                  {useLoginHook.error.emailError && (
-                    <p className="text-[12px] py-[4px] text-red-600">
-                      {useLoginHook.error.emailError}
-                    </p>
-                  )}
-                </div>
-                <div className="flex flex-col mb-[8px]">
-                  <label className="my-[2px]">Password</label>
-                  <input
-                    type="password"
-                    placeholder="Enter your password..."
-                    value={useLoginHook.password}
-                    onChange={(e) => {
-                      useLoginHook.setPassword(e.target.value);
-                      useLoginHook.setError({
-                        ...useLoginHook.error,
-                        passwordError: "",
-                      });
-                    }}
-                    autoComplete={"current-password"}
-                    className="bg-rmlk-dark-lighter text-[12px] p-[6px] rounded-md"
-                  ></input>
-                  {useLoginHook.error.passwordError && (
-                    <p className="text-[12px] py-[4px] text-red-600">
-                      {useLoginHook.error.passwordError}
-                    </p>
-                  )}
-                </div>
-                <div className="flex flex-col mt-[24px] ">
-                  <button
-                    disabled={useLoginHook.isLoading}
-                    type="submit"
-                    className="bg-blue-500 hover:bg-blue-400 hover:cursor-pointer duration-200 py-[4px] rounded-md shadow-md"
-                  >
-                    Login
-                  </button>
-                </div>
-              </form>
-            </div>
-            <div className="mt-[16px] flex ">
-              <p className="text-[12px] text-white/50">
-                Don't have an Account?{" "}
-                <Link to={"/signup"} className="text-white underline">
-                  Register
-                </Link>
-              </p>
-            </div>
+  return (
+    <AuthWrapper>
+      <div className="h-full col-span-6 overflow-hidden shadow-md relative max-xs-rmlk:col-span-12 max-xs-rmlk:hidden max-md-rmlk:col-span-5">
+        {backButton}
+        <img
+          src={authbanner}
+          alt="authbanner"
+          className="object-cover max-md-rmlk:h-full"
+        />
+      </div>
+      <div className="col-span-6 h-full w-full bg-rmlk-dark-light  shadow-md max-xs-rmlk:col-span-12 max-md-rmlk:col-span-7  ">
+        <div className="max-xs-rmlk:block max-2xl-rmlk:hidden">
+          {backButton}
+        </div>
+        <div className="flex justify-center h-full w-full flex-col py-[16px] px-[30px] text-white text-left relative">
+          <h3 className="text-[24px]  text-white">Sign In</h3>
+          <p>To access more features.</p>
+          <hr className="w-full"></hr>
+          <div className="mt-[16px] font-rmlk-secondary text-[12px]">
+            <form className="" onSubmit={useLoginHook.handleSubmit}>
+              <div className="flex flex-col mb-[8px]">
+                <label className="my-[2px]">Email</label>
+
+                <input
+                  type="email"
+                  placeholder="Enter your email..."
+                  value={useLoginHook.email}
+                  onChange={(e) => {
+                    useLoginHook.setEmail(e.target.value);
+                    useLoginHook.setError({
+                      ...useLoginHook.error,
+                      emailError: "",
+                    });
+                  }}
+                  autoComplete={"email"}
+                  className="bg-rmlk-dark-lighter text-[12px] p-[6px] rounded-md"
+                ></input>
+                {useLoginHook.error.emailError && (
+                  <p className="text-[12px] py-[4px] text-red-600">
+                    {useLoginHook.error.emailError}
+                  </p>
+                )}
+              </div>
+              <div className="flex flex-col mb-[8px]">
+                <label className="my-[2px]">Password</label>
+                <input
+                  type="password"
+                  placeholder="Enter your password..."
+                  value={useLoginHook.password}
+                  onChange={(e) => {
+                    useLoginHook.setPassword(e.target.value);
+                    useLoginHook.setError({
+                      ...useLoginHook.error,
+                      passwordError: "",
+                    });
+                  }}
+                  autoComplete={"current-password"}
+                  className="bg-rmlk-dark-lighter text-[12px] p-[6px] rounded-md"
+                ></input>
+                {useLoginHook.error.passwordError && (
+                  <p className="text-[12px] py-[4px] text-red-600">
+                    {useLoginHook.error.passwordError}
+                  </p>
+                )}
+              </div>
+              <div className="flex flex-col mt-[24px] ">
+                <button
+                  disabled={useLoginHook.isLoading}
+                  type="submit"
+                  className="bg-blue-500 hover:bg-blue-400 hover:cursor-pointer duration-200 py-[4px] rounded-md shadow-md"
+                >
+                  Login
+                </button>
+              </div>
+            </form>
+          </div>
+          <div className="mt-[16px] flex ">
+            <p className="text-[12px] text-white/50">
+              Don't have an Account?{" "}
+              <Link to={"/signup"} className="text-white underline">
+                Register
+              </Link>
+            </p>
           </div>
         </div>
       </div>
-    </div>
+    </AuthWrapper>
   );
 };
 

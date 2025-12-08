@@ -62,7 +62,7 @@ const Recommendation = () => {
         <div className="h-full w-full flex items-center justify-center text-white">
           <div
             className={`${
-              userInfo && userInfo.isAdmin ? "w-[60%]" : "w-[50%]"
+              userInfo && userInfo.isAdmin ? "w-[50%]" : "w-[50%]"
             }  bg-rmlk-dark-light rounded-md shadow-md p-[16px]`}
           >
             <div className="text-white text-[18px] font-semibold mb-[16px] text-center">

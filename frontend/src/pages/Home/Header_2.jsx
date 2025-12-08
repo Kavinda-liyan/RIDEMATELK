@@ -21,6 +21,9 @@ import seat4 from "../../assets/seats/seat4.svg";
 
 import { useSelector } from "react-redux";
 
+import header2BgClip from "../../assets/Header2BgClip.mp4";
+import LandingPageWrapper from "../../components/Wrappers/LandingPageWrapper";
+
 const Header_2 = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const bodyTypes = [
@@ -56,11 +59,13 @@ const Header_2 = () => {
     },
   ];
   return (
-    <section
-      className="h-dvh bg-rmlk-dark grid grid-cols-12 pl-[60px] pr-[60px] pt-[60px] pb-[45px] gap-[20px]"
-      id="Specifications"
+    <LandingPageWrapper
+      id={"Specifications"}
+      extraClass={
+        "grid grid-cols-12 pt-[60px] pb-[45px] gap-[20px] bg-rmlk-dark"
+      }
     >
-      <div className="col-span-6 h-full">
+      <div className="col-span-6 h-full max-md-rmlk:col-span-12 ">
         <div className=" grid grid-rows-12 h-full gap-[20px]">
           <div className="row-span-5 h-full">
             <div className=" grid grid-cols-12 gap-[20px] h-full">
@@ -106,14 +111,16 @@ const Header_2 = () => {
         </div>
       </div>
 
-      <div className="h-full overflow-hidden col-span-6 relative rounded-xs shadow-md">
+      <div className="h-full overflow-hidden col-span-6 relative rounded-xs shadow-md max-md-rmlk:col-span-12 ">
         <img
-          className={`object-cover w-full ${userInfo.isAdmin?'scale-[250%]':'scale-200'}   absolute left-[70px]`}
+          className={`object-cover w-full ${
+            userInfo && userInfo.isAdmin ? "scale-[250%]" : "scale-200"
+          }   absolute left-[70px]`}
           src={headerimg_2}
           alt="header_img_2"
         />
       </div>
-    </section>
+    </LandingPageWrapper>
   );
 };
 

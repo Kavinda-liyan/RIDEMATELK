@@ -1,13 +1,13 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useLocation } from "react-router-dom";
 
-const NavLinks = ({ path, navlink, children }) => {
+const NavLinks = ({ path, navlink, children, handleClose }) => {
   const location = useLocation();
   return (
     <>
       <li className={`nav-link flex items-center `}>
-        
         <Link
+          onClick={handleClose}
           to={`${path}`}
           className={`text-white w-full tracking-widest hover:text p-[4px] ${
             location.pathname === `${path}` ? "active" : ""

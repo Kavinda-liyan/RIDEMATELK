@@ -17,7 +17,8 @@ import BreadCrumb from "../../components/BreadCrumb";
 import { useDashboardComponents } from "../../hooks/useDashboardComponents";
 import CountUp from "react-countup";
 import DashboardPillers from "../../components/Assets/DashboardPillers";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
+import Loader from "../../components/Routes/Loader";
 
 const Dashboard = () => {
   const useDashBoardHook = useDashboardComponents();
@@ -80,6 +81,24 @@ const Dashboard = () => {
     ),
     [barData]
   );
+
+  const [pageLoading, setPageLoading] = useState(true);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setPageLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timeout);
+  }, []);
+
+  if (pageLoading) {
+    return (
+      <div className=" flex justify-center items-center h-dvh inset-1 w-full">
+        <Loader />
+      </div>
+    );
+  }
 
   return (
     <PageWrapper>

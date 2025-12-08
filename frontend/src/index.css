@@ -11,18 +11,23 @@
   --color-rmlk-dark-lighter: #4d4949;
   --font-rmlk-secondary: "Golos Text", sans-serif;
   --default-font-family: "Anybody", sans-serif;
-  
+  --breakpoint-xs-rmlk: 768px;
+  --breakpoint-sm-rmlk: 912px;
+  --breakpoint-md-rmlk:1024px;
+  --breakpoint-lg-rmlk: 1366px;
+  --breakpoint-xl-rmlk: 1920px;
+  --breakpoint-2xl-rmlk: 2160px;
 }
 :root {
   --color-rmlk-red: #de3031;
   --color-rmlk-dark_green: #0f2e37;
   --color-rmlk-dark-lghter: #797474;
   --color-rmlk-dark-lght: #2a2a2b;
-  --color--rmlk-dark-exp:#1f1f21;
+  --color--rmlk-dark-exp: #1f1f21;
   --font-rmlk-secondary: "Golos Text", sans-serif;
   --default-font-family: "Anybody", sans-serif;
-  --color-riyasewana-blue:#039be6;
-  --color-ikman-green:#149777;
+  --color-riyasewana-blue: #039be6;
+  --color-ikman-green: #149777;
 }
 
 * {
@@ -69,10 +74,10 @@
 .nav-link .tracking-widest.active::after {
   width: 100%;
 }
-
+/* 
 .Header {
   background-image: url("./assets/Bg_dark.jpg");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: 0px -180px;
-}
+} */

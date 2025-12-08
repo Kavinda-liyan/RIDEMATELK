@@ -31,7 +31,7 @@ const HeaderCard = ({ items, interval = 3500, description, duration }) => {
                 </div>
                 <div className="image-container h-36px flex items-center justify-center">
                   <img
-                    className="h-[80px] transition-all duration-500 py-2"
+                    className="h-[80px] transition-all duration-500 py-2 max-sm-rmlk:h-[50px]"
                     src={currentItem.img}
                     alt={currentItem.name}
                   />

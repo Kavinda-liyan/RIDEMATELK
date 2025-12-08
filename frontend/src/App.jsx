@@ -40,7 +40,7 @@ function App() {
 
         <main className="flex-1 flex flex-col transition-all duration-500 ">
           <div className="flex-grow">
-            <Outlet />
+            <Outlet key={location.pathname} />
           </div>
 
           {!hideLayout && <Footer />}

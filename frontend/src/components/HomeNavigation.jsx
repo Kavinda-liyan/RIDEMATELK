@@ -5,7 +5,7 @@ const HomeNavigation = () => {
   const sections = [
     { id: "#Home" },
     { id: "#Specifications" },
-    { id: "#Roadconditions" },
+    { id: "#Aboutus" },
   ];
 
   const handleDotClick = (id) => {

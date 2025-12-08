@@ -30,12 +30,20 @@ import AllUsers from "./pages/Admin/Users/AllUsers.jsx";
 import ReviewedVehicles from "./pages/Admin/Reviews/ReviewedVehicles.jsx";
 import UpdateProfile from "./pages/User/UpdateProfile.jsx";
 import Favourites from "./pages/User/Favourites.jsx";
+import AboutUs from "./pages/About/AboutUs.jsx";
+import Contactus from "./pages/Contact/Contactus.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
-      <Route path="/" index={true} element={<IndexRoute />}></Route>
-      <Route path="/home" element={<Home />} />
+      <Route
+        path="/"
+        index={true}
+        element={<IndexRoute key={location.pathname} />}
+      ></Route>
+      <Route path="/home" element={<Home key={location.pathname} />} />
+      <Route path="/about" element={<AboutUs />} />
+      <Route path="/contact" element={<Contactus />} />
       <Route
         path="/admin/dashboard"
         element={
