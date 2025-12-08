@@ -3,6 +3,7 @@ import AdminDashboardButton from "../../components/Assets/AdminDashboardButton.j
 import HomeNavigation from "../../components/HomeNavigation.jsx";
 import Header from "./Header.jsx";
 import Header_2 from "./Header_2.jsx";
+import { motion } from "framer-motion";
 
 const Home = () => {
   const { userInfo } = useSelector((state) => state.auth);

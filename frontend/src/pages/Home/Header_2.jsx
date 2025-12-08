@@ -21,8 +21,8 @@ import seat4 from "../../assets/seats/seat4.svg";
 
 import { useSelector } from "react-redux";
 
-import header2BgClip from "../../assets/Header2BgClip.mp4";
 import LandingPageWrapper from "../../components/Wrappers/LandingPageWrapper";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 const Header_2 = () => {
   const { userInfo } = useSelector((state) => state.auth);
@@ -58,6 +58,14 @@ const Header_2 = () => {
       img: seat4,
     },
   ];
+
+  const { scrollY } = useScroll();
+  const imgOpacity = useTransform(scrollY, [0, 400], [0, 1]);
+  const imgSlideleft = useTransform(scrollY, [0, 400], [-80, 0]);
+  const imgSlideright = useTransform(scrollY, [0, 400], [80, 0]);
+  const imgBlur = useTransform(scrollY, [0, 500], ["blur(2px)", "blur(0px)"]);
+  const bannerImgY = useTransform(scrollY, [0, 700], [50, 0]);
+
   return (
     <LandingPageWrapper
       id={"Specifications"}
@@ -69,57 +77,113 @@ const Header_2 = () => {
         <div className=" grid grid-rows-12 h-full gap-[20px]">
           <div className="row-span-5 h-full">
             <div className=" grid grid-cols-12 gap-[20px] h-full">
-              <div className="col-span-6">
+              <motion.div
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, ease: "easeInOut" }}
+                style={{
+                  x: imgSlideleft,
+                  opacity: imgOpacity,
+                  filter: imgBlur,
+                }}
+                className="col-span-6"
+              >
                 <HeaderCard
                   items={bodyTypes}
                   description={"Shape that defines your drive."}
                   duration={0.8}
                 />
-              </div>
-              <div className="col-span-6">
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, ease: "easeInOut" }}
+                style={{
+                  x: imgSlideright,
+                  opacity: imgOpacity,
+                  filter: imgBlur,
+                }}
+                className="col-span-6"
+              >
                 <HeaderCard
                   description={"Power your journey, your way."}
                   items={fuelTypes}
                   duration={0.8}
                 />
-              </div>
+              </motion.div>
             </div>
           </div>
           <div className="row-span-2 flex items-center text-center justify-center">
-            <h3 className="text-[24px] font-light tracking-[4px] text-white">
+            <motion.h3
+              style={{
+                opacity: imgOpacity,
+                filter: imgBlur,
+              }}
+              className="text-[24px] font-light tracking-[4px] text-white"
+            >
               Discover the Drive That Defines You !
-            </h3>
+            </motion.h3>
           </div>
           <div className="row-span-5">
             <div className=" grid grid-cols-12 gap-[20px] h-full">
-              <div className="col-span-6 h-full">
+              <motion.div
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, ease: "easeInOut" }}
+                style={{
+                  x: imgSlideleft,
+                  opacity: imgOpacity,
+                  filter: imgBlur,
+                }}
+                className="col-span-6 h-full"
+              >
                 <HeaderCard
                   description={"Precision in every shift."}
                   items={gearType}
                   duration={0.8}
                 />
-              </div>
-              <div className="col-span-6">
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, ease: "easeInOut" }}
+                style={{
+                  x: imgSlideright,
+                  opacity: imgOpacity,
+                  filter: imgBlur,
+                }}
+                className="col-span-6"
+              >
                 <HeaderCard
                   description={"Room for every story."}
                   items={seats}
                   duration={0.8}
                 />
-              </div>
+              </motion.div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="h-full overflow-hidden col-span-6 relative rounded-xs shadow-md max-md-rmlk:col-span-12 ">
-        <img
+      <motion.div
+        style={{
+          x: bannerImgY,
+          filter: imgBlur,
+        }}
+        className="h-full overflow-hidden col-span-6 relative rounded-xs shadow-md max-md-rmlk:col-span-12 "
+      >
+        <motion.img
+          style={{
+            x: bannerImgY,
+            filter: imgBlur,
+          }}
           className={`object-cover w-full ${
-            userInfo && userInfo.isAdmin ? "scale-[250%]" : "scale-200"
+            userInfo && userInfo.isAdmin ? "scale-[200%]" : "scale-200"
           }   absolute left-[70px]`}
           src={headerimg_2}
           alt="header_img_2"
         />
-      </div>
+      </motion.div>
     </LandingPageWrapper>
   );
 };

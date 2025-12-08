@@ -6,35 +6,17 @@ import rmlk_bg from "../../assets/Bg_dark.jpg";
 import LandingPageWrapper from "../../components/Wrappers/LandingPageWrapper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import { motion, useAnimation } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 const Header = () => {
-  const videoRef = useRef(null);
-  const forwardRef = useRef(true);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    video.play();
-
-    const interval = setInterval(() => {
-      if (forwardRef.current) {
-        if (video.currentTime >= video.duration) {
-          forwardRef.current = false;
-        }
-      } else {
-        if (video.currentTime <= 0) {
-          forwardRef.current = true;
-        } else {
-          video.currentTime -= 0.03; // step for reverse
-        }
-      }
-    }, 30);
-
-    return () => clearInterval(interval);
-  }, []);
-
+  const bgImageRef = useRef(null);
+  const { scrollY } = useScroll();
+  const bgOpacity = useTransform(scrollY, [0, 350], [1, 0]);
+  const logoOpacity = useTransform(scrollY, [0, 300], [1, 0]);
+  const logoY = useTransform(scrollY, [0, 200], [0, -200]);
+  const y = useTransform(scrollY, [0, 200], [0, -50]);
+  const x = useTransform(scrollY, [0, 200], [0, 200]);
+  const logoBlur = useTransform(scrollY, [0, 200], ["blur(0px)", "blur(10px)"]);
   return (
     <LandingPageWrapper id={"Home"} extraClass={"Header overflow-hidden"}>
       <div id="bgImage">
@@ -45,9 +27,11 @@ const Header = () => {
           className="w-full h-full object-[20%_30%] object-cover absolute top-0 left-0 z-0 brightness-100"
           /> */}
         <motion.img
-          initial={{ scale: 1.8, opacity: 0.2 }}
+          ref={bgImageRef}
+          initial={{ scale: 1.3, opacity: 0.2 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 1.5, ease: "easeOut" }}
+          style={{ opacity: bgOpacity, y: y }}
           src={rmlk_bg}
           alt="background_image"
           className="w-full h-full  object-[20%_30%] object-cover absolute top-0 left-0 z-0 brightness-100 max-sm-rmlk:object-[50%_30%] max-md-rmlk:brightness-75"
@@ -59,6 +43,7 @@ const Header = () => {
             initial={{ scale: 1, y: -50, opacity: 0 }}
             animate={{ scale: 1, y: 0, opacity: 1 }}
             transition={{ duration: 1, ease: "easeInOut", delay: 0.5 }}
+            style={{ y: logoY, opacity: logoOpacity, filter: logoBlur }}
             src={rmlk_l_dark}
             alt="ridemelk_logo_dark"
             className="w-[480px] max-sm-rmlk:w-[300px]"
@@ -67,6 +52,11 @@ const Header = () => {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1, y: 0 }}
+            style={{
+              y: x,
+              opacity: logoOpacity,
+              filter: logoBlur,
+            }}
             transition={{ duration: 1, ease: "easeInOut", delay: 0.6 }}
             className="w-[480px] max-xs-rmlk:w-[300px] p-[16px] "
           >
@@ -79,6 +69,7 @@ const Header = () => {
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
+            style={{ y: x, opacity: logoOpacity }}
             transition={{ duration: 1, ease: "easeInOut", delay: 0.5 }}
             className="flex justify-center items-center flex-col gap-[5px]"
           >
