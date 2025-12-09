@@ -15,23 +15,25 @@ const HeaderCard = ({ items, interval = 3500, description, duration }) => {
   return (
     <>
       <div className="card bg-rmlk-dark-light h-full shadow-md rounded-xs overflow-hidden">
-        <div className="h-[70%] p-[8px]">
+        <div className="h-[150px] overflow-hidden">
           <div className="h-full flex flex-col items-center justify-center overflow-hidden ">
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="popLayout">
               <motion.div
+                layout
                 key={currentItem.name}
-                initial={{ opacity: 0, scale: 0.95,x:-50 }}
-                animate={{ opacity: 1, scale: 1,x:0 }}
-                exit={{ opacity: 0, scale: 0.95,x:50 }}
-                transition={{ duration: duration, ease: "easeInOut" }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{
+                  duration: duration,
+                  ease: "easeInOut",
+                  translateX: 0,
+                }}
                 className="flex flex-col items-center overflow-hidden"
               >
-                <div className="text-container text-white/70 font-rmlk-secondary  h-[36px] font-light">
-                  <p className="text-[12px] py-[4px]">{currentItem.name}</p>
-                </div>
-                <div className="image-container h-36px flex items-center justify-center">
+                <div className="image-container h-36px flex items-center justify-center overflow-hidden">
                   <img
-                    className="h-[80px] transition-all duration-500 py-2 max-sm-rmlk:h-[50px]"
+                    className="w-full transition-all duration-500 max-sm-rmlk:h-[50px] object-cover "
                     src={currentItem.img}
                     alt={currentItem.name}
                   />
@@ -40,7 +42,7 @@ const HeaderCard = ({ items, interval = 3500, description, duration }) => {
             </AnimatePresence>
           </div>
         </div>
-        <div className="h-[30%] flex items-center justify-center p-[8px] bg-rmlk-dark-lighter">
+        <div className="h-fit flex items-center justify-center p-[8px] bg-rmlk-dark-lighter">
           <p className="text-white text-[12px] h-fit flex item-center justify-center tracking-widest text-center ">
             {description}
           </p>

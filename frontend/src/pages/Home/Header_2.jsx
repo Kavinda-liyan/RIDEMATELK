@@ -9,15 +9,15 @@ import Hatchback from "../../assets/body_types/Hatchback 1.svg";
 import Sedan from "../../assets/body_types/Sedan 1.svg";
 import Minivan from "../../assets/body_types/Minivan 1.svg";
 
-import Gasoline from "../../assets/fuel_types/Petrol.svg";
-import Electric from "../../assets/fuel_types/Electric.svg";
-import Hybrid from "../../assets/fuel_types/Hybrid.svg";
+import Gasoline from "../../assets/fuel_types/gasoline.jpg";
+import Electric from "../../assets/fuel_types/electric.jpg";
+import Hybrid from "../../assets/fuel_types/hybrid.jpg";
 
-import Manuel from "../../assets/gear_types/Gear Box_Manuel.svg";
-import Auto from "../../assets/gear_types/Gear Box_Auto.svg";
-
-import seat2 from "../../assets/seats/seat2.svg";
-import seat4 from "../../assets/seats/seat4.svg";
+import Manuel from "../../assets/gear_types/Manuel.jpg";
+import Auto from "../../assets/gear_types/Automatic.jpg";
+import seat1 from "../../assets/seats/singleseat.jpg";
+import seat2 from "../../assets/seats/2seat.jpg";
+import seatM from "../../assets/seats/Manyseat.jpg";
 
 import { useSelector } from "react-redux";
 
@@ -51,20 +51,24 @@ const Header_2 = () => {
   const seats = [
     {
       name: "For Life",
+      img: seat1,
+    },
+    {
+      name: "For Travel",
       img: seat2,
     },
     {
       name: "For Travel",
-      img: seat4,
+      img: seatM,
     },
   ];
 
   const { scrollY } = useScroll();
   const imgOpacity = useTransform(scrollY, [0, 400], [0, 1]);
-  const imgSlideleft = useTransform(scrollY, [0, 400], [-80, 0]);
-  const imgSlideright = useTransform(scrollY, [0, 400], [80, 0]);
-  const imgBlur = useTransform(scrollY, [0, 500], ["blur(2px)", "blur(0px)"]);
-  const bannerImgY = useTransform(scrollY, [0, 700], [50, 0]);
+
+  const imgSlidetop = useTransform(scrollY, [0, 400], [200, 0]);
+  const imgBlur = useTransform(scrollY, [0, 400], ["blur(2px)", "blur(0px)"]);
+  const bannerImgY = useTransform(scrollY, [0, 400], [50, 0]);
 
   return (
     <LandingPageWrapper
@@ -74,7 +78,7 @@ const Header_2 = () => {
       }
     >
       <div className="col-span-6 h-full max-md-rmlk:col-span-12 ">
-        <div className=" grid grid-rows-12 h-full gap-[20px]">
+        <div className=" grid grid-rows-12 h-full gap-[4px]">
           <div className="row-span-5 h-full">
             <div className=" grid grid-cols-12 gap-[20px] h-full">
               <motion.div
@@ -82,7 +86,7 @@ const Header_2 = () => {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, ease: "easeInOut" }}
                 style={{
-                  x: imgSlideleft,
+                  y: imgSlidetop,
                   opacity: imgOpacity,
                   filter: imgBlur,
                 }}
@@ -99,7 +103,7 @@ const Header_2 = () => {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, ease: "easeInOut" }}
                 style={{
-                  x: imgSlideright,
+                  y: imgSlidetop,
                   opacity: imgOpacity,
                   filter: imgBlur,
                 }}
@@ -118,8 +122,9 @@ const Header_2 = () => {
               style={{
                 opacity: imgOpacity,
                 filter: imgBlur,
+                y: imgSlidetop,
               }}
-              className="text-[24px] font-light tracking-[4px] text-white"
+              className="text-[18px] font-light tracking-[4px] text-white"
             >
               Discover the Drive That Defines You !
             </motion.h3>
@@ -131,7 +136,7 @@ const Header_2 = () => {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, ease: "easeInOut" }}
                 style={{
-                  x: imgSlideleft,
+                  y: imgSlidetop,
                   opacity: imgOpacity,
                   filter: imgBlur,
                 }}
@@ -148,7 +153,7 @@ const Header_2 = () => {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, ease: "easeInOut" }}
                 style={{
-                  x: imgSlideright,
+                  x: imgSlidetop,
                   opacity: imgOpacity,
                   filter: imgBlur,
                 }}
@@ -165,16 +170,10 @@ const Header_2 = () => {
         </div>
       </div>
 
-      <motion.div
-        style={{
-          x: bannerImgY,
-          filter: imgBlur,
-        }}
-        className="h-full overflow-hidden col-span-6 relative rounded-xs shadow-md max-md-rmlk:col-span-12 "
-      >
+      <motion.div className="h-full overflow-hidden col-span-6 relative rounded-xs shadow-md max-md-rmlk:col-span-12 ">
         <motion.img
           style={{
-            x: bannerImgY,
+            y: bannerImgY,
             filter: imgBlur,
           }}
           className={`object-cover w-full ${

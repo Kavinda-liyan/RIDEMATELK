@@ -23,7 +23,7 @@ const Favourites = () => {
             <div className="min-h-[100dvh] bg-rmlk-dark pt-[50px] px-[60px] pb-[16px] font-rmlk-secondary text-white">
               <div
                 className={`grid ${
-                  userInfo.isAdmin ? " grid-cols-3" : "grid-cols-4"
+                  userInfo.isAdmin ? " grid-cols-4" : "grid-cols-4"
                 } gap-[24px] mt-[45px]`}
               >
                 {favouriteData.map((vehicle) =>

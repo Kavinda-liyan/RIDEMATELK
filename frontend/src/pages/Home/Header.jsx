@@ -14,7 +14,7 @@ const Header = () => {
   const bgOpacity = useTransform(scrollY, [0, 350], [1, 0]);
   const logoOpacity = useTransform(scrollY, [0, 300], [1, 0]);
   const logoY = useTransform(scrollY, [0, 200], [0, -200]);
-  const y = useTransform(scrollY, [0, 200], [0, -50]);
+  const y = useTransform(scrollY, [0, 200], [0, 250]);
   const x = useTransform(scrollY, [0, 200], [0, 200]);
   const logoBlur = useTransform(scrollY, [0, 200], ["blur(0px)", "blur(10px)"]);
   return (
