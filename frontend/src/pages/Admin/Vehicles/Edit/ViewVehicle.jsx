@@ -1,5 +1,6 @@
 import { data, Link } from "react-router-dom";
 import { useEditVehicle } from "../../../../hooks/useEditVehicle";
+import imgPlaceholder from "../../../../assets/placeholderimg.svg";
 const ViewVehicle = () => {
   const viewEditedVehicleHook = useEditVehicle();
 
@@ -27,9 +28,11 @@ const ViewVehicle = () => {
       data: viewEditedVehicleHook.transmissionArr.join(" , ") || "N/A",
     },
     {
-      field:"Gallery Images", data: viewEditedVehicleHook.galleryImages.length + " image(s)" || "N/A"
-    }
+      field: "Gallery Images",
+      data: viewEditedVehicleHook.galleryImages.length + " image(s)" || "N/A",
+    },
   ];
+  console.log(viewEditedVehicleHook.vehicle);
 
   return (
     <div className="col-span-5 bg-rmlk-dark-light rounded-md shadow-md max-h-[420px] max-[2160px]:max-h-[786px] overflow-y-scroll my-[16px] p-[16px] text-white font-rmlk-secondary">
@@ -40,6 +43,17 @@ const ViewVehicle = () => {
               viewEditedVehicleHook.manufacturer.slice(1)}{" "}
             : {viewEditedVehicleHook.model.toUpperCase()}
           </h3>
+        </div>
+        <div className="w-full">
+          <img
+            src={
+              viewEditedVehicleHook?.vehicle?.gallery_img?.length > 0
+                ? viewEditedVehicleHook?.vehicle?.gallery_img[0].url
+                : imgPlaceholder
+            }
+            alt="Vehicle"
+            className="w-full h-auto rounded-md shadow-md"
+          />
         </div>
         <div>
           <table className="table-auto w-full text-[12px]">
@@ -60,7 +74,7 @@ const ViewVehicle = () => {
                   <td className=" px-4 py-2 text-left">
                     {viewEditedVehicleHook.infoLinkList.map(
                       ({ link, tag }, index) => (
-                         <a
+                        <a
                           key={index}
                           href={
                             link.startsWith("http") ? link : `https://${link}`
@@ -77,7 +91,7 @@ const ViewVehicle = () => {
                               : "bg-blue-600"
                           } `}
                         >
-                        {tag}
+                          {tag}
                         </a>
                       )
                     )}

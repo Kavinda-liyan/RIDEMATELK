@@ -157,7 +157,11 @@ const getAllVehicles = asyncHandler(async (req, res) => {
     }
 
     const total = await Vehicle.countDocuments(filter);
-    const vehicles = await Vehicle.find(filter).skip(skip).limit(limit);
+    const vehicles = await Vehicle.find(filter)
+      .collation({ locale: "en", strength: 1 })
+      .sort({ Manufacturer: 1, Model: 1 })
+      .skip(skip)
+      .limit(limit);
 
     res.status(200).json({
       vehicles,

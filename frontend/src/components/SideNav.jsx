@@ -13,6 +13,7 @@ import {
   faUserLock,
 } from "@fortawesome/free-solid-svg-icons";
 import { useSelector } from "react-redux";
+import imgPlaceholder from "../assets/placeholderimg.svg";
 
 const SideNav = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -32,22 +33,38 @@ const SideNav = () => {
       {/* SIDEBAR MAIN WRAPPER */}
       <div
         className={`h-[100dvh] bg-rmlk-dark duration-300 
-          w-[220px]
+          w-[300px]
         `}
       >
-        <div className="h-full pt-[8px] flex flex-col gap-[20px] pl-[20px] pr-[20px] bg-rmlk-dark-light">
-          <div className="font-rmlk-secondary p-[8px] rounded-sm bg-rmlk-dark-lighter shadow-md">
-            <h3 className="p-[4px] text-[18px] font-semibold">Admin Panel</h3>
-            <div className="flex items-center">
-              <FontAwesomeIcon
-                icon={faUserLock}
-                className="text-[12px] mr-[2px]"
-              />
-              <h2 className="p-[4px] text-[12px]">{userInfo.username}</h2>
+        <div className="h-full pt-[8px] flex flex-col gap-[20px] pl-[60px] pr-[20px] ">
+          <div className="font-rmlk-secondary p-[8px] rounded-sm bg-rmlk-dark-light shadow-md">
+            <h3 className="p-[4px] text-[18px] font-semibold text-center mb-[8px]">
+              Admin Panel
+            </h3>
+            <div className="flex items-center flex-col">
+              <div className="rounded-full border-2 border-rmlk-red overflow-hidden w-[80px] h-[80px]">
+                <img
+                  src={
+                    userInfo.profilePicture
+                      ? userInfo.profilePicture
+                      : imgPlaceholder
+                  }
+                  alt="Profile"
+                  className=" rounded-full object-cover "
+                />
+              </div>
+              <h2 className="p-[4px] text-[12px]">
+                {" "}
+                <FontAwesomeIcon
+                  icon={faUserLock}
+                  className="text-[12px] mr-[2px]"
+                />
+                {userInfo.username}
+              </h2>
             </div>
           </div>
-          
-          <div className="p-[8px] rounded-sm ">
+
+          <div className="p-[8px] rounded-sm  bg-rmlk-dark-light shadow-md">
             <ul
               className={`text-[12px] flex flex-col gap-[24px]  py-[16px] text-white transition-all duration-300
             

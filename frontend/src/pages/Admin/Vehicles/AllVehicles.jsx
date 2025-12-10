@@ -3,10 +3,13 @@ import { useGetVehiclesQuery } from "../../../app/api/vehiclesApiSlice";
 import { setPage } from "../../../app/slices/paginationSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faCaretDown,
   faCaretLeft,
   faCaretRight,
+  faCaretUp,
   faEdit,
   faFolder,
+  faGears,
   faPlus,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
@@ -52,12 +55,11 @@ const AllVehicles = () => {
     "Fuel Type",
     "Body Type",
     "Last modified",
-    "Edit",
-    "Delete",
-    "view",
+    "Action(s)",
   ];
 
   const useDeleteVehicleHook = useDeleteVehicle();
+  const [toggleAction, setToggleAction] = useState(null);
 
   // useEffect(() => {
   //   // Reset page only if not on editvehicle path
@@ -109,7 +111,6 @@ const AllVehicles = () => {
       }
     />
   );
-
 
   return (
     <PageWrapper>
@@ -163,7 +164,9 @@ const AllVehicles = () => {
               data.vehicles.map((vehicle, index) => (
                 <tr
                   key={vehicle._id}
-                  className="text-[12px] font-rmlk-secondary transition-all duration-200 "
+                  className={`text-[12px] font-rmlk-secondary transition-all duration-200 ${
+                    toggleAction === vehicle._id ? "bg-rmlk-dark" : ""
+                  }`}
                   onClick={() => handleVehicleClick()}
                 >
                   <td className="p-2">{index + 1}</td>
@@ -187,38 +190,64 @@ const AllVehicles = () => {
                   <td className="p-2">
                     <button
                       onClick={() =>
-                        navigate(`/admin/editvehicle/${vehicle._id}`)
-                      }
-                      id="edit"
-                      className="p-[6px] mx-[2px] bg-rmlk-red rounded-md shadow-md cursor-pointer hover:bg-rmlk-red-light duration-200"
-                    >
-                      <FontAwesomeIcon icon={faEdit} />
-                    </button>
-                  </td>
-                  <td className="p-2">
-                    <button
-                      id="delete"
-                      onClick={() => {
-                        useDeleteVehicleHook.setShowDeleteVehicleModal(true);
-                        useDeleteVehicleHook.setSelectedVehicle(vehicle);
-                      }}
-                      className="bg-rmlk-dark-lighter p-[6px] rounded-md shadow-md mx-[2px] cursor-pointer hover:bg-rmlk-dark-lighter/50 duration-200"
-                    >
-                      <FontAwesomeIcon icon={faTrash} />
-                    </button>
-                  </td>
-                  <td className="p-2">
-                    <button
-                      onClick={() =>
-                        navigate(
-                          `/recommendation/result/vehicle/${vehicle._id}`
+                        setToggleAction(
+                          toggleAction === vehicle._id ? null : vehicle._id
                         )
                       }
-                      id="open"
-                      className="p-[6px] mx-[2px] bg-green-600 rounded-md shadow-md cursor-pointer hover:bg-green-500 duration-200"
+                      id="Action"
+                      className="px-[8px] py-[4px] cursor-pointer bg-rmlk-red hover:bg-rmlk-red-light rounded-md shadow-md transition-all duration-200 w-full"
                     >
-                      <FontAwesomeIcon icon={faFolder} />
+                      <FontAwesomeIcon icon={faGears} className="pr-[4px]" />{" "}
+                      Actions{" "}
+                      {toggleAction === vehicle._id ? (
+                        <FontAwesomeIcon icon={faCaretUp} />
+                      ) : (
+                        <FontAwesomeIcon icon={faCaretDown} />
+                      )}
                     </button>
+                    {toggleAction === vehicle._id && (
+                      <ul className="py-[8px] flex flex-col gap-[8px]">
+                        <li>
+                          <button
+                            onClick={() =>
+                              navigate(`/admin/editvehicle/${vehicle._id}`)
+                            }
+                            id="edit"
+                            className="px-[8px] py-[4px] bg-blue-600 rounded-md shadow-md cursor-pointer hover:bg-blue-500 duration-200 w-full"
+                          >
+                            <FontAwesomeIcon icon={faEdit} /> Edit
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            onClick={() =>
+                              navigate(
+                                `/recommendation/result/vehicle/${vehicle._id}`
+                              )
+                            }
+                            id="open"
+                            className="px-[8px] py-[4px]  bg-green-600 rounded-md shadow-md cursor-pointer hover:bg-green-500 duration-200 w-full"
+                          >
+                            <FontAwesomeIcon icon={faFolder} /> View
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            id="delete"
+                            onClick={() => {
+                              useDeleteVehicleHook.setShowDeleteVehicleModal(
+                                true
+                              );
+                              useDeleteVehicleHook.setSelectedVehicle(vehicle);
+                            }}
+                            className="bg-rmlk-dark-lighter p-[6px] rounded-md shadow-md cursor-pointer hover:bg-rmlk-dark-lighter/50 duration-200 w-full"
+                          >
+                            <FontAwesomeIcon icon={faTrash} />
+                            Delete
+                          </button>
+                        </li>
+                      </ul>
+                    )}
                   </td>
                 </tr>
               ))

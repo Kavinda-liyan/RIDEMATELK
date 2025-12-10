@@ -1,4 +1,5 @@
 import { useGetVehicleByFilterQuery } from "../app/api/vehiclesApiSlice";
+import { useGetAllRatingsQuery } from "../app/api/ratingsApiSlice";
 import { useGetAllUsersQuery } from "../app/api/usersApiSlice";
 import { useMemo } from "react";
 
@@ -9,13 +10,29 @@ export const useDashboardComponents = () => {
     isError: errorVehicle,
   } = useGetVehicleByFilterQuery({});
 
-  const { data: userData = [] } = useGetAllUsersQuery();
+  const {
+    data: ratingData = [],
+    isLoading: loadingRating,
+    isError: errorRating,
+  } = useGetAllRatingsQuery();
+
+  const {
+    data: userData = [],
+    isLoading: loadingUser,
+    isError: errorUser,
+  } = useGetAllUsersQuery();
 
   const AllUsers = Array.isArray(userData)
     ? userData.filter((user) => user.isAdmin === false).length
     : 0;
 
   const AllVehicles = Array.isArray(vehicleData) ? vehicleData.length : 0;
+
+  const AllRatings = Array.isArray(ratingData) ? ratingData.length : 0;
+
+  const AllVerifiedUsers = Array.isArray(userData)
+    ? userData.filter((user) => user.isTrustedBatch).length
+    : 0;
 
   //Cal fuel Types
 
@@ -39,6 +56,28 @@ export const useDashboardComponents = () => {
     name: key.charAt(0).toUpperCase() + key.slice(1),
     value: value,
   }));
+
+  //getting each body Types
+  const AvailableBodyTypes = useMemo(() => {
+    if (!Array.isArray(vehicleData)) return [];
+    return [...new Set(vehicleData.map((v) => v["Body Type"].toLowerCase()))];
+  }, [vehicleData]);
+
+  const bodyTypeCounts = {};
+  AvailableBodyTypes.forEach((body) => {
+    bodyTypeCounts[body] = Array.isArray(vehicleData)
+      ? vehicleData.filter(
+          (vehicle) => vehicle["Body Type"].toLowerCase() === body
+        ).length
+      : 0;
+  });
+
+  const bodyTypePieData = Object.entries(bodyTypeCounts).map(
+    ([key, value]) => ({
+      name: key.charAt(0).toUpperCase() + key.slice(1),
+      value: value,
+    })
+  );
 
   //getting each vehicle Manufacturer
   const AvailableManufacturers = useMemo(() => {
@@ -76,5 +115,12 @@ export const useDashboardComponents = () => {
     fuelTypePieData,
     manufacturerBarData,
     AllUsers,
+    bodyTypePieData,
+    loadingRating,
+    errorRating,
+    AllRatings,
+    loadingUser,
+    errorUser,
+    AllVerifiedUsers,
   };
 };
