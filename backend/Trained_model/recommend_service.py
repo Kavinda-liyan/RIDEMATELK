@@ -112,6 +112,9 @@ def generate_recommendations(user_prefs, top_n=30, knn_k=30):
 
         if user_body:
             df_filtered = df_filtered[df_filtered["Body Type"].str.contains(user_body, na=False)]
+        
+        if user_fuel:
+            df_filtered=df_filtered[df_filtered["Fuel Type"] == user_fuel]
 
         df_filtered = df_filtered[
             df_filtered["Seating Capacity"].between(user_seating - 1, user_seating + 1, inclusive="both")
@@ -141,8 +144,8 @@ def generate_recommendations(user_prefs, top_n=30, knn_k=30):
             "Seating Capacity": 1.0,
             "EFF (km/l)/(km/kwh)": 1.0,
             "Ground Clearance (range)": 1.0,
-            "Fuel Type": 1.0,
-            "Body Type": 1.0,
+            "Fuel Type": 1.5,
+            "Body Type": 1.5,
             "Road Type": 1.0
         }
 
