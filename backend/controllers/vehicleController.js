@@ -27,7 +27,7 @@ const getBodyTypes = asyncHandler(async (req, res) => {
 });
 //@route POST /api/vehicles/bodytypes
 const createBodyType = asyncHandler(async (req, res) => {
-  const { bodytype, Description, Purpose } = req.body;
+  let { bodytype, Description, Purpose } = req.body; // use let instead of const
 
   if (!bodytype || !Description || !Purpose) {
     return res
@@ -41,17 +41,26 @@ const createBodyType = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "Body Type already exists" });
   }
 
-  // Handle uploaded icon
   let iconPath = "";
   if (req.file) {
     iconPath = `/public/assets/uploads/bodyTypes/${req.file.filename}`;
+  }
+
+  if (Purpose && typeof Purpose === "string") {
+    try {
+      Purpose = JSON.parse(Purpose);
+    } catch (err) {
+      return res
+        .status(400)
+        .json({ message: "Purpose must be a valid JSON array or string" });
+    }
   }
 
   try {
     const newBodyType = new bodyType({
       bodytype,
       Description,
-      Purpose: Array.isArray(Purpose) ? Purpose : [Purpose],
+      Purpose: (Array.isArray(Purpose) ? Purpose : [Purpose]).map(String),
       icon: iconPath,
     });
 

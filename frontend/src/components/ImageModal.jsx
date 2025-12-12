@@ -9,6 +9,7 @@ import ReactCrop, {
 import "react-image-crop/dist/ReactCrop.css";
 import { toast } from "react-toastify";
 import drawCanvasPreview from "../hooks/drawCanvasPreview";
+import { motion, AnimatePresence } from "framer-motion";
 
 const ImageModal = ({ onClose, isOpen, onFileSelect, existingFiles = [] }) => {
   if (!isOpen) return null;
@@ -130,147 +131,161 @@ const ImageModal = ({ onClose, isOpen, onFileSelect, existingFiles = [] }) => {
   };
 
   return (
-    <div className="inset-0 bg-black/60 backdrop-blur-sm z-[1000] flex items-center justify-center fixed font-rmlk-secondary text-[12px] text-white">
-      <div className="bg-rmlk-dark-lighter rounded-md shadow-md w-[90%] max-w-[400px] max-h-[80%] flex flex-col overflow-hidden">
-        {/* Header */}
-        <div className="flex items-center justify-between p-2">
-          <label className="text-white text-sm">Select Vehicle Image</label>
-          <button
-            onClick={onClose}
-            className="text-white hover:text-gray-300 duration-200"
-          >
-            <FontAwesomeIcon icon={faTimes} />
-          </button>
-        </div>
-
-        <div className="flex flex-col gap-2 p-2 overflow-auto">
-          {/* File Input */}
-          <div className="p-2 flex flex-col items-center justify-center text-[12px]">
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="w-full text-white file:bg-rmlk-dark file:px-[8px] file:py-[4px] file:rounded-md file:shadow-md file:cursor-pointer file:hover:bg-rmlk-dark-light duration-200"
-            />
+    <AnimatePresence mode="wait">
+      <motion.div
+        initial={{ opacity: 0, scale: 1 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 1 }}
+        transition={{ duration: 0.2 }}
+        className="inset-0 bg-black/60 backdrop-blur-sm z-[1000] flex items-center justify-center fixed font-rmlk-secondary text-[12px] text-white"
+      >
+        <motion.div
+          initial={{ scale: 0.5, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.5, opacity: 0 }}
+          transition={{ duration: 0.2, ease: "easeInOut" }}
+          className="bg-rmlk-dark-lighter rounded-md shadow-md w-[90%] max-w-[400px] max-h-[80%] flex flex-col overflow-hidden"
+        >
+          {/* Header */}
+          <div className="flex items-center justify-between p-2">
+            <label className="text-white text-sm">Select Vehicle Image</label>
+            <button
+              onClick={onClose}
+              className="text-white hover:text-gray-300 duration-200"
+            >
+              <FontAwesomeIcon icon={faTimes} />
+            </button>
           </div>
 
-          <div className="grid grid-cols-12">
-            {/* Left Section */}
-            <div className="col-span-7">
-              {error && (
-                <div className="p-2 text-red-500 text-sm">
-                  <p>{error}</p>
-                </div>
-              )}
+          <div className="flex flex-col gap-2 p-2 overflow-auto">
+            {/* File Input */}
+            <div className="p-2 flex flex-col items-center justify-center text-[12px]">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="w-full text-white file:bg-rmlk-dark file:px-[8px] file:py-[4px] file:rounded-md file:shadow-md file:cursor-pointer file:hover:bg-rmlk-dark-light duration-200"
+              />
+            </div>
 
-              {/* Cropper */}
-              {ImgSrc ? (
-                <div className="p-2 flex items-center justify-center overflow-auto">
-                  <ReactCrop
-                    crop={crop}
-                    aspect={ASPECT_RATIO}
-                    keepSelection
-                    onChange={(c) => setCrop(c)}
-                    className="max-h-[280px]"
-                  >
-                    <img
-                      ref={ImgRef}
-                      src={ImgSrc}
-                      alt="Selected Vehicle"
-                      onLoad={onImageLoad}
-                      className="h-full w-auto object-contain rounded-md shadow-md"
-                    />
-                  </ReactCrop>
-                </div>
-              ) : (
-                <div className="p-[8px] w-full">
-                  <div className="p-4 h-[120px] border-2 border-dashed border-rmlk-dark-light flex items-center justify-center rounded-md">
-                    <FontAwesomeIcon
-                      icon={faImage}
-                      className="text-rmlk-dark-light text-3xl"
-                    />
+            <div className="grid grid-cols-12">
+              {/* Left Section */}
+              <div className="col-span-7">
+                {error && (
+                  <div className="p-2 text-red-500 text-sm">
+                    <p>{error}</p>
                   </div>
-                </div>
-              )}
+                )}
 
-              {crop && (
-                <div className="w-full p-[8px] flex items-center justify-center">
-                  <button
-                    onClick={() =>
-                      drawCanvasPreview(
-                        ImgRef.current,
-                        previewCanvasRef.current,
-                        convertToPixelCrop(
-                          crop,
-                          ImgRef.current.width,
-                          ImgRef.current.height
+                {/* Cropper */}
+                {ImgSrc ? (
+                  <div className="p-2 flex items-center justify-center overflow-auto">
+                    <ReactCrop
+                      crop={crop}
+                      aspect={ASPECT_RATIO}
+                      keepSelection
+                      onChange={(c) => setCrop(c)}
+                      className="max-h-[280px]"
+                    >
+                      <img
+                        ref={ImgRef}
+                        src={ImgSrc}
+                        alt="Selected Vehicle"
+                        onLoad={onImageLoad}
+                        className="h-full w-auto object-contain rounded-md shadow-md"
+                      />
+                    </ReactCrop>
+                  </div>
+                ) : (
+                  <div className="p-[8px] w-full">
+                    <div className="p-4 h-[120px] border-2 border-dashed border-rmlk-dark-light flex items-center justify-center rounded-md">
+                      <FontAwesomeIcon
+                        icon={faImage}
+                        className="text-rmlk-dark-light text-3xl"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {crop && (
+                  <div className="w-full p-[8px] flex items-center justify-center">
+                    <button
+                      onClick={() =>
+                        drawCanvasPreview(
+                          ImgRef.current,
+                          previewCanvasRef.current,
+                          convertToPixelCrop(
+                            crop,
+                            ImgRef.current.width,
+                            ImgRef.current.height
+                          )
                         )
-                      )
-                    }
-                    className="bg-blue-600 hover:bg-blue-500 px-[8px] py-[4px] rounded-md shadow-md cursor-pointer"
+                      }
+                      className="bg-blue-600 hover:bg-blue-500 px-[8px] py-[4px] rounded-md shadow-md cursor-pointer"
+                    >
+                      Crop
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Right Section */}
+              <div className="col-span-5">
+                {crop && (
+                  <div className="p-2">
+                    <canvas ref={previewCanvasRef} className="w-full" />
+                  </div>
+                )}
+
+                <div className="p-2 text-white flex">
+                  <label className="block p-[4px]">Tag:</label>
+                  <select
+                    className="w-full p-[4px] bg-rmlk-dark-light rounded-md text-white"
+                    value={tag}
+                    onChange={(e) => setTag(e.target.value)}
                   >
-                    Crop
+                    <option value="" disabled>
+                      ---Tag---
+                    </option>
+                    {tags.map((tag) => (
+                      <option key={tag} value={tag}>
+                        {tag}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="p-2 text-white flex">
+                  <label className="block p-[4px]">Year:</label>
+                  <select
+                    className="w-full p-[4px] bg-rmlk-dark-light rounded-md text-white"
+                    value={year}
+                    onChange={(e) => setYear(e.target.value)}
+                  >
+                    <option value="" disabled>
+                      ---Year---
+                    </option>
+                    {yearsArr.map((year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                {crop && tag && year && (
+                  <button
+                    onClick={handleAddImage}
+                    className="w-full bg-blue-600 mt-2 px-[8px] py-[4px] rounded-md hover:bg-blue-500 duration-200 cursor-pointer"
+                  >
+                    Add Image
                   </button>
-                </div>
-              )}
-            </div>
-
-            {/* Right Section */}
-            <div className="col-span-5">
-              {crop && (
-                <div className="p-2">
-                  <canvas ref={previewCanvasRef} className="w-full" />
-                </div>
-              )}
-
-              <div className="p-2 text-white flex">
-                <label className="block p-[4px]">Tag:</label>
-                <select
-                  className="w-full p-[4px] bg-rmlk-dark-light rounded-md text-white"
-                  value={tag}
-                  onChange={(e) => setTag(e.target.value)}
-                >
-                  <option value="" disabled>
-                    ---Tag---
-                  </option>
-                  {tags.map((tag) => (
-                    <option key={tag} value={tag}>
-                      {tag}
-                    </option>
-                  ))}
-                </select>
+                )}
               </div>
-
-              <div className="p-2 text-white flex">
-                <label className="block p-[4px]">Year:</label>
-                <select
-                  className="w-full p-[4px] bg-rmlk-dark-light rounded-md text-white"
-                  value={year}
-                  onChange={(e) => setYear(e.target.value)}
-                >
-                  <option value="" disabled>
-                    ---Year---
-                  </option>
-                  {yearsArr.map((year) => (
-                    <option key={year} value={year}>
-                      {year}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              {crop && tag && year && (
-                <button
-                  onClick={handleAddImage}
-                  className="w-full bg-blue-600 mt-2 px-[8px] py-[4px] rounded-md hover:bg-blue-500 duration-200 cursor-pointer"
-                >
-                  Add Image
-                </button>
-              )}
             </div>
           </div>
-        </div>
-      </div>
-    </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
   );
 };
 

@@ -3,7 +3,9 @@ import { useGetBodyTypesQuery } from "../app/api/bodyTypesApiSlice";
 import { useGetRecommendationsMutation } from "../app/api/recommendVehiclesApiSlice";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { vehicleUtils } from "../utils/vehicleUtils";
 export const useSetRecommendations = () => {
+  const { bodyTypesArr } = vehicleUtils();
   const {
     data: bodyTypesData = [],
     isLoading: bodyTypesLoading,
@@ -30,6 +32,19 @@ export const useSetRecommendations = () => {
   const [bodyTypeDescription, setBodyTypeDescription] = useState("");
   const [icon, setIcon] = useState("");
   const [purpose, setPurpose] = useState("");
+
+  let bodyTypesList = [];
+  if (Array.isArray(bodyTypesArr)) {
+    if (purpose === "Not Specified" || !purpose) {
+      bodyTypesList = bodyTypesArr;
+    } else {
+      bodyTypesList = bodyTypesArr.filter(
+        (b) => b.Purpose && b.Purpose.includes(purpose)
+      );
+    }
+  }
+
+  const bodyTypeNames = bodyTypesList.map((b) => b.bodytype);
 
   useEffect(() => {
     if (bodyType) {
@@ -104,5 +119,7 @@ export const useSetRecommendations = () => {
     setPurpose,
     icon,
     setIcon,
+    bodyTypesList,
+    bodyTypeNames,
   };
 };

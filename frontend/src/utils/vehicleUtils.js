@@ -23,9 +23,7 @@ export const vehicleUtils = () => {
     ? ManufacturerData?.map((manufacturer) => manufacturer.manufacturer)
     : [];
 
-  const bodyTypesArr = bodyTypeData
-    ? bodyTypeData?.map((bodyType) => bodyType.bodytype)
-    : [];
+  const bodyTypesArr = bodyTypeData ? bodyTypeData : [];
 
   const AvailableManufacturers = Array.isArray(vehicleData)
     ? [...new Set(vehicleData.map((v) => v["Manufacturer"].toLowerCase()))]

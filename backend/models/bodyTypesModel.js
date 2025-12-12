@@ -10,7 +10,7 @@ const bodyTypesSchema = new mongoose.Schema(
       unique: true,
     },
     Description: { type: String, trim: true, default: "" },
-    Purpose: [{ type: String, trim: true, default: "Not Specified" }],
+    Purpose: { type: [String], trim: true, default: "" },
     icon: { type: String, trim: true, default: "" },
   },
   {
