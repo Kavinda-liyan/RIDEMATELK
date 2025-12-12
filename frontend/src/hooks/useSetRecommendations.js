@@ -28,6 +28,8 @@ export const useSetRecommendations = () => {
   const [trafficCondition, setTrafficCondition] = useState("");
   const [recommendations, setRecommendations] = useState([]);
   const [bodyTypeDescription, setBodyTypeDescription] = useState("");
+  const [icon, setIcon] = useState("");
+  const [purpose, setPurpose] = useState("");
 
   useEffect(() => {
     if (bodyType) {
@@ -35,8 +37,10 @@ export const useSetRecommendations = () => {
         (b) => b.bodytype === bodyType
       );
       setBodyTypeDescription(selectedBodyType?.Description || "");
+      setIcon(selectedBodyType?.icon || "");
     } else {
       setBodyTypeDescription("");
+      setIcon("");
     }
   }, [bodyType, bodyTypesData]);
 
@@ -96,5 +100,9 @@ export const useSetRecommendations = () => {
     errorRecommendations,
     loadingRecommendations,
     bodyTypeDescription,
+    purpose,
+    setPurpose,
+    icon,
+    setIcon,
   };
 };

@@ -4,8 +4,10 @@ import WarningIcon from "../../../../components/Assets/WarningIcon";
 import QuestionIcon from "../../../../components/Assets/QuestionIcon";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { vehicleUtils } from "../../../../utils/vehicleUtils";
 
 const AddBodyTypesForm = () => {
+  const { purposeArr } = vehicleUtils();
   const bodyTypeHook = useBodyTypes();
   const BodyTypeModals = (
     <>
@@ -111,6 +113,66 @@ const AddBodyTypesForm = () => {
                       className="p-[4px] bg-rmlk-dark-lighter rounded-md w-full"
                     />
                   </div>
+                  <div className="flex flex-col gap-[8px] border p-[8px] rounded-md border-rmlk-dark-lighter">
+                    <label htmlFor="bodyDes" className="">
+                      Purpose :
+                    </label>
+                    <div className="flex">
+                      <select
+                        id="year"
+                        name="year"
+                        value={bodyTypeHook.purpose || ""}
+                        onChange={(e) => {
+                          bodyTypeHook.setPurpose(e.target.value);
+                        }}
+                        className="w-full h-[30px] p-[4px] bg-rmlk-dark-lighter rounded-md"
+                      >
+                        <option disabled value={""}>
+                          -- Select --
+                        </option>
+                        {purposeArr?.map((purpose) => (
+                          <option key={purpose} value={purpose}>
+                            {purpose}
+                          </option>
+                        ))}
+                      </select>
+
+                      <button
+                        onClick={bodyTypeHook.addPurposeToList}
+                        className="p-[2px] bg-blue-600 rounded-md shadow-md hover:cursor-pointer hover:bg-blue-500 mx-[4px] w-[30px] duration-200 text-[16px]"
+                      >
+                        +
+                      </button>
+                    </div>
+                    <div className="flex flex-wrap gap-[2px] py-[4px]">
+                      {bodyTypeHook.purposeToList?.map((purpose, index) => (
+                        <span
+                          className="flex items-center px-[4px] py-[2px] text-[10px] text-amber-400 font-semibold  hover:cursor-pointer hover:text-white duration-200 "
+                          key={index}
+                          onClick={() =>
+                            bodyTypeHook.removePurposeFromList(index)
+                          }
+                        >
+                          <FontAwesomeIcon
+                            icon={faTimes}
+                            className="pr-[2px]"
+                          />
+                          {purpose}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex gap-[8px] border p-[8px] rounded-md border-rmlk-dark-lighter">
+                    <input
+                      id="icon"
+                      name="icon"
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => bodyTypeHook.setIcon(e.target.files[0])}
+                      className="p-[4px] bg-rmlk-dark-lighter rounded-md w-full"
+                    />
+                  </div>
+
                   <div>
                     <button
                       className="px-[8px] py-[4px] bg-blue-600 w-full rounded-md shadow-md hover:bg-blue-500 hover:cursor-pointer duration-200"

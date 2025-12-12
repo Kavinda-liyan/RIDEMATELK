@@ -25,25 +25,36 @@ const getBodyTypes = asyncHandler(async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
-//@route POST/api/vehicles/bodytypes
+//@route POST /api/vehicles/bodytypes
 const createBodyType = asyncHandler(async (req, res) => {
-  const { bodytype } = req.body;
-  if (!req.body.bodytype || !req.body.Description) {
+  const { bodytype, Description, Purpose } = req.body;
+
+  if (!bodytype || !Description || !Purpose) {
     return res
       .status(400)
       .json({ message: "Body Type and Description are required" });
   }
 
-  const bodyTypeExists = await bodyType.findOne({
-    bodytype,
-  });
+  const bodyTypeExists = await bodyType.findOne({ bodytype });
 
   if (bodyTypeExists) {
     return res.status(400).json({ message: "Body Type already exists" });
   }
 
+  // Handle uploaded icon
+  let iconPath = "";
+  if (req.file) {
+    iconPath = `/public/assets/uploads/bodyTypes/${req.file.filename}`;
+  }
+
   try {
-    const newBodyType = new bodyType(req.body);
+    const newBodyType = new bodyType({
+      bodytype,
+      Description,
+      Purpose: Array.isArray(Purpose) ? Purpose : [Purpose],
+      icon: iconPath,
+    });
+
     const createdBodyType = await newBodyType.save();
     res.status(201).json(createdBodyType);
   } catch (error) {

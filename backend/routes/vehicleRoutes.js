@@ -32,6 +32,7 @@ import {
   createBodyType,
   deleteBodyType,
 } from "../controllers/vehicleController.js";
+import { uploadBodyType } from "../middlewares/uploadBodyType.js";
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -40,7 +41,7 @@ const upload = multer({ storage: storage });
 //GET /api/vehicles/bodytypes
 router.get("/bodytypes", getBodyTypes);
 //POST /api/vehicles/bodytypes
-router.post("/bodytypes", authenticate, authAdmin, createBodyType);
+router.post("/bodytypes", authenticate, authAdmin, uploadBodyType.single("icon"), createBodyType);
 //DELETE /api/vehicles/bodytypes/:id
 router.delete("/bodytypes/:id", authenticate, authAdmin, deleteBodyType);
 

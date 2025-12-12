@@ -43,6 +43,13 @@ export const vehicleUtils = () => {
   const infoTagsArr = ["ikman", "riyasewana", "other"];
   const seatingCapacityArr = ["2", "4", "5", "7", "8", "10", "12", "15"];
 
+  const purposeArr = [
+    "Tourism / Transport",
+    "Personal Use",
+    "Heavy Duty / Pickup",
+    "Not Specified",
+  ];
+
   return {
     ManufacturerArr,
     yearsArr,
@@ -56,5 +63,6 @@ export const vehicleUtils = () => {
     loadingBodyType,
     errorBodyType,
     seatingCapacityArr,
+    purposeArr,
   };
 };

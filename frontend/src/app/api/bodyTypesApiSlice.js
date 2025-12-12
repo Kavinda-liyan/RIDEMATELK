@@ -12,10 +12,10 @@ export const bodyTypesApiSlice = apiSlice.injectEndpoints({
       keepUnusedDataFor: 5,
     }),
     addBodyTypes: builder.mutation({
-      query: (data) => ({
+      query: (formData) => ({
         url: `${BODY_TYPES_URL}`,
         method: "POST",
-        body: data,
+        body: formData,
       }),
       invalidatesTags: ["BodyType"],
     }),

@@ -10,8 +10,13 @@ const Recommendation = () => {
   const { userInfo } = useSelector((state) => state.auth);
 
   const recommendationHook = useSetRecommendations();
-  const { bodyTypesArr, loadingBodyType, errorBodyType, seatingCapacityArr } =
-    vehicleUtils();
+  const {
+    bodyTypesArr,
+    loadingBodyType,
+    errorBodyType,
+    seatingCapacityArr,
+    purposeArr,
+  } = vehicleUtils();
   const { roadConditionList, trafficConditionList, fuelTypeList } =
     recommendationUtils();
 
@@ -78,6 +83,61 @@ const Recommendation = () => {
                 <div className="p-[8px] text-[12px] w-full ">
                   <label
                     className="block mb-[8px] text-[14px]"
+                    htmlFor="purpose"
+                  >
+                    What is the primary purpose of the vehicle?
+                  </label>
+
+                  <select
+                    id="purpose"
+                    className={`w-full p-[8px] rounded-md bg-rmlk-dark-lighter text-white ${
+                      recommendationHook.purpose === ""
+                        ? "border border-rmlk-red"
+                        : "border border-green-600"
+                    }`}
+                    value={recommendationHook.purpose}
+                    onChange={(e) =>
+                      recommendationHook.setPurpose(e.target.value)
+                    }
+                  >
+                    <option disabled value="">
+                      Select Purpose
+                    </option>
+                    {purposeArr.map((purpose) => (
+                      <option className="p-[8px]" key={purpose} value={purpose}>
+                        {purpose}
+                      </option>
+                    ))}
+                  </select>
+
+                  {recommendationHook.bodyTypeDescription && (
+                    <div
+                      ref={descriptionRef}
+                      className="rounded-sm border border-green-600 my-[16px] p-[16px]"
+                    >
+                      <p className=" text-gray-300 text-center text-[14px]">
+                        {recommendationHook.bodyTypeDescription}
+                      </p>
+                    </div>
+                  )}
+
+                  {recommendationHook.purpose && (
+                    <button
+                      ref={nextBtnRef}
+                      type="button"
+                      onClick={nextStep}
+                      className="mt-[8px] bg-rmlk-red cursor-pointer hover:bg-rmlk-red-light duration-200 text-white px-[8px] py-[4px] rounded-md w-full h-[30px]"
+                    >
+                      Next
+                    </button>
+                  )}
+                </div>
+              )}
+
+              {step === 2 && (
+                <div className="p-[8px] text-[12px] w-full ">
+                  <label
+                    className="block mb-[8px] text-[14px]"
                     htmlFor="bodyType"
                   >
                     What body type do you prefer?
@@ -119,6 +179,11 @@ const Recommendation = () => {
                       ref={descriptionRef}
                       className="rounded-sm border border-green-600 my-[16px] p-[16px]"
                     >
+                      <img
+                        src={`http://localhost:5000${recommendationHook.icon}`}
+                        alt={recommendationHook.bodyType}
+                        className="w-[100px] h-auto mx-auto mb-[8px]"
+                      />
                       <p className=" text-gray-300 text-center text-[14px]">
                         {recommendationHook.bodyTypeDescription}
                       </p>
@@ -138,7 +203,7 @@ const Recommendation = () => {
                 </div>
               )}
 
-              {step === 2 && (
+              {step === 3 && (
                 <div className="p-[8px] text-[12px] w-full mb-[16px]">
                   <label className="block mb-[8px]" htmlFor="seatingCapacity">
                     What seating capacity do you need?
@@ -202,7 +267,7 @@ const Recommendation = () => {
                 </div>
               )}
 
-              {step === 3 && (
+              {step === 4 && (
                 <>
                   {/* Road Condition */}
                   <div className="p-[8px] text-[12px] w-full mb-[16px]">

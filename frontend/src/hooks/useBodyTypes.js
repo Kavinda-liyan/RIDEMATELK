@@ -23,6 +23,9 @@ export const useBodyTypes = () => {
   //Form state
   const [bodyType, setBodyType] = useState("");
   const [bodyDescription, setBodyDescription] = useState("");
+  const [purpose, setPurpose] = useState("");
+  const [purposeToList, setPurposeToList] = useState([]);
+  const [icon, setIcon] = useState(null);
 
   //Model State
   const [showAddBodyTypeModal, setShowAddBodyTypeModal] = useState(false);
@@ -48,15 +51,24 @@ export const useBodyTypes = () => {
     }
 
     try {
-      const res = await addBodyTypes({
-        bodytype: bodyType,
-        Description: bodyDescription,
-      }).unwrap();
+      const formData = new FormData();
+      formData.append("bodytype", bodyType);
+      formData.append("Description", bodyDescription);
+      formData.append("Purpose", JSON.stringify(purposeToList));
+      if (icon) formData.append("icon", icon); 
+
+      await addBodyTypes(formData).unwrap();
 
       setBodyType("");
       setBodyDescription("");
+      setPurpose("");
+      setPurposeToList([]);
+      setIcon(null);
+
       setShowAddBodyTypeModal(false);
       refetchBodyTypes();
+
+      toast.success("Body Type added successfully!");
     } catch (error) {
       console.error(error);
       toast.error("Failed to add body type");
@@ -78,10 +90,29 @@ export const useBodyTypes = () => {
       setShowDeleteBodyTypeModal(false);
       setBodyTypeDeleteById(null);
       setBodyTypeToDelete("");
+      setIcon(null);
     } catch (error) {
       console.error(error);
       toast.error("Failed to delete Body Type");
     }
+  };
+
+  const addPurposeToList = (e) => {
+    e.preventDefault();
+    if (!purpose) {
+      toast.error("Please provide a purpose before adding.");
+    }
+
+    if (purpose && !purposeToList.includes(purpose)) {
+      setPurposeToList((prev) => [...prev, purpose]);
+      setPurpose("");
+    }
+  };
+
+  const removePurposeFromList = (indexToRemove) => {
+    setPurposeToList((prev) =>
+      prev.filter((_, index) => index !== indexToRemove)
+    );
   };
 
   return {
@@ -105,5 +136,13 @@ export const useBodyTypes = () => {
     confirmAddBodyType,
     handleDeleteBodyType,
     confirmDeleteBodyType,
+    purpose,
+    setPurpose,
+    addPurposeToList,
+    purposeToList,
+    setPurposeToList,
+    removePurposeFromList,
+    icon,
+    setIcon,
   };
 };

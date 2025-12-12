@@ -18,6 +18,8 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/", (req, res) => {
   res.send("Vehicle Recommender API is Running...");
 });
+app.use("/public", express.static("public"));
+
 
 app.post("/test-json", (req, res) => {
   console.log("req.body:", req.body);
