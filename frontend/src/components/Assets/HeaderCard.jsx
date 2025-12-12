@@ -14,7 +14,7 @@ const HeaderCard = ({ items, interval = 3500, description, duration }) => {
 
   return (
     <>
-      <div className="card bg-rmlk-dark-light h-full shadow-md rounded-xs overflow-hidden">
+      <div className="card bg-rmlk-dark-light h-full shadow-md rounded-sm overflow-hidden hover:scale-105 duration-300 group">
         <div className="h-[150px] overflow-hidden">
           <div className="h-full flex flex-col items-center justify-center overflow-hidden ">
             <AnimatePresence mode="popLayout">
@@ -33,7 +33,7 @@ const HeaderCard = ({ items, interval = 3500, description, duration }) => {
               >
                 <div className="image-container h-36px flex items-center justify-center overflow-hidden">
                   <img
-                    className="w-full transition-all duration-500 max-sm-rmlk:h-[50px] object-cover "
+                    className="w-full transition-all duration-500 max-sm-rmlk:h-[50px] object-cover group-hover:scale-110 "
                     src={currentItem.img}
                     alt={currentItem.name}
                   />

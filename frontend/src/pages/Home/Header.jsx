@@ -11,12 +11,13 @@ import { motion, useScroll, useTransform } from "framer-motion";
 const Header = () => {
   const bgImageRef = useRef(null);
   const { scrollY } = useScroll();
-  const bgOpacity = useTransform(scrollY, [0, 350], [1, 0]);
+  const bgOpacity = useTransform(scrollY, [0, 300], [1, 0]);
   const logoOpacity = useTransform(scrollY, [0, 300], [1, 0]);
-  const logoY = useTransform(scrollY, [0, 200], [0, -200]);
-  const y = useTransform(scrollY, [0, 200], [0, 250]);
-  const x = useTransform(scrollY, [0, 200], [0, 200]);
-  const logoBlur = useTransform(scrollY, [0, 200], ["blur(0px)", "blur(10px)"]);
+  const logoY = useTransform(scrollY, [0, 300], [0, -200]);
+  const y = useTransform(scrollY, [0, 300], [0, 250]);
+  const x = useTransform(scrollY, [0, 300], [0, 200]);
+  const btnOpacity = useTransform(scrollY, [0, 200], [1, 0]);
+  const logoBlur = useTransform(scrollY, [0, 300], ["blur(0px)", "blur(10px)"]);
   return (
     <LandingPageWrapper id={"Home"} extraClass={"Header overflow-hidden"}>
       <div id="bgImage">
@@ -69,7 +70,7 @@ const Header = () => {
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
-            style={{ y: x, opacity: logoOpacity }}
+            style={{ y: x, opacity: btnOpacity }}
             transition={{ duration: 1, ease: "easeInOut", delay: 0.5 }}
             className="flex justify-center items-center flex-col gap-[5px]"
           >

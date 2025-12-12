@@ -64,125 +64,142 @@ const Header_2 = () => {
   ];
 
   const { scrollY } = useScroll();
-  const imgOpacity = useTransform(scrollY, [0, 400], [0, 1]);
+  const imgOpacity = useTransform(scrollY, [0, 550], [0.5, 1]);
 
-  const imgSlidetop = useTransform(scrollY, [0, 400], [200, 0]);
+  const imgSlidetop = useTransform(scrollY, [0, 550], [200, 0]);
   const imgBlur = useTransform(scrollY, [0, 400], ["blur(2px)", "blur(0px)"]);
-  const bannerImgY = useTransform(scrollY, [0, 400], [50, 0]);
+  const bannerImgY = useTransform(scrollY, [0, 400], [200, 0]);
+  const borderY = useTransform(scrollY, [0, 400], [200, 0]);
 
   return (
     <LandingPageWrapper
       id={"Specifications"}
-      extraClass={
-        "grid grid-cols-12 pt-[60px] pb-[45px] gap-[20px] bg-rmlk-dark"
-      }
+      extraClass={" pt-[60px] pb-[45px] gap-[20px] bg-rmlk-dark"}
     >
-      <div className="col-span-6 h-full max-md-rmlk:col-span-12 ">
-        <div className=" grid grid-rows-12 h-full gap-[4px]">
-          <div className="row-span-5 h-full">
-            <div className=" grid grid-cols-12 gap-[20px] h-full">
-              <motion.div
-                initial={{ opacity: 0, x: -50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, ease: "easeInOut" }}
-                style={{
-                  y: imgSlidetop,
-                  opacity: imgOpacity,
-                  filter: imgBlur,
-                }}
-                className="col-span-6"
-              >
-                <HeaderCard
-                  items={bodyTypes}
-                  description={"Shape that defines your drive."}
-                  duration={0.8}
-                />
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, x: -50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, ease: "easeInOut" }}
-                style={{
-                  y: imgSlidetop,
-                  opacity: imgOpacity,
-                  filter: imgBlur,
-                }}
-                className="col-span-6"
-              >
-                <HeaderCard
-                  description={"Power your journey, your way."}
-                  items={fuelTypes}
-                  duration={0.8}
-                />
-              </motion.div>
+      <div className=" flex flex-col items-center text-center justify-center mb-[20px]">
+        <motion.h3
+          style={{
+            opacity: imgOpacity,
+            filter: imgBlur,
+            y: borderY,
+          }}
+          className="text-[28px] font-light tracking-[4px] text-white"
+        >
+          Discover the Drive That Defines You !
+        </motion.h3>
+        <motion.div
+          style={{
+            opacity: imgOpacity,
+            y: borderY,
+            filter: imgBlur,
+          }}
+          className="h-[4px] w-[50%] bg-rmlk-red"
+        ></motion.div>
+      </div>
+      <div className="grid grid-cols-12 gap-[20px] px-[60px]">
+        <div className="col-span-6 h-full max-md-rmlk:col-span-12 ">
+          <div className=" grid grid-rows-12 h-full gap-[20px]">
+            <div className="row-span-6 h-full">
+              <div className=" grid grid-cols-12 gap-[20px] h-full">
+                <motion.div
+                  initial={{ opacity: 0, x: -50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, ease: "easeInOut" }}
+                  style={{
+                    y: imgSlidetop,
+                    opacity: imgOpacity,
+                    filter: imgBlur,
+                    scale: imgOpacity,
+                  }}
+                  className="col-span-6"
+                >
+                  <HeaderCard
+                    items={bodyTypes}
+                    description={"Shape that defines your drive."}
+                    duration={0.8}
+                  />
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, x: -50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, ease: "easeInOut" }}
+                  style={{
+                    y: imgSlidetop,
+                    opacity: imgOpacity,
+                    filter: imgBlur,
+                    scale: imgOpacity,
+                  }}
+                  className="col-span-6"
+                >
+                  <HeaderCard
+                    description={"Power your journey, your way."}
+                    items={fuelTypes}
+                    duration={0.8}
+                  />
+                </motion.div>
+              </div>
             </div>
-          </div>
-          <div className="row-span-2 flex items-center text-center justify-center">
-            <motion.h3
-              style={{
-                opacity: imgOpacity,
-                filter: imgBlur,
-                y: imgSlidetop,
-              }}
-              className="text-[18px] font-light tracking-[4px] text-white"
-            >
-              Discover the Drive That Defines You !
-            </motion.h3>
-          </div>
-          <div className="row-span-5">
-            <div className=" grid grid-cols-12 gap-[20px] h-full">
-              <motion.div
-                initial={{ opacity: 0, x: -50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, ease: "easeInOut" }}
-                style={{
-                  y: imgSlidetop,
-                  opacity: imgOpacity,
-                  filter: imgBlur,
-                }}
-                className="col-span-6 h-full"
-              >
-                <HeaderCard
-                  description={"Precision in every shift."}
-                  items={gearType}
-                  duration={0.8}
-                />
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, x: -50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, ease: "easeInOut" }}
-                style={{
-                  x: imgSlidetop,
-                  opacity: imgOpacity,
-                  filter: imgBlur,
-                }}
-                className="col-span-6"
-              >
-                <HeaderCard
-                  description={"Room for every story."}
-                  items={seats}
-                  duration={0.8}
-                />
-              </motion.div>
+
+            <div className="row-span-6">
+              <div className=" grid grid-cols-12 gap-[20px] h-full">
+                <motion.div
+                  initial={{ opacity: 0, x: -50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, ease: "easeInOut" }}
+                  style={{
+                    y: imgSlidetop,
+                    opacity: imgOpacity,
+                    filter: imgBlur,
+                    scale: imgOpacity,
+                  }}
+                  className="col-span-6 h-full"
+                >
+                  <HeaderCard
+                    description={"Precision in every shift."}
+                    items={gearType}
+                    duration={0.8}
+                  />
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, x: -50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, ease: "easeInOut" }}
+                  style={{
+                    y: imgSlidetop,
+                    opacity: imgOpacity,
+                    filter: imgBlur,
+                    scale: imgOpacity,
+                  }}
+                  className="col-span-6"
+                >
+                  <HeaderCard
+                    description={"Room for every story."}
+                    items={seats}
+                    duration={0.8}
+                  />
+                </motion.div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <motion.div className="h-full overflow-hidden col-span-6 relative rounded-xs shadow-md max-md-rmlk:col-span-12 ">
-        <motion.img
+        <motion.div
           style={{
-            y: bannerImgY,
+            y: imgSlidetop,
             filter: imgBlur,
+            scale: imgOpacity,
           }}
-          className={`object-cover w-full ${
-            userInfo && userInfo.isAdmin ? "scale-[200%]" : "scale-200"
-          }   absolute left-[70px]`}
-          src={headerimg_2}
-          alt="header_img_2"
-        />
-      </motion.div>
+          className="h-full overflow-hidden col-span-6 relative rounded-sm shadow-md max-md-rmlk:col-span-12 "
+        >
+          <motion.img
+            className={`object-cover w-full ${
+              userInfo && userInfo.isAdmin ? "scale-150" : "scale-150"
+            }   absolute left-[70px]`}
+            src={headerimg_2}
+            alt="header_img_2"
+          />
+        </motion.div>
+      </div>
     </LandingPageWrapper>
   );
 };

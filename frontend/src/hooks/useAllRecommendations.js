@@ -18,7 +18,7 @@ export const useAllRecommendations = () => {
   const [pageNumber, setPageNumber] = useState(1);
   const itemsPerPage = userInfo?.isAdmin ? 6 : 8;
 
-  const { recommendations = [] } = location.state || {};
+  const { recommendations = [], inputs } = location.state || {};
 
   // Favorites
   const { data: favoritesData = [], refetch } = useGetFavoritesQuery(
@@ -32,12 +32,10 @@ export const useAllRecommendations = () => {
   const [removeFavorite] = useRemoveFavoriteMutation();
 
   const favoriteIds = favoritesData
-  .map((fav) =>
-    typeof fav?.vehicleId === "string"
-      ? fav.vehicleId
-      : fav?.vehicleId?._id
-  )
-  .filter(Boolean);
+    .map((fav) =>
+      typeof fav?.vehicleId === "string" ? fav.vehicleId : fav?.vehicleId?._id
+    )
+    .filter(Boolean);
 
   const favoritsUserIds = favoritesData.map((fav) => fav.userId);
   console.log("Favorite User Ids:", favoritsUserIds);
@@ -126,6 +124,7 @@ export const useAllRecommendations = () => {
     handleAddFavorite,
     handleRemoveFavorite,
     favoritsUserIds,
-    navigate
+    navigate,
+    inputs,
   };
 };

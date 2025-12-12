@@ -16,9 +16,10 @@ const RecommendationForm = () => {
     handleRemoveFavorite,
     favoriteIds,
     favoritsUserIds,
+    inputs,
   } = useAllRecommendations();
 
-  console.log("Displayed Vehicles:", userInfo);
+  console.log("Displayed Vehicles:", inputs);
 
   return (
     <>
@@ -27,7 +28,7 @@ const RecommendationForm = () => {
         <div
           id="vehicleContainer"
           className={`p-[16px] grid  gap-[16px] overflow-y-auto h-[75vh] mt-[45px] ${
-            userInfo && userInfo.isAdmin ? "grid-cols-3" : "grid-cols-4"
+            userInfo && userInfo.isAdmin ? "grid-cols-4" : "grid-cols-4"
           }`}
         >
           {loadingVehicle ? (
@@ -68,7 +69,48 @@ const RecommendationForm = () => {
               ></VehicleCard>
             ))
           ) : (
-            <p className="text-white">No recommendations found.</p>
+            <div className="h-full w-full flex items-center justify-center col-span-4 font-rmlk-secondary">
+              <div className="h-fit w-[50%] flex items-center justify-center border-2 rounded-sm border-rmlk-red shadow-md flex-col p-[16px]">
+                <p className="text-white">No recommendations found.</p>
+                <p className="text-white mt-[8px]">Your Selections were:</p>
+                <ul className="text-white  text-[12px]">
+                  <li>
+                    Body Type:{" "}
+                    <span className="text-amber-500">{inputs.bodyType}</span>{" "}
+                  </li>
+                  <li>
+                    Seating Capacity:{" "}
+                    <span className="text-amber-500">
+                      {" "}
+                      {inputs.seatingCapacity}
+                    </span>
+                  </li>
+                  <li>
+                    Fuel Type:{" "}
+                    <span className="text-amber-500">{inputs.fuelType}</span>
+                  </li>
+                  <li>
+                    Road Condition:{" "}
+                    <span className="text-amber-500">
+                      {inputs.roadCondition}
+                    </span>{" "}
+                  </li>
+                  <li>
+                    Traffic Condition:{" "}
+                    <span className="text-amber-500">
+                      {inputs.trafficCondition}
+                    </span>
+                  </li>
+                </ul>
+
+                <button
+                  onClick={() => navigate("/recommendations")}
+                  className="mt-[16px] px-[12px] py-[8px] bg-rmlk-red text-white rounded-sm shadow-md hover:bg-rmlk-red-lighter duration-200 text-[12px]"
+                >
+                  Get Recommendations
+                </button>
+              </div>
+            </div>
           )}
         </div>
       </div>

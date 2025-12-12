@@ -86,6 +86,7 @@ export const useSetRecommendations = () => {
         state: {
           recommendations: res.recommendations,
           inputs: {
+            purpose,
             bodyType,
             seatingCapacity,
             roadCondition,
