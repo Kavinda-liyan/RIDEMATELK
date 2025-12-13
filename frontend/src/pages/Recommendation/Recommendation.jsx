@@ -8,6 +8,7 @@ import AdminDashboardButton from "../../components/Assets/AdminDashboardButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretLeft, faCaretRight } from "@fortawesome/free-solid-svg-icons";
 import { motion } from "framer-motion";
+import carSeat from "../../assets/car_seat_1.svg";
 
 const Recommendation = () => {
   const { userInfo } = useSelector((state) => state.auth);
@@ -281,9 +282,17 @@ const Recommendation = () => {
                           ref={descriptionRef}
                           className="rounded-sm border border-green-600 my-[16px] p-[16px] flex items-center flex-col gap-[16px]"
                         >
-                          <h3 className="text-[24px] ">
-                            {recommendationHook.seatingCapacity}
-                          </h3>
+                          <div className="flex items-center">
+                            <img
+                              src={carSeat}
+                              alt="car_seat"
+                              className="h-[40px]"
+                            />
+                            <h3 className="text-[24px] ">
+                              X {recommendationHook.seatingCapacity}
+                            </h3>
+                          </div>
+
                           <p className=" text-gray-300 text-center text-[14px]">
                             You selected a seating capacity of{" "}
                             {recommendationHook.seatingCapacity} seats with the
