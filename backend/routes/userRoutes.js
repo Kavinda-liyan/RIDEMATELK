@@ -12,13 +12,18 @@ import {
 } from "../controllers/userController.js";
 import { authAdmin, authenticate } from "../middlewares/authMiddleware.js";
 import multer from "multer";
+import {
+  registerValidationRules,
+  loginValidationRules,
+  validateRequest,
+} from "../middlewares/authValidation.js";
 
 const router = express.Router();
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 // Authentication routes for any users
-router.post("/", createUser);
-router.post("/auth", authUser);
+router.post("/", registerValidationRules, validateRequest, createUser);
+router.post("/auth", loginValidationRules, validateRequest, authUser);
 router.post("/logout", logOutUser);
 
 // User Routes

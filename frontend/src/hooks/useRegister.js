@@ -12,15 +12,13 @@ export const useRegister = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [visiblePassword, setVisiblePassword] = useState(false);
   const [visibleConfirmPassword, setVisibleConfirmPassword] = useState(false);
-  const [Regerror, setRegError] = useState([
-    {
-      emailError: "",
-      passwordError: "",
-      usernameError: "",
-      confirmPasswordError: "",
-      allFieldsError: "",
-    },
-  ]);
+  const [Regerror, setRegError] = useState({
+    emailError: "",
+    passwordError: "",
+    usernameError: "",
+    confirmPasswordError: "",
+    allFieldsError: "",
+  });
 
   const [register, { isLoading, isError, error }] = useRegisterMutation();
   const { userInfo } = useSelector((state) => state.auth);
@@ -38,7 +36,6 @@ export const useRegister = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
 
     if (!username && !email && !password && !confirmPassword) {
       toast.error("Please fill in all the empty fields !");
@@ -81,10 +78,11 @@ export const useRegister = () => {
       const res = await register({ username, email, password }).unwrap();
       toast.success("Registered successfully !");
       navigate("/signin");
-    } catch (error) {
-      toast.error(
-        error?.data?.message || error.message || "Registration failed!"
-      );
+    } catch (err) {
+      const message =
+        err?.data?.message || err?.message || "Registration failed!";
+      setRegError((prev) => ({ ...prev, allFieldsError: message }));
+      toast.error(message);
     }
   };
 

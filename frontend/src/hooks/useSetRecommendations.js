@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { vehicleUtils } from "../utils/vehicleUtils";
 export const useSetRecommendations = () => {
-  const { bodyTypesArr } = vehicleUtils();
+  const { bodyTypesArr, loadingBodyType, errorBodyType } = vehicleUtils();
   const {
     data: bodyTypesData = [],
     isLoading: bodyTypesLoading,
@@ -94,6 +94,7 @@ export const useSetRecommendations = () => {
             trafficCondition,
           },
         },
+        replace: true,
       });
     } catch (error) {
       console.error("Error getting recommendations:", error);
@@ -122,5 +123,7 @@ export const useSetRecommendations = () => {
     setIcon,
     bodyTypesList,
     bodyTypeNames,
+    loadingBodyType,
+    errorBodyType,
   };
 };

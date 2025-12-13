@@ -1,14 +1,24 @@
 import { Link, useLocation } from "react-router-dom";
 import rmlk_l_dark from "../../assets/rmlk_logo_dark.svg";
-import bg_Clip from "../../assets/BgClip.mp4";
-import { useEffect, useRef } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import rmlk_bg from "../../assets/Bg_dark.jpg";
+import rmlk_bg_2 from "../../assets/Bg_dark_2.jpg";
+import rmlk_bg_3 from "../../assets/Bg_dark_3.jpg";
+import rmlk_bg_4 from "../../assets/Bg_dark_4.jpg";
 import LandingPageWrapper from "../../components/Wrappers/LandingPageWrapper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import { motion, useScroll, useTransform } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  useMotionValue,
+  useScroll,
+  useTransform,
+} from "framer-motion";
 
 const Header = () => {
+  
+
   const bgImageRef = useRef(null);
   const { scrollY } = useScroll();
   const bgOpacity = useTransform(scrollY, [0, 300], [1, 0]);
@@ -18,33 +28,35 @@ const Header = () => {
   const x = useTransform(scrollY, [0, 300], [0, 200]);
   const btnOpacity = useTransform(scrollY, [0, 200], [1, 0]);
   const logoBlur = useTransform(scrollY, [0, 300], ["blur(0px)", "blur(10px)"]);
+  const logoScale = useTransform(scrollY, [0, 300], [1, 1.5]);
+  
+
   return (
     <LandingPageWrapper id={"Home"} extraClass={"Header overflow-hidden"}>
-      <div id="bgImage">
-        {/* <video
-          ref={videoRef}
-          src={bg_Clip}
-          muted
-          className="w-full h-full object-[20%_30%] object-cover absolute top-0 left-0 z-0 brightness-100"
-          /> */}
+      <AnimatePresence mode="wait">
         <motion.img
           ref={bgImageRef}
-          initial={{ scale: 1.3, opacity: 0.2 }}
-          animate={{ scale: 1, opacity: 1 }}
+          initial={{ scale: 1.3, opacity: 0.2, x: -40 }}
+          animate={{ scale: 1, opacity: 1, x: 0 }}
           transition={{ duration: 1.5, ease: "easeOut" }}
-          style={{ opacity: bgOpacity, y: y }}
-          src={rmlk_bg}
+          style={{ opacity: bgOpacity, y:y }}
+          src={rmlk_bg_4}
           alt="background_image"
-          className="w-full h-full  object-[20%_30%] object-cover absolute top-0 left-0 z-0 brightness-100 max-sm-rmlk:object-[50%_30%] max-md-rmlk:brightness-75"
+          className=" w-full h-full  object-[20%_30%] object-cover absolute top-0 left-0 z-0 brightness-100 max-sm-rmlk:object-[50%_30%] max-md-rmlk:brightness-75"
         />
-      </div>
+      </AnimatePresence>
       <div className="h-auto pt-[50px] absolute top-[50%] left-[50%] transform translate-x-[-50%] translate-y-[-60%]">
         <div className="w-[640px] flex items-center justify-center flex-col gap-[8px] p-[16px] max-xs-rmlk:w-[300px]">
           <motion.img
             initial={{ scale: 1, y: -50, opacity: 0 }}
             animate={{ scale: 1, y: 0, opacity: 1 }}
-            transition={{ duration: 1, ease: "easeInOut", delay: 0.5 }}
-            style={{ y: logoY, opacity: logoOpacity, filter: logoBlur }}
+            transition={{ duration: 1, ease: "anticipate", delay: 0.5 }}
+            style={{
+              y: logoY,
+              opacity: logoOpacity,
+              filter: logoBlur,
+              scale: logoScale,
+            }}
             src={rmlk_l_dark}
             alt="ridemelk_logo_dark"
             className="w-[480px] max-sm-rmlk:w-[300px]"
@@ -58,7 +70,7 @@ const Header = () => {
               opacity: logoOpacity,
               filter: logoBlur,
             }}
-            transition={{ duration: 1, ease: "easeInOut", delay: 0.6 }}
+            transition={{ duration: 1, ease: "anticipate", delay: 0.6 }}
             className="w-[480px] max-xs-rmlk:w-[300px] p-[16px] "
           >
             <h3 className="text-white text-center text-[16px] tracking-wider font-light max-xs-rmlk:text-[14px]">
@@ -71,7 +83,7 @@ const Header = () => {
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             style={{ y: x, opacity: btnOpacity }}
-            transition={{ duration: 1, ease: "easeInOut", delay: 0.5 }}
+            transition={{ duration: 1, ease: "anticipate", delay: 0.5 }}
             className="flex justify-center items-center flex-col gap-[5px]"
           >
             <Link

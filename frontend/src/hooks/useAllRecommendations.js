@@ -16,18 +16,21 @@ export const useAllRecommendations = () => {
   const [displayedVehicle, setDisplayedVehicle] = useState([]);
   const [displayedIds, setDisplayedIds] = useState(new Set());
   const [pageNumber, setPageNumber] = useState(1);
-  const itemsPerPage = userInfo?.isAdmin ? 6 : 8;
+  const itemsPerPage = userInfo?.isAdmin ? 8 : 8;
 
-  const { recommendations = [], inputs } = location.state || {};
+  const locationState = location.state || {};
+
+  const [recommendations, setRecommendationsState] = useState(
+    locationState.recommendations || []
+  );
+
+  const [inputs, setInputs] = useState(locationState.inputs || {});
 
   // Favorites
-  const { data: favoritesData = [], refetch } = useGetFavoritesQuery(
-    undefined,
-    {
-      refetchOnMountOrArgChange: true,
-      skip: !userInfo,
-    }
-  );
+  const { data: favoritesData = [], refetch } = useGetFavoritesQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+    skip: !userInfo,
+  });
   const [addFavorite] = useAddFavoriteMutation();
   const [removeFavorite] = useRemoveFavoriteMutation();
 
@@ -36,11 +39,23 @@ export const useAllRecommendations = () => {
       typeof fav?.vehicleId === "string" ? fav.vehicleId : fav?.vehicleId?._id
     )
     .filter(Boolean);
-
   const favoritsUserIds = favoritesData.map((fav) => fav.userId);
-  console.log("Favorite User Ids:", favoritsUserIds);
 
-  // Load next batch of vehicles
+  // Update recommendations & inputs and reset scroll + pagination
+  const updateRecommendations = (newRecs = [], newInputs = {}) => {
+    setRecommendationsState(newRecs);
+    setInputs(newInputs);
+
+    const initialBatch = newRecs.slice(0, itemsPerPage);
+    setDisplayedVehicle(initialBatch);
+    setDisplayedIds(new Set(initialBatch.map((v) => v.id)));
+    setPageNumber(2);
+
+    const scrollContainer = document.getElementById("vehicleContainer");
+    if (scrollContainer) scrollContainer.scrollTop = 0;
+  };
+
+  // Infinite scroll
   const loadMoreVehicles = () => {
     const start = (pageNumber - 1) * itemsPerPage;
     const end = start + itemsPerPage;
@@ -59,17 +74,15 @@ export const useAllRecommendations = () => {
     }
   };
 
-  // Reset on recommendations change
   useEffect(() => {
-    if (recommendations.length > 0) {
+    if (recommendations.length > 0 && displayedVehicle.length === 0) {
       const initialBatch = recommendations.slice(0, itemsPerPage);
       setDisplayedVehicle(initialBatch);
       setDisplayedIds(new Set(initialBatch.map((v) => v.id)));
       setPageNumber(2);
     }
-  }, [recommendations]);
+  }, [recommendations, itemsPerPage]);
 
-  // Scroll event for infinite scroll
   useEffect(() => {
     const scrollContainer = document.getElementById("vehicleContainer");
     if (!scrollContainer) return;
@@ -88,12 +101,10 @@ export const useAllRecommendations = () => {
   }, [displayedIds, recommendations]);
 
   useEffect(() => {
-    if (userInfo) {
-      refetch();
-    }
+    if (userInfo) refetch();
   }, [userInfo?._id]);
 
-  // Favorites handlers
+  // Favorites
   const handleAddFavorite = async (vehicleId) => {
     if (!userInfo) {
       navigate("/login");
@@ -119,6 +130,7 @@ export const useAllRecommendations = () => {
   return {
     userInfo,
     displayedVehicle,
+    setRecommendations: updateRecommendations, 
     recommendations,
     favoriteIds,
     handleAddFavorite,
@@ -126,5 +138,6 @@ export const useAllRecommendations = () => {
     favoritsUserIds,
     navigate,
     inputs,
+    setInputs,
   };
 };

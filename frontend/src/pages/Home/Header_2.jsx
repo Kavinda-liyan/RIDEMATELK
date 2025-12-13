@@ -1,13 +1,10 @@
 import headerimg_2 from "../../assets/header_2.jpg";
 import HeaderCard from "../../components/Assets/HeaderCard";
-import Micro from "../../assets/body_types/Micro.svg";
-import Pickup from "../../assets/body_types/Pickup 1.svg";
-import Roadstar from "../../assets/body_types/Roadstar 1.svg";
-import Van from "../../assets/body_types/Van 1.svg";
-import Coupe from "../../assets/body_types/Coupe 1.svg";
-import Hatchback from "../../assets/body_types/Hatchback 1.svg";
-import Sedan from "../../assets/body_types/Sedan 1.svg";
-import Minivan from "../../assets/body_types/Minivan 1.svg";
+import bt1 from "../../assets/body_types/bt1.jpg";
+import bt2 from "../../assets/body_types/bt2.jpg";
+import bt3 from "../../assets/body_types/bt3.jpg";
+import bt4 from "../../assets/body_types/bt4.jpg";
+import bt5 from "../../assets/body_types/bt5.jpg";
 
 import Gasoline from "../../assets/fuel_types/gasoline.jpg";
 import Electric from "../../assets/fuel_types/electric.jpg";
@@ -27,14 +24,11 @@ import { motion, useScroll, useTransform } from "framer-motion";
 const Header_2 = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const bodyTypes = [
-    { name: "Micro", img: Micro },
-    { name: "Pickup", img: Pickup },
-    { name: "Roadstar", img: Roadstar },
-    { name: "Van", img: Van },
-    { name: "Minivan", img: Minivan },
-    { name: "Sedan", img: Sedan },
-    { name: "Hatchback", img: Hatchback },
-    { name: "Coupe", img: Coupe },
+    { name: "Micro", img: bt1 },
+    { name: "Pickup", img: bt2 },
+    { name: "Roadstar", img: bt3 },
+    { name: "Van", img: bt4 },
+    { name: "Minivan", img: bt5 },
   ];
 
   const fuelTypes = [

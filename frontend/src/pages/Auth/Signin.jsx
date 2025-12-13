@@ -90,6 +90,11 @@ const Signin = () => {
                     {useLoginHook.error.passwordError}
                   </p>
                 )}
+                {useLoginHook.error.general && (
+                  <p className="text-red-500 text-[12px] py-[4px]">
+                    {useLoginHook.error.general}
+                  </p>
+                )}
               </div>
               <div className="flex flex-col mt-[24px] ">
                 <button

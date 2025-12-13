@@ -71,7 +71,7 @@ const VehicleDetails = () => {
       {userInfo && userInfo.isAdmin && <AdminDashboardButton />}
       <div className="min-h-[100dvh] bg-rmlk-dark pt-[50px] px-[60px] pb-[16px] font-rmlk-secondary text-white">
         <div
-          className={`grid grid-cols-12 gap-[16px] mt-[45px] px-[30px] h-full  ${
+          className={`grid grid-cols-12 gap-[16px] mt-[45px] px-[60px] h-full  ${
             userInfo && userInfo.isAdmin ? "" : "px-[60px]"
           }`}
         >

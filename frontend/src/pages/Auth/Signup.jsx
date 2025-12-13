@@ -3,29 +3,38 @@ import authbanner from "../../assets/Authbanner.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faEye } from "@fortawesome/free-solid-svg-icons";
 import { useRegister } from "../../hooks/useRegister";
-import { use } from "react";
 import AuthWrapper from "../../components/Wrappers/AuthWrapper";
+
 const Signup = () => {
-  const useRegisterHook = useRegister();
+  const registerHook = useRegister();
 
   const backButton = (
     <Link
       replace={true}
       to={"/"}
-      className="text-white no-underline absolute top-[18px] left-[18px] border  rounded-full w-[30px] h-[30px] flex justify-center items-center bg-rmlk-dark/50 hover:bg-rmlk-dark-lighter duration-200"
+      className="text-white no-underline absolute top-[18px] left-[18px] border rounded-full w-[30px] h-[30px] flex justify-center items-center bg-rmlk-dark/50 hover:bg-rmlk-dark-lighter duration-200"
     >
       <FontAwesomeIcon icon={faArrowLeft} className="text-[12px]" />
     </Link>
   );
-  return useRegisterHook.isLoading ? (
-    <div className="h-dvh pt-[45px] pl-[60px] pr-[60px] bg-rmlk-dark font-rmlk-secondary flex justify-center items-center text-white">
-      Loading...
-    </div>
-  ) : useRegisterHook.isError ? (
-    <div className="h-dvh pt-[45px] pl-[60px] pr-[60px] bg-rmlk-dark font-rmlk-secondary flex justify-center items-center text-white">
-      Error: {useRegisterHook.error?.data?.message || error.error}
-    </div>
-  ) : (
+
+  if (registerHook.isLoading) {
+    return (
+      <div className="h-dvh pt-[45px] pl-[60px] pr-[60px] bg-rmlk-dark font-rmlk-secondary flex justify-center items-center text-white">
+        Registering...
+      </div>
+    );
+  }
+
+  if (registerHook.isError) {
+    return (
+      <div className="h-dvh pt-[45px] pl-[60px] pr-[60px] bg-rmlk-dark font-rmlk-secondary flex justify-center items-center text-white">
+        Error: {registerHook.error?.data?.message || registerHook.error?.message || "Something went wrong"}
+      </div>
+    );
+  }
+
+  return (
     <AuthWrapper>
       <div className="h-full col-span-6 overflow-hidden shadow-md relative max-xs-rmlk:col-span-12 max-xs-rmlk:hidden max-md-rmlk:col-span-5">
         {backButton}
@@ -35,139 +44,145 @@ const Signup = () => {
           className="object-cover max-md-rmlk:h-full"
         />
       </div>
-      <div className="col-span-6 h-full w-full bg-rmlk-dark-light shadow-md  max-xs-rmlk:col-span-12 max-md-rmlk:col-span-7 ">
-        <div className="max-xs-rmlk:block max-2xl-rmlk:hidden">
-          {backButton}
-        </div>
+
+      <div className="col-span-6 h-full w-full bg-rmlk-dark-light shadow-md max-xs-rmlk:col-span-12 max-md-rmlk:col-span-7">
+        <div className="max-xs-rmlk:block max-2xl-rmlk:hidden">{backButton}</div>
+
         <div className="flex justify-center h-full w-full flex-col py-[16px] px-[40px] text-white text-left">
-          <h3 className="text-[24px]  text-white">Register user</h3>
+          <h3 className="text-[24px] text-white">Register user</h3>
           <p>To access more features.</p>
-          <hr className="w-full"></hr>
+          <hr className="w-full" />
+
           <div className="mt-[16px] font-rmlk-secondary text-[12px]">
-            <form onSubmit={useRegisterHook.handleSubmit}>
+            <form onSubmit={registerHook.handleSubmit}>
+              {/* Username */}
               <div className="flex flex-col mb-[8px]">
-                <label className="my-[2px]">Name</label>
+                <label>Name</label>
                 <input
                   type="text"
                   placeholder="Enter your full name..."
-                  value={useRegisterHook.username}
+                  value={registerHook.username}
                   onChange={(e) => {
-                    useRegisterHook.setuserName(e.target.value);
-                    useRegisterHook.setRegError({
-                      ...useRegisterHook.Regerror,
+                    registerHook.setuserName(e.target.value);
+                    registerHook.setRegError({
+                      ...registerHook.Regerror,
                       usernameError: "",
                     });
                   }}
                   className="bg-rmlk-dark-lighter text-[12px] p-[6px] rounded-md"
-                ></input>
-                {useRegisterHook.Regerror.usernameError && (
-                  <p className="text-[12px] py-[4px] text-red-600">
-                    {useRegisterHook.Regerror.usernameError}
+                />
+                {registerHook.Regerror.usernameError && (
+                  <p className="text-red-600 text-[12px] py-[4px]">
+                    {registerHook.Regerror.usernameError}
                   </p>
                 )}
               </div>
+
+              {/* Email */}
               <div className="flex flex-col mb-[8px]">
-                <label className="my-[2px]">Email</label>
+                <label>Email</label>
                 <input
                   type="email"
                   placeholder="Enter your email..."
                   autoComplete="new-email"
-                  value={useRegisterHook.email}
+                  value={registerHook.email}
                   onChange={(e) => {
-                    useRegisterHook.setEmail(e.target.value);
-                    useRegisterHook.setRegError({
-                      ...useRegisterHook.Regerror,
+                    registerHook.setEmail(e.target.value);
+                    registerHook.setRegError({
+                      ...registerHook.Regerror,
                       emailError: "",
                     });
                   }}
                   className="bg-rmlk-dark-lighter text-[12px] p-[6px] rounded-md"
-                ></input>
-                {useRegisterHook.Regerror.emailError && (
-                  <p className="text-[12px] py-[4px] text-red-600">
-                    {useRegisterHook.Regerror.emailError}
+                />
+                {registerHook.Regerror.emailError && (
+                  <p className="text-red-600 text-[12px] py-[4px]">
+                    {registerHook.Regerror.emailError}
                   </p>
                 )}
               </div>
+
+              {/* Password */}
               <div className="flex flex-col mb-[8px] relative">
-                <label className="my-[2px]">Password</label>
+                <label>Password</label>
                 <input
-                  type={`${
-                    useRegisterHook.visiblePassword ? "text" : "password"
-                  }`}
+                  type={registerHook.visiblePassword ? "text" : "password"}
                   placeholder="Enter your password..."
                   autoComplete="new-password"
-                  value={useRegisterHook.password}
+                  value={registerHook.password}
                   onChange={(e) => {
-                    useRegisterHook.setPassword(e.target.value);
-                    useRegisterHook.setRegError({
-                      ...useRegisterHook.Regerror,
+                    registerHook.setPassword(e.target.value);
+                    registerHook.setRegError({
+                      ...registerHook.Regerror,
                       passwordError: "",
                     });
                   }}
                   className="bg-rmlk-dark-lighter text-[12px] p-[6px] rounded-md"
-                ></input>
+                />
                 <button
-                  id="viewPW"
                   onClick={(e) => {
                     e.preventDefault();
-                    useRegisterHook.setVisiblePassword((prev) => !prev);
+                    registerHook.setVisiblePassword((prev) => !prev);
                   }}
                   className="absolute bottom-[6px] right-[8px] text-white hover:text-white/60 hover:cursor-pointer duration-200"
                 >
                   <FontAwesomeIcon icon={faEye} />
                 </button>
-                {useRegisterHook.Regerror.passwordError && (
-                  <p className="text-[12px] py-[4px] text-red-600">
-                    {useRegisterHook.Regerror.passwordError}
+                {registerHook.Regerror.passwordError && (
+                  <p className="text-red-600 text-[12px] py-[4px]">
+                    {registerHook.Regerror.passwordError}
                   </p>
                 )}
               </div>
-              <div className="flex flex-col mb-[8px] relative">
-                <label htmlFor="confirmPassword" className="my-[2px]">
-                  Confirm password
-                </label>
 
+              {/* Confirm Password */}
+              <div className="flex flex-col mb-[8px] relative">
+                <label>Confirm password</label>
                 <input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type={`${
-                    useRegisterHook.visibleConfirmPassword ? "text" : "password"
-                  }`}
+                  type={registerHook.visibleConfirmPassword ? "text" : "password"}
                   placeholder="Confirm password..."
                   autoComplete="new-password"
-                  value={useRegisterHook.confirmPassword}
+                  value={registerHook.confirmPassword}
                   onChange={(e) => {
-                    useRegisterHook.setConfirmPassword(e.target.value);
+                    registerHook.setConfirmPassword(e.target.value);
+                    registerHook.setRegError({
+                      ...registerHook.Regerror,
+                      confirmPasswordError: "",
+                    });
                   }}
-                  className="bg-rmlk-dark-lighter text-[12px] p-[6px] rounded-md w-full"
-                ></input>
+                  className="bg-rmlk-dark-lighter text-[12px] p-[6px] rounded-md"
+                />
                 <button
-                  id="viewCPW"
                   onClick={(e) => {
                     e.preventDefault();
-                    useRegisterHook.setVisibleConfirmPassword((prev) => !prev);
+                    registerHook.setVisibleConfirmPassword((prev) => !prev);
                   }}
                   className="absolute bottom-[6px] right-[8px] text-white hover:text-white/60 hover:cursor-pointer duration-200"
                 >
                   <FontAwesomeIcon icon={faEye} />
                 </button>
-                {useRegisterHook.Regerror.confirmPasswordError && (
-                  <p className="text-[12px] py-[4px] text-red-600">
-                    {useRegisterHook.Regerror.confirmPasswordError}
+                {registerHook.Regerror.confirmPasswordError && (
+                  <p className="text-red-600 text-[12px] py-[4px]">
+                    {registerHook.Regerror.confirmPasswordError}
                   </p>
                 )}
               </div>
-              <div className="flex flex-col mt-[24px] ">
+
+              {/* Submit */}
+              <div className="flex flex-col mt-[24px]">
                 <button
                   type="submit"
+                  disabled={registerHook.isLoading}
                   className="bg-blue-500 hover:bg-blue-400 hover:cursor-pointer duration-200 py-[4px] rounded-md shadow-md"
                 >
-                  Register
+                  {registerHook.isLoading ? "Registering..." : "Register"}
                 </button>
               </div>
             </form>
           </div>
-          <div className="mt-[16px] flex ">
+
+          {/* Login link */}
+          <div className="mt-[16px] flex">
             <p className="text-[12px] text-white/50">
               Already have an Account?{" "}
               <Link to={"/signin"} className="text-white underline">

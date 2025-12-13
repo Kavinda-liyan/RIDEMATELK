@@ -9,7 +9,6 @@ from sklearn.compose import ColumnTransformer
 from sklearn.neighbors import NearestNeighbors
 from bson import ObjectId
 
-
 MONGO_URI = "mongodb://localhost:27017/"
 DB_NAME = "ridematelk"
 VEHICLE_COLLECTION = "vehicledata"
@@ -50,53 +49,41 @@ def safe_value(val):
         return 0
     return val
 
-
 # USER RATINGS
 def load_vehicle_ratings():
     ratings = list(rating_col.find({}, {"vehicleId": 1, "rating": 1, "_id": 0}))
     if not ratings:
         return {}
-    
     df = pd.DataFrame(ratings)
     df["rating"] = pd.to_numeric(df["rating"], errors="coerce").fillna(0)
-
-    # Convert vehicleId to string to match vehicle _id
     df["vehicleId"] = df["vehicleId"].astype(str)
-    
     return df.groupby("vehicleId")["rating"].mean().to_dict()
 
-
-#  VEHICLE DATAFRAME
+# VEHICLE DATAFRAME
 def build_dataframe(vehicles):
     df = pd.DataFrame(vehicles)
-
     for c in OUTPUT_COLS:
         if c not in df.columns:
             df[c] = np.nan
-
     for cat in ["Body Type", "Fuel Type", "Road Type"]:
         if cat in df.columns:
             df[cat] = df[cat].astype(str).fillna("").str.lower().str.strip()
         else:
             df[cat] = ""
-
-    df["Seating Capacity"] = pd.to_numeric(df.get("Seating Capacity", pd.Series()), errors="coerce")
-    df["EFF (km/l)/(km/kwh)"] = pd.to_numeric(df.get("EFF (km/l)/(km/kwh)", pd.Series()), errors="coerce")
-    df["Ground Clearance (range)"] = pd.to_numeric(df.get("Ground Clearance (range)", pd.Series()), errors="coerce")
-
+    df["Seating Capacity"] = pd.to_numeric(df["Seating Capacity"], errors="coerce")
+    df["EFF (km/l)/(km/kwh)"] = pd.to_numeric(df["EFF (km/l)/(km/kwh)"], errors="coerce")
+    df["Ground Clearance (range)"] = pd.to_numeric(df["Ground Clearance (range)"], errors="coerce")
     return df
 
-
 # RECOMMENDATION ENGINE
-def generate_recommendations(user_prefs, top_n=30, knn_k=30):
+def generate_recommendations(user_prefs, top_n=30):
     try:
         vehicles = list(vehicle_col.find())
         if not vehicles:
-            return []
+            return {"recommendations": [], "accuracy_percent": 0}
 
         vehicle_ratings = load_vehicle_ratings()
-        baseline_rating = 2.5  
-
+        baseline_rating = 2.5
         df = build_dataframe(vehicles)
 
         # --- User preferences ---
@@ -109,44 +96,36 @@ def generate_recommendations(user_prefs, top_n=30, knn_k=30):
 
         # --- Filter vehicles ---
         df_filtered = df.dropna(subset=["Seating Capacity", "Fuel Type", "Body Type"]).copy()
-
         if user_body:
             df_filtered = df_filtered[df_filtered["Body Type"].str.contains(user_body, na=False)]
-        
         if user_fuel:
-            df_filtered=df_filtered[df_filtered["Fuel Type"] == user_fuel]
-
-        df_filtered = df_filtered[
-            df_filtered["Seating Capacity"].between(user_seating - 1, user_seating + 1, inclusive="both")
-        ]
-
-        if df_filtered.shape[0] == 0:
-            return []
+            df_filtered = df_filtered[df_filtered["Fuel Type"] == user_fuel]
+        df_filtered = df_filtered[df_filtered["Seating Capacity"].between(user_seating - 1, user_seating + 1)]
+        if df_filtered.empty:
+            return {"recommendations": [], "accuracy_percent": 0}
 
         numeric_features = ["Seating Capacity", "EFF (km/l)/(km/kwh)", "Ground Clearance (range)"]
         categorical_features = ["Fuel Type", "Body Type", "Road Type"]
 
         for col in numeric_features:
-            median = df_filtered[col].median(skipna=True)
-            df_filtered[col] = df_filtered[col].fillna(median if not np.isnan(median) else 0)
+            df_filtered[col] = df_filtered[col].fillna(df_filtered[col].median())
 
         preprocessor = ColumnTransformer(
             transformers=[
                 ("num", StandardScaler(), numeric_features),
                 ("cat", OneHotEncoder(handle_unknown="ignore", sparse_output=False), categorical_features),
-            ],
-            remainder="drop",
+            ]
         )
 
         X = preprocessor.fit_transform(df_filtered[numeric_features + categorical_features])
 
         FEATURE_WEIGHTS = {
             "Seating Capacity": 1.0,
-            "EFF (km/l)/(km/kwh)": 1.0,
+            "EFF (km/l)/(km/kwh)": 1.5,
             "Ground Clearance (range)": 1.0,
             "Fuel Type": 1.5,
             "Body Type": 1.5,
-            "Road Type": 1.0
+            "Road Type": 1.0,
         }
 
         if user_road_mapped == "off-road/hilly terrain":
@@ -158,96 +137,73 @@ def generate_recommendations(user_prefs, top_n=30, knn_k=30):
             FEATURE_WEIGHTS["EFF (km/l)/(km/kwh)"] = 5.0
         elif user_traffic == "medium":
             FEATURE_WEIGHTS["EFF (km/l)/(km/kwh)"] = 2.0
-        elif user_traffic == "mixed":
-            FEATURE_WEIGHTS["EFF (km/l)/(km/kwh)"] = 1.5
 
         for i, col in enumerate(numeric_features):
             X[:, i] *= FEATURE_WEIGHTS[col]
 
-        cat_start = len(numeric_features)
-        for i, col in enumerate(categorical_features):
-            n_cols = len(preprocessor.named_transformers_["cat"].categories_[i])
-            X[:, cat_start:cat_start + n_cols] *= FEATURE_WEIGHTS[col]
-            cat_start += n_cols
-
-        effective_k = X.shape[0]
-        knn = NearestNeighbors(n_neighbors=effective_k, metric="euclidean")
+        knn = NearestNeighbors(n_neighbors=len(X), metric="euclidean")
         knn.fit(X)
 
         user_row = {
             "Seating Capacity": user_seating,
-            "EFF (km/l)/(km/kwh)": df_filtered["EFF (km/l)/(km/kwh)"].median(skipna=True) or 0,
-            "Ground Clearance (range)": df_filtered["Ground Clearance (range)"].median(skipna=True) or 0,
+            "EFF (km/l)/(km/kwh)": df_filtered["EFF (km/l)/(km/kwh)"].median(),
+            "Ground Clearance (range)": df_filtered["Ground Clearance (range)"].median(),
             "Fuel Type": user_fuel,
-            "Body Type": user_body if user_body else df_filtered["Body Type"].mode().iloc[0],
+            "Body Type": user_body or df_filtered["Body Type"].mode().iloc[0],
             "Road Type": user_road_mapped,
         }
 
-        user_df = pd.DataFrame([user_row])
-        user_df = user_df[numeric_features + categorical_features]
-
-        user_X = preprocessor.transform(user_df)
-
-        for i, col in enumerate(numeric_features):
-            user_X[:, i] *= FEATURE_WEIGHTS[col]
-
-        cat_start = len(numeric_features)
-        for i, col in enumerate(categorical_features):
-            n_cols = len(preprocessor.named_transformers_["cat"].categories_[i])
-            user_X[:, cat_start:cat_start + n_cols] *= FEATURE_WEIGHTS[col]
-            cat_start += n_cols
-
+        user_X = preprocessor.transform(pd.DataFrame([user_row])[numeric_features + categorical_features])
         distances, indices = knn.kneighbors(user_X)
 
-        idx_list = indices[0].tolist()
-        distances_list = distances[0].tolist()
         recommendations = []
-        filtered_records = df_filtered.reset_index(drop=True)
-
-        for rank, (idx, dist) in enumerate(zip(idx_list, distances_list)):
-            record = filtered_records.iloc[idx].to_dict()
-            veh_id = str(record.get("_id"))
-
-            #  AI Rating: Predict / fallback
-            predicted_rating = float(vehicle_ratings.get(veh_id, baseline_rating))
-            predicted_rating = max(1.0, min(predicted_rating, 5.0))
-
-            #  AI Score: Rating + Distance
-            final_score = (0.7 * predicted_rating) + (0.3 * (1 / (1 + dist)))
-
-            rec = {
+        records = df_filtered.reset_index(drop=True)
+        for idx, dist in zip(indices[0], distances[0]):
+            rec = records.iloc[idx].to_dict()
+            veh_id = str(rec["_id"])
+            rating = float(vehicle_ratings.get(veh_id, baseline_rating))
+            rating = max(1.0, min(rating, 5.0))
+            score = (0.7 * rating) + (0.3 * (1 / (1 + dist)))
+            recommendations.append({
                 "id": veh_id,
-                **{k: (None if pd.isna(record.get(k, None)) else record.get(k, None)) for k in OUTPUT_COLS},
-                "gallery_img": safe_value(record.get("gallery_img", None)),
-                "rating": predicted_rating,
-                "score": final_score,
+                **{k: rec.get(k) for k in OUTPUT_COLS},
+                "gallery_img": safe_value(rec.get("gallery_img")),
+                "rating": rating,
+                "score": score,
                 "_distance": float(dist),
-            }
+            })
 
-            recommendations.append(rec)
+        # --- FINAL SORTING LOGIC ---
+        if user_road_mapped in ["off-road/hilly terrain", "mid off-road"]:
+            recommendations.sort(key=lambda x: (-(x["Ground Clearance (range)"] or 0), -x["score"]))
+        elif user_road_mapped == "suburban/normal":
+            gc_vals = [r["Ground Clearance (range)"] for r in recommendations if r["Ground Clearance (range)"]]
+            gc_median = np.median(gc_vals) if gc_vals else 0
+            recommendations.sort(key=lambda x: (abs((x["Ground Clearance (range)"] or gc_median) - gc_median), -x["score"]))
+        else:
+            recommendations.sort(key=lambda x: x["score"], reverse=True)
 
-        #  Sort by AI score
-        recommendations = sorted(recommendations, key=lambda x: x["score"], reverse=True)
+        # --- ACCURACY CALCULATION ---
+        matched_count = 0
+        for rec in recommendations:
+            match_body = user_body in rec.get("Body Type", "").lower()
+            match_seating = abs(rec.get("Seating Capacity", 0) - user_seating) <= 1
+            match_fuel = rec.get("Fuel Type", "").lower() == user_fuel
+            if match_body and match_seating and match_fuel:
+                matched_count += 1
 
-        return recommendations[:top_n]
+        accuracy_percent = (matched_count / len(recommendations) * 100) if recommendations else 0
+
+        return {"recommendations": recommendations[:top_n], "accuracy_percent": round(accuracy_percent, 2)}
 
     except Exception as e:
         return {"error": str(e)}
 
-
-# MAIN 
-
+# MAIN
 if __name__ == "__main__":
     try:
-        user_prefs_json = sys.stdin.read()
-        if not user_prefs_json:
-            print(json.dumps({"error": "No user preference JSON provided."}))
-            sys.exit(1)
-
-        user_prefs = json.loads(user_prefs_json)
-        recommendations = generate_recommendations(user_prefs, top_n=20, knn_k=10)
-        print(json.dumps({"recommendations": recommendations}, default=str))
-
+        user_prefs = json.loads(sys.stdin.read())
+        result = generate_recommendations(user_prefs, top_n=40)
+        print(json.dumps(result, default=str))
     except Exception as e:
-        print(json.dumps({"error": f"Recommendation generation failed: {str(e)}"}))
-        sys.exit(1)
+        print(json.dumps({"error": str(e)}))

@@ -12,6 +12,7 @@ export const useLogin = () => {
   const [error, setError] = useState({
     emailError: "",
     passwordError: "",
+    general: "",
   });
 
   const navigate = useNavigate();
@@ -34,6 +35,7 @@ export const useLogin = () => {
     setError({
       emailError: "",
       passwordError: "",
+      general: "",
     });
 
     try {
@@ -65,6 +67,8 @@ export const useLogin = () => {
         err?.data?.message ||
         err?.error ||
         "Something went wrong. Please try again.";
+
+      setError((prev) => ({ ...prev, general: message }));
 
       toast.error(message);
     }

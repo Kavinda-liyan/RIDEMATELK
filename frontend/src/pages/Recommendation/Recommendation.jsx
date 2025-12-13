@@ -6,19 +6,14 @@ import gsap from "gsap";
 import { useSelector } from "react-redux";
 import AdminDashboardButton from "../../components/Assets/AdminDashboardButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCaretRight } from "@fortawesome/free-solid-svg-icons";
+import { faCaretLeft, faCaretRight } from "@fortawesome/free-solid-svg-icons";
+import { motion } from "framer-motion";
 
 const Recommendation = () => {
   const { userInfo } = useSelector((state) => state.auth);
 
   const recommendationHook = useSetRecommendations();
-  const {
-    bodyTypesArr,
-    loadingBodyType,
-    errorBodyType,
-    seatingCapacityArr,
-    purposeArr,
-  } = vehicleUtils();
+  const { seatingCapacityArr, purposeArr } = vehicleUtils();
   const { roadConditionList, trafficConditionList, fuelTypeList } =
     recommendationUtils();
 
@@ -43,6 +38,7 @@ const Recommendation = () => {
   const descriptionRef = useRef(null);
   const nextBtnRef = useRef(null);
   const prevBtnRef = useRef(null);
+  const purposeNextBtnRef = useRef(null);
 
   useEffect(() => {
     if (recommendationHook.bodyTypeDescription) {
@@ -64,9 +60,16 @@ const Recommendation = () => {
           { opacity: 1, y: 0, duration: 0.4, ease: "bounce.in" }
         );
     }
-  }, [recommendationHook.bodyTypeDescription]);
 
-  console.log(recommendationHook.bodyTypesList);
+    if (recommendationHook.purpose) {
+      const t1 = gsap.timeline();
+      t1.fromTo(
+        purposeNextBtnRef.current,
+        { opacity: 0, y: -20 },
+        { opacity: 1, y: 0, duration: 0.4, ease: "sine" }
+      );
+    }
+  }, [recommendationHook.bodyTypeDescription, recommendationHook.purpose]);
 
   return (
     <>
@@ -76,12 +79,15 @@ const Recommendation = () => {
         id="Recommendation"
       >
         <div className="h-full w-full flex items-center justify-center text-white">
-          <div
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeInOut", delay: 0.2 }}
             className={`${
-              userInfo && userInfo.isAdmin ? "w-[50%]" : "w-[50%]"
-            }  bg-rmlk-dark-light rounded-md shadow-md p-[16px]`}
+              userInfo && userInfo.isAdmin ? "w-[40%]" : "w-[40%]"
+            }  bg-rmlk-dark-light rounded-sm shadow-md p-[16px]`}
           >
-            <div className="text-white text-[18px] font-semibold mb-[16px] text-center">
+            <div className="text-white text-[18px] font-semibold my-[16px] text-center">
               Find your vehicle here
             </div>
             <div className="w-full h-[2px] bg-rmlk-red mb-[16px]"></div>
@@ -128,7 +134,7 @@ const Recommendation = () => {
 
                     {recommendationHook.purpose && (
                       <button
-                        ref={nextBtnRef}
+                        ref={purposeNextBtnRef}
                         type="button"
                         onClick={nextStep}
                         className="mt-[8px] bg-rmlk-red cursor-pointer hover:bg-rmlk-red-light duration-200 text-white px-[8px] py-[4px] rounded-md w-full h-[30px]"
@@ -155,9 +161,9 @@ const Recommendation = () => {
                     >
                       What body type do you prefer?
                     </label>
-                    {loadingBodyType ? (
+                    {recommendationHook.loadingBodyType ? (
                       <p>Loading body types...</p>
-                    ) : errorBodyType ? (
+                    ) : recommendationHook.errorBodyType ? (
                       <p>Error loading body types</p>
                     ) : (
                       <select
@@ -416,17 +422,18 @@ const Recommendation = () => {
                     </div>
 
                     {/* Back & Submit Buttons */}
-                    <div className="flex gap-[8px]">
+                    <div className="flex gap-[8px] font-rmlk-secondary text-[12px] justify-between">
                       <button
                         type="button"
                         onClick={prevStep}
-                        className="bg-gray-600 text-white px-[8px] py-[4px] rounded-md"
+                        className="bg-gray-600 text-white  cursor-pointer hover:bg-gray-500 transition duration-200 px-[32px] py-[4px] rounded-md w-fit h-[30px]"
                       >
+                        <FontAwesomeIcon icon={faCaretLeft} />
                         Back
                       </button>
                       <button
                         type="submit"
-                        className={`bg-rmlk-red text-white px-[8px] py-[4px] rounded-md hover:bg-rmlk-red-light transition duration-200 ${
+                        className={`bg-rmlk-red text-white cursor-pointer hover:bg-rmlk-red-light transition duration-200 px-[32px] py-[4px] rounded-md w-fit h-[30px] ${
                           allStep2FieldsSelected
                             ? ""
                             : "opacity-50 cursor-not-allowed"
@@ -434,13 +441,14 @@ const Recommendation = () => {
                         disabled={!allStep2FieldsSelected}
                       >
                         Get Recommendations
+                        <FontAwesomeIcon icon={faCaretRight} />
                       </button>
                     </div>
                   </div>
                 </>
               )}
             </form>
-          </div>
+          </motion.div>
         </div>
       </section>
     </>
