@@ -189,7 +189,7 @@ const EditVehicleForm = () => {
               </InputWrapper>
               <InputWrapper title={"Year of manufacture"}>
                 <div className="p-[8px] w-full text-[12px] flex  gap-[4px]">
-                  <div className="flex flex-wrap gap-[2px] py-[4px] w-1/3">
+                  <div className="flex flex-wrap gap-[2px] py-[4px] w-2/3">
                     {editVehicleHook.yearsArr.length > 0 ? (
                       editVehicleHook.yearsArr.map((year) => (
                         <span
@@ -212,7 +212,7 @@ const EditVehicleForm = () => {
                       </span>
                     )}
                   </div>
-                  <div className="flex w-2/3">
+                  <div className="flex w-1/3">
                     <select
                       id="year"
                       name="year"
@@ -365,7 +365,7 @@ const EditVehicleForm = () => {
               </InputWrapper>
               <InputWrapper title={"Transmission(s)"}>
                 <div className="p-[8px] w-full text-[12px] flex gap-[4px]">
-                  <div className="flex flex-wrap gap-[2px] py-[4px] w-1/3">
+                  <div className="flex flex-wrap gap-[2px] py-[4px] w-2/3">
                     {editVehicleHook.transmissionArr.length > 0 ? (
                       editVehicleHook.transmissionArr.map((transmission) => (
                         <span
@@ -390,7 +390,7 @@ const EditVehicleForm = () => {
                       </span>
                     )}
                   </div>
-                  <div className="flex w-2/3">
+                  <div className="flex w-1/3">
                     <select
                       id="year"
                       name="year"

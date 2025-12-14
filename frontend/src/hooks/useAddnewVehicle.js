@@ -16,7 +16,7 @@ export const useAddnewVehicle = () => {
   const [groundClearance, setGroundClearance] = useState();
   const [fuelType, setFuelType] = useState("");
   const [fuelEfficiency, setFuelEfficiency] = useState("");
-  const [year, setYear] = useState(null);
+  const [year, setYear] = useState("");
   const [transmissionType, setTransmissionType] = useState("");
   const [infoLink, setInfoLink] = useState("");
   const [infoTag, setInfoTag] = useState("");

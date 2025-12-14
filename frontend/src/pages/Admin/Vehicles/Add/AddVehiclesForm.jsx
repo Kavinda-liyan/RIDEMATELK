@@ -188,7 +188,7 @@ const AddVehiclesForm = () => {
                     }}
                     className="w-full h-[30px] p-[4px] bg-rmlk-dark-lighter rounded-md"
                   >
-                    <option disabled value={null}>
+                    <option disabled value={""}>
                       -- Select --
                     </option>
                     {addNewVehicleHook.yearsArr?.map((year) => (
@@ -355,7 +355,7 @@ const AddVehiclesForm = () => {
                 {addNewVehicleHook.transmmissionList?.map(
                   (transmission, index) => (
                     <span
-                      className="px-[4px] py-[2px] text-[10px] text-white/40 font-semibold  hover:cursor-pointer hover:text-white duration-200"
+                      className="px-[4px] py-[2px] text-[10px] text-amber-400 font-semibold  hover:cursor-pointer hover:text-white duration-200"
                       key={index}
                       onClick={() =>
                         addNewVehicleHook.removeTransmissionFromList(index)
@@ -418,7 +418,7 @@ const AddVehiclesForm = () => {
                 {addNewVehicleHook.infoLinkList?.map(({ link, tag }, index) => (
                   <div key={index}>
                     <span
-                      className="px-[4px] py-[2px]  text-[10px] text-white/40 font-semibold hover:cursor-pointer hover:text-white duration-200"
+                      className="px-[4px] py-[2px]  text-[10px] text-amber-400 font-semibold hover:cursor-pointer hover:text-white duration-200"
                       onClick={() =>
                         addNewVehicleHook.removeInfoLinkFromList(index)
                       }
