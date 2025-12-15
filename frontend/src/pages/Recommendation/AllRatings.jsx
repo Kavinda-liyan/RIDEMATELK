@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSetRatings } from "../../hooks/useSetRatings";
-import { faStar } from "@fortawesome/free-solid-svg-icons";
-import imgPlaceholder from "../../assets/placeholderimg.svg";
+import { faMedal, faStar } from "@fortawesome/free-solid-svg-icons";
+import imgPlaceholder from "../../assets/userPlaceholder.svg";
 
 const AllRatings = ({ vehicleId }) => {
   const ratingHook = useSetRatings(vehicleId);
@@ -56,6 +56,11 @@ const AllRatings = ({ vehicleId }) => {
                     <span className="text-white font-semibold text-[14px]">
                       {matchedUser?.username || "Unknown User"}
                     </span>
+                    {matchedUser?.isTrustedBatch && (
+                      <span className="text-white  text-[8px] bg-blue-600 px-[8px] py-[4px] rounded-full">
+                        <span className=""><FontAwesomeIcon icon={faMedal} /></span> Trusted User
+                      </span>
+                    )}
                   </div>
                   <div className="ml-[52px]">
                     <p className="text-white text-[12px] mb-[4px]">

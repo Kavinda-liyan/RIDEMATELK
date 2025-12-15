@@ -26,14 +26,6 @@ const Signup = () => {
     );
   }
 
-  if (registerHook.isError) {
-    return (
-      <div className="h-dvh pt-[45px] pl-[60px] pr-[60px] bg-rmlk-dark font-rmlk-secondary flex justify-center items-center text-white">
-        Error: {registerHook.error?.data?.message || registerHook.error?.message || "Something went wrong"}
-      </div>
-    );
-  }
-
   return (
     <AuthWrapper>
       <div className="h-full col-span-6 overflow-hidden shadow-md relative max-xs-rmlk:col-span-12 max-xs-rmlk:hidden max-md-rmlk:col-span-5">

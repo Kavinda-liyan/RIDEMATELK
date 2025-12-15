@@ -12,7 +12,7 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../app/slices/authSlice.js";
 import { useLogoutMutation } from "../app/api/usersApiSlice.js";
-import imgPlaceholder from "../assets/placeholderimg.svg";
+import imgPlaceholder from "../assets/userPlaceholder.svg";
 import HamburgerButton from "./Assets/HamburgerButton.jsx";
 import CloseButton from "./Assets/CloseButton.jsx";
 import { motion, AnimatePresence } from "framer-motion";
@@ -80,8 +80,25 @@ const Navigation = () => {
   }, [mobileDropdownOpen]);
 
   const navLinks = [
-    { path: "/" || "/home", link_des: "Home" },
+    {
+      path:  userInfo?.isAdmin ? "/home" : "/",
+      link_des: "Home",
+    },
     { path: "/recommendations", link_des: "Recommendations" },
+    { path: "/about", link_des: "About Us" },
+    { path: "/contact", link_des: "Contact Us" },
+  ];
+
+  const mobileNavLinks = [
+    {
+      path: userInfo?.isAdmin ? "/home" : "/",
+      link_des: "Home",
+    },
+    { path: "/recommendations", link_des: "Recommendations" },
+    { path: "/admin/dashboard", link_des: "Admin Dashboard" },
+    { path: "/admin/allvehicles", link_des: "All Vehicles" },
+    { path: "/admin/allusers", link_des: "All Users" },
+    { path: "/admin/reviews", link_des: "Reviews" },
     { path: "/about", link_des: "About Us" },
     { path: "/contact", link_des: "Contact Us" },
   ];
@@ -115,7 +132,7 @@ const Navigation = () => {
 
       <div className="h-full w-full flex items-center justify-center">
         <ul className="flex flex-col gap-[40px] text-[18px] font-light text-white px-[32px] items-center">
-          {navLinks.map(({ path, link_des }, index) => (
+          {mobileNavLinks.map(({ path, link_des }, index) => (
             <NavLinks
               key={index}
               path={path}
@@ -165,7 +182,9 @@ const Navigation = () => {
                             : imgPlaceholder
                         }
                       />
-                      {userNameArr[0]} {userNameArr[userNameArr.length - 1]}{" "}
+                      <span className="max-sm-rmlk:hidden">
+                        {userNameArr[0]} {userNameArr[userNameArr.length - 1]}{" "}
+                      </span>
                       <FontAwesomeIcon icon={faCaretDown} />
                     </button>
                   </div>

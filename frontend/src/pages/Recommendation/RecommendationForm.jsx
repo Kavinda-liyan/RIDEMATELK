@@ -23,14 +23,14 @@ const RecommendationForm = () => {
   return (
     <>
       {userInfo && userInfo.isAdmin && <AdminDashboardButton />}
-      <div className="bg-rmlk-dark py-[50px] px-[60px] min-h-[100dvh]">
+      <div className="bg-rmlk-dark py-[50px] px-[60px] min-h-[100dvh] max-sm-rmlk:px-[24px]">
         {recommendations.length > 0 ? (
           <div className="mt-[45px] text-white w-full bg-rmlk-dark-light rounded-sm shadow-md p-[16px] border border-rmlk-red">
             <div className="text-center my-[8px]">
               <h3>Your Recommendations</h3>
             </div>
-            <div className="w-full flex items-center justify-center">
-              <ul className="text-white text-[12px] flex gap-[20px] items-center">
+            <div className="w-full flex items-center justify-center max-sm-rmlk:block">
+              <ul className="text-white text-[12px] flex gap-[20px] items-center max-sm-rmlk:block">
                 <li>
                   Body Type:{" "}
                   <span className="text-amber-500">{inputs.bodyType}</span>
@@ -71,7 +71,7 @@ const RecommendationForm = () => {
         {/* Vehicle Container */}
         <div
           id="vehicleContainer"
-          className={`p-[16px] grid gap-[16px] overflow-y-auto h-[75vh] mt-[16px] grid-cols-4`}
+          className={`p-[16px] grid gap-[16px] overflow-y-auto h-[75vh] mt-[16px] grid-cols-4 max-xs-rmlk:grid-cols-1 max-sm-rmlk:col-span-3 max-sm-rmlk:gap-[8px] max-sm-rmlk:p-[0px]`}
         >
           {recommendations.length > 0 ? (
             displayedVehicle.map((vehicle) => (

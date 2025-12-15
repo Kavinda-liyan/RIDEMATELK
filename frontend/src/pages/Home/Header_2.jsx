@@ -20,6 +20,7 @@ import { useSelector } from "react-redux";
 
 import LandingPageWrapper from "../../components/Wrappers/LandingPageWrapper";
 import { motion, useScroll, useTransform } from "framer-motion";
+import LogoCarousel from "../../components/LogoCarousel";
 
 const Header_2 = () => {
   const { userInfo } = useSelector((state) => state.auth);
@@ -68,8 +69,10 @@ const Header_2 = () => {
   return (
     <LandingPageWrapper
       id={"Specifications"}
-      extraClass={" pt-[60px] pb-[45px] gap-[20px] bg-rmlk-dark"}
+      extraClass={" pt-[60px] pb-[45px] gap-[20px] bg-rmlk-dark overflow-hidden"}
     >
+      
+
       <div className=" flex flex-col items-center text-center justify-center mb-[20px]">
         <motion.h3
           style={{
@@ -90,8 +93,10 @@ const Header_2 = () => {
           className="h-[4px] w-[50%] bg-rmlk-red"
         ></motion.div>
       </div>
-      <div className="grid grid-cols-12 gap-[20px] px-[60px]">
+      <div className="grid grid-cols-12 gap-[20px] px-[60px] max-sm-rmlk:px-0">
+        
         <div className="col-span-6 h-full max-md-rmlk:col-span-12 ">
+          
           <div className=" grid grid-rows-12 h-full gap-[20px]">
             <div className="row-span-6 h-full">
               <div className=" grid grid-cols-12 gap-[20px] h-full">
@@ -194,6 +199,7 @@ const Header_2 = () => {
           />
         </motion.div>
       </div>
+      
     </LandingPageWrapper>
   );
 };

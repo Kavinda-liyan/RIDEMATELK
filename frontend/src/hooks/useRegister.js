@@ -79,10 +79,17 @@ export const useRegister = () => {
       toast.success("Registered successfully !");
       navigate("/signin");
     } catch (err) {
-      const message =
-        err?.data?.message || err?.message || "Registration failed!";
-      setRegError((prev) => ({ ...prev, allFieldsError: message }));
-      toast.error(message);
+      // express-validator errors
+      if (err?.data?.errors && Array.isArray(err.data.errors)) {
+        err.data.errors.forEach((validationError) => {
+          toast.error(validationError.msg);
+        });
+      } else {
+        // fallback error
+        const message =
+          err?.data?.message || err?.message || "Registration failed!";
+        toast.error(message);
+      }
     }
   };
 

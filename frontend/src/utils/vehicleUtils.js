@@ -1,6 +1,11 @@
 import { useGetManufacturerQuery } from "../app/api/manufacturerSlice";
 import { useGetVehicleByFilterQuery } from "../app/api/vehiclesApiSlice";
 import { useGetBodyTypesQuery } from "../app/api/bodyTypesApiSlice";
+import all from "../assets/Purpose/all.svg";
+import tourism from "../assets/Purpose/travel.svg";
+import heavyduty from "../assets/Purpose/transport.svg";
+import personal from "../assets/Purpose/personal.svg";
+import { icon } from "@fortawesome/fontawesome-svg-core";
 
 export const vehicleUtils = () => {
   const {
@@ -42,10 +47,22 @@ export const vehicleUtils = () => {
   const seatingCapacityArr = ["2", "4", "5", "7", "8", "10", "12", "15"];
 
   const purposeArr = [
-    "Tourism / Transport",
-    "Personal Use",
-    "Heavy Duty / Pickup",
-    "Not Specified",
+    {
+      lable: "Tourism / Transport",
+      icon: tourism,
+    },
+    {
+      lable: "Personal Use",
+      icon: personal,
+    },
+    {
+      lable: "Heavy Duty / Pickup",
+      icon: heavyduty,
+    },
+    {
+      lable: "Not Specified",
+      icon: all,
+    },
   ];
 
   return {

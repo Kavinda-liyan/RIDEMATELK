@@ -29,6 +29,10 @@
   --color-riyasewana-blue: #039be6;
   --color-ikman-green: #149777;
 }
+html,
+body {
+  overflow-x: hidden;
+}
 
 * {
   box-sizing: border-box;
@@ -81,3 +85,4 @@
   background-repeat: no-repeat;
   background-position: 0px -180px;
 } */
+

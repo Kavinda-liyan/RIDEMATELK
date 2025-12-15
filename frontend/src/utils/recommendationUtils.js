@@ -24,7 +24,6 @@ export const recommendationUtils = () => {
 
   const trafficConditionList = [
     { answer: "Usually traffics are not heavy", value: "low" },
-    { answer: "Usually traffics are moderate", value: "medium" },
     { answer: "Usually traffics are heavy", value: "high" },
     { answer: "I often encounter mixed traffic conditions", value: "mixed" },
   ];
@@ -34,7 +33,6 @@ export const recommendationUtils = () => {
     { answer: "I prefer diesel vehicles.", value: "diesel" },
     { answer: "I prefer electric vehicles.", value: "electric" },
     { answer: "I prefer hybrid vehicles.", value: "hybrid" },
-    { answer: "I have no specific fuel type preference.", value: "any" },
   ];
 
   const GcRecommendation = [

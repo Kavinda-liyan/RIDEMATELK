@@ -5,7 +5,7 @@ const PageWrapper = ({ children }) => {
   return (
     <section
       className={`min-h-[100dvh] pt-[50px] pb-[30px] bg-rmlk-dark ${
-        userInfo.isAdmin ? "pl-[30px] pr-[60px]" : "pl-[60px] pr-[60px]"
+        userInfo.isAdmin ? "pl-[30px] pr-[60px] max-sm-rmlk:px-[24px]" : "pl-[60px] pr-[60px]"
       }`}
     >
       {children}

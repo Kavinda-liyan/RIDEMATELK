@@ -68,27 +68,49 @@ const Recommendation = () => {
         purposeNextBtnRef.current,
         { opacity: 0, y: -20 },
         { opacity: 1, y: 0, duration: 0.4, ease: "sine" }
+      ).fromTo(
+        descriptionRef.current,
+        { opacity: 0, y: -20 },
+        { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }
       );
     }
-  }, [recommendationHook.bodyTypeDescription, recommendationHook.purpose]);
+
+    if (recommendationHook.seatingCapacity) {
+      const t2 = gsap.timeline();
+      t2.fromTo(
+        descriptionRef.current,
+        { opacity: 0, y: -20 },
+        { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }
+      );
+    }
+  }, [
+    recommendationHook.bodyTypeDescription,
+    recommendationHook.purpose,
+    recommendationHook.seatingCapacity,
+  ]);
 
   return (
     <>
       {userInfo && userInfo.isAdmin && <AdminDashboardButton />}
       <section
-        className="h-dvh bg-rmlk-dark pl-[60px] pr-[60px] pt-[50px]"
+        className="min-h-dvh bg-rmlk-dark pl-[60px] pr-[60px] py-[50px] max-sm-rmlk:px-[24px]"
         id="Recommendation"
       >
-        <div className="h-full w-full flex items-center justify-center text-white">
+
+        <div className="text-[24px] mt-[16px] px-[16px] py-[8px] w-full bg-rmlk-dark-light rounded-sm shadow-md text-white">
+          <h3>Recommendation</h3>
+        </div>
+
+        <div className="h-full w-full flex items-center justify-center text-white pt-[20px] pb-[20px] my-[16px]">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeInOut", delay: 0.2 }}
             className={`${
               userInfo && userInfo.isAdmin ? "w-[40%]" : "w-[40%]"
-            }  bg-rmlk-dark-light rounded-sm shadow-md p-[16px]`}
+            }  bg-rmlk-dark-light rounded-sm shadow-md p-[16px] max-sm-rmlk:w-[100%]`}
           >
-            <div className="text-white text-[18px] font-semibold my-[16px] text-center">
+            <div className="text-white text-[16px] font-semibold my-[16px] text-center">
               Find your vehicle here
             </div>
             <div className="w-full h-[2px] bg-rmlk-red mb-[16px]"></div>
@@ -99,7 +121,7 @@ const Recommendation = () => {
             >
               {step === 1 && (
                 <div>
-                  <div className="p-[8px] text-[12px] w-full ">
+                  <div className="p-[8px] text-[12px] w-full">
                     <label
                       className="block mb-[8px] text-[14px]"
                       htmlFor="purpose"
@@ -122,17 +144,37 @@ const Recommendation = () => {
                       <option disabled value="">
                         Select Purpose
                       </option>
-                      {purposeArr.map((purpose) => (
-                        <option
-                          className="p-[8px]"
-                          key={purpose}
-                          value={purpose}
-                        >
-                          {purpose}
+
+                      {purposeArr.map(({ lable }, index) => (
+                        <option key={index} value={lable}>
+                          {lable}
                         </option>
                       ))}
                     </select>
 
+                    {/* Selected Purpose Preview */}
+                    {recommendationHook.purpose && (
+                      <div
+                        ref={descriptionRef}
+                        className="rounded-sm border border-green-600 my-[16px] p-[16px] text-center"
+                      >
+                        <img
+                          src={
+                            purposeArr.find(
+                              (item) =>
+                                item.lable === recommendationHook.purpose
+                            )?.icon
+                          }
+                          alt={recommendationHook.purpose}
+                          className="h-[60px]  mx-auto mb-[8px]"
+                        />
+                        <p className="text-gray-300 text-[14px]">
+                          {recommendationHook.purpose}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Next Button */}
                     {recommendationHook.purpose && (
                       <button
                         ref={purposeNextBtnRef}
@@ -304,6 +346,7 @@ const Recommendation = () => {
                       {recommendationHook.seatingCapacity && (
                         <div className="flex items-center w-full gap-[16px] justify-between">
                           <button
+                            ref={prevBtnRef}
                             type="button"
                             onClick={prevStep}
                             className="mt-[8px] bg-gray-600 cursor-pointer hover:bg-gray-500 duration-200 text-white px-[32px] py-[4px] rounded-md w-fit h-[30px]"

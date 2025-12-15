@@ -33,7 +33,7 @@ const HeaderCard = ({ items, interval = 3500, description, duration }) => {
               >
                 <div className="image-container h-36px flex items-center justify-center overflow-hidden">
                   <img
-                    className="w-full transition-all duration-500 max-sm-rmlk:h-[50px] object-cover group-hover:scale-110 "
+                    className="w-full transition-all duration-500 max-sm-rmlk:w-full object-cover group-hover:scale-110 "
                     src={currentItem.img}
                     alt={currentItem.name}
                   />
@@ -42,8 +42,8 @@ const HeaderCard = ({ items, interval = 3500, description, duration }) => {
             </AnimatePresence>
           </div>
         </div>
-        <div className="h-fit flex items-center justify-center p-[8px] bg-rmlk-dark-lighter">
-          <p className="text-white text-[12px] h-fit flex item-center justify-center tracking-widest text-center ">
+        <div className="h-fit max-sm-rmlk:h-full flex items-center justify-center p-[8px] bg-rmlk-dark-lighter">
+          <p className="text-white text-[12px] h-fit max-sm-rmlk:h-full flex item-center justify-center tracking-widest text-center ">
             {description}
           </p>
         </div>

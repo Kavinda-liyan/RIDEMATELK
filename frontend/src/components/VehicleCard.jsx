@@ -16,11 +16,12 @@ const VehicleCard = ({
   toggleFavourite,
   isFavorite,
   userIdForFav,
+  fuelEff,
 }) => {
   const fuel = fueltype.toLowerCase();
   const { userInfo } = useSelector((state) => state.auth);
   return (
-    <div className="py-[16px] px-[18px] ">
+    <div className="py-[16px] px-[18px] max-sm-rmlk:px-[8px]">
       <div
         id="card"
         className="relative hover:scale-105 cursor-pointer duration-200 w-full bg-rmlk-dark-light rounded-xs shadow-md border border-rmlk-dark-light overflow-hidden min-h-[290px]"
@@ -82,10 +83,11 @@ const VehicleCard = ({
               <p className="w-fit mb-[2px] bg-sky-600 inline-block px-[4px] py-[2px] rounded-sm font-semibold">
                 {seats} seats
               </p>
-              {/* <p className="w-fit mb-[2px]">
-              <strong>Fuel Efficiency</strong> : {fuelEff}{" "}
-              {fuel === "electric" ? "km/kwh" : "km/l"}
-            </p> */}
+              <p
+                className={`w-fit mb-[2px] inline-block px-[4px] py-[2px] rounded-sm font-semibold bg-indigo-500`}
+              >
+                {fuelEff} {fuel === "electric" ? "km/kwh" : "km/l"}
+              </p>
               <p className="w-fit mb-[2px] bg-gray-600 inline-block px-[4px] py-[2px] rounded-sm font-semibold">
                 {groundC} mm
               </p>

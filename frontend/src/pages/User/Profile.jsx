@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import imgPlaceholder from "../../assets/placeholderimg.svg";
+import imgPlaceholder from "../../assets/userPlaceholder.svg";
 import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
@@ -10,14 +10,14 @@ const Profile = () => {
   console.log("User Info:", userInfo);
 
   return (
-    <section className="h-dvh bg-rmlk-dark pl-[60px] pr-[60px] pt-[50px] font-rmlk-secondary">
-      <div className="h-full w-full flex flex-col items-center justify-start text-white gap-8">
+    <section className="h-dvh bg-rmlk-dark pl-[60px] pr-[60px] pt-[50px] font-rmlk-secondary max-sm-rmlk:px-[24px]">
+      <div className="h-full w-full flex flex-col items-center justify-center text-white gap-8">
         <div></div>
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          className="w-[50%] flex items-center justify-center flex-col gap-[16px] bg-rmlk-dark-light p-[32px] rounded-sm shadow-md"
+          className="w-[50%] flex items-center justify-center flex-col gap-[16px] bg-rmlk-dark-light p-[32px] rounded-sm shadow-md max-sm-rmlk:w-full"
         >
           <div className="w-[120px] h-[120px] overflow-hidden rounded-full border-2 border-rmlk-dark-lighter shadow-md cursor-pointer">
             <img

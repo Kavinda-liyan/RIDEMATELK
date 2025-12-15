@@ -44,6 +44,10 @@ ROAD_MAPPING = {
     "hilly": "Off-Road/Hilly Terrain",
 }
 
+TRAFFIC_CATEGORIES = ["low", "medium", "high", "mixed"]
+
+FUEL_PRIORITY = {"ev": 3, "hybrid": 2, "petrol": 1, "diesel": 1, "cng": 1}
+
 def safe_value(val):
     if val is None or (isinstance(val, float) and math.isnan(val)):
         return 0
@@ -91,14 +95,25 @@ def generate_recommendations(user_prefs, top_n=30):
         user_seating = int(user_prefs.get("seating", 5))
         user_road = user_prefs.get("road", "city").lower().strip()
         user_traffic = user_prefs.get("traffic", "mixed").lower().strip()
-        user_fuel = user_prefs.get("fuel", "petrol").lower().strip()
+        user_fuel = user_prefs.get("fuel", "any").lower().strip()
         user_road_mapped = ROAD_MAPPING.get(user_road, "City/Urban").lower()
 
+        # Validate traffic input
+        if user_traffic not in TRAFFIC_CATEGORIES:
+            user_traffic = "mixed"
+
+        # Treat 'any' fuel as no preference
+        if user_fuel == "any":
+            user_fuel_filter = False
+            user_fuel = ""
+        else:
+            user_fuel_filter = True
+
         # --- Filter vehicles ---
-        df_filtered = df.dropna(subset=["Seating Capacity", "Fuel Type", "Body Type"]).copy()
+        df_filtered = df.dropna(subset=["Seating Capacity", "Body Type"]).copy()
         if user_body:
             df_filtered = df_filtered[df_filtered["Body Type"].str.contains(user_body, na=False)]
-        if user_fuel:
+        if user_fuel_filter:
             df_filtered = df_filtered[df_filtered["Fuel Type"] == user_fuel]
         df_filtered = df_filtered[df_filtered["Seating Capacity"].between(user_seating - 1, user_seating + 1)]
         if df_filtered.empty:
@@ -119,6 +134,7 @@ def generate_recommendations(user_prefs, top_n=30):
 
         X = preprocessor.fit_transform(df_filtered[numeric_features + categorical_features])
 
+        # --- Feature weights based on traffic and road ---
         FEATURE_WEIGHTS = {
             "Seating Capacity": 1.0,
             "EFF (km/l)/(km/kwh)": 1.5,
@@ -137,6 +153,8 @@ def generate_recommendations(user_prefs, top_n=30):
             FEATURE_WEIGHTS["EFF (km/l)/(km/kwh)"] = 5.0
         elif user_traffic == "medium":
             FEATURE_WEIGHTS["EFF (km/l)/(km/kwh)"] = 2.0
+        else:
+            FEATURE_WEIGHTS["EFF (km/l)/(km/kwh)"] = 1.5
 
         for i, col in enumerate(numeric_features):
             X[:, i] *= FEATURE_WEIGHTS[col]
@@ -148,7 +166,7 @@ def generate_recommendations(user_prefs, top_n=30):
             "Seating Capacity": user_seating,
             "EFF (km/l)/(km/kwh)": df_filtered["EFF (km/l)/(km/kwh)"].median(),
             "Ground Clearance (range)": df_filtered["Ground Clearance (range)"].median(),
-            "Fuel Type": user_fuel,
+            "Fuel Type": user_fuel or df_filtered["Fuel Type"].mode().iloc[0],
             "Body Type": user_body or df_filtered["Body Type"].mode().iloc[0],
             "Road Type": user_road_mapped,
         }
@@ -174,12 +192,35 @@ def generate_recommendations(user_prefs, top_n=30):
             })
 
         # --- FINAL SORTING LOGIC ---
-        if user_road_mapped in ["off-road/hilly terrain", "mid off-road"]:
-            recommendations.sort(key=lambda x: (-(x["Ground Clearance (range)"] or 0), -x["score"]))
+        if user_traffic == "high" and not user_fuel_filter:
+            # Score first, then fuel priority, then fuel efficiency
+            recommendations.sort(
+                key=lambda x: (
+                    x["score"],
+                    FUEL_PRIORITY.get(x["Fuel Type"].lower(), 0),
+                    x["EFF (km/l)/(km/kwh)"] or 0
+                ),
+                reverse=True
+            )
+        elif user_traffic == "high":
+            # Score first, then fuel efficiency
+            recommendations.sort(
+                key=lambda x: (x["score"], x["EFF (km/l)/(km/kwh)"] or 0),
+                reverse=True
+            )
+        elif user_road_mapped in ["off-road/hilly terrain", "mid off-road"]:
+            # Score first, then ground clearance
+            recommendations.sort(
+                key=lambda x: (x["score"], x["Ground Clearance (range)"] or 0),
+                reverse=True
+            )
         elif user_road_mapped == "suburban/normal":
             gc_vals = [r["Ground Clearance (range)"] for r in recommendations if r["Ground Clearance (range)"]]
             gc_median = np.median(gc_vals) if gc_vals else 0
-            recommendations.sort(key=lambda x: (abs((x["Ground Clearance (range)"] or gc_median) - gc_median), -x["score"]))
+            recommendations.sort(
+                key=lambda x: (x["score"], -abs((x["Ground Clearance (range)"] or gc_median) - gc_median)),
+                reverse=True
+            )
         else:
             recommendations.sort(key=lambda x: x["score"], reverse=True)
 
@@ -188,7 +229,7 @@ def generate_recommendations(user_prefs, top_n=30):
         for rec in recommendations:
             match_body = user_body in rec.get("Body Type", "").lower()
             match_seating = abs(rec.get("Seating Capacity", 0) - user_seating) <= 1
-            match_fuel = rec.get("Fuel Type", "").lower() == user_fuel
+            match_fuel = True if not user_fuel_filter else rec.get("Fuel Type", "").lower() == user_fuel
             if match_body and match_seating and match_fuel:
                 matched_count += 1
 

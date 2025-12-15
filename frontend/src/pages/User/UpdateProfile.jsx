@@ -1,4 +1,4 @@
-import imgPlaceholder from "../../assets/placeholderimg.svg";
+import imgPlaceholder from "../../assets/userPlaceholder.svg";
 import ProfileImageModal from "../../components/ProfileImageModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCamera } from "@fortawesome/free-solid-svg-icons";
@@ -39,7 +39,7 @@ const UpdateProfile = () => {
   );
 
   return (
-    <section className="h-dvh bg-rmlk-dark pl-[60px] pr-[60px] pt-[50px] font-rmlk-secondary">
+    <section className="h-dvh bg-rmlk-dark pl-[60px] pr-[60px] pt-[50px] font-rmlk-secondary max-sm-rmlk:px-[24px]">
       {handleSubmitModal}
       {/* Cropper Modal */}
       <ProfileImageModal
@@ -57,7 +57,7 @@ const UpdateProfile = () => {
       >
         <form
           onSubmit={handleSubmit}
-          className="w-[50%] bg-rmlk-dark-light rounded-sm shadow-md p-[16px] flex flex-col gap-4 font-rmlk-secondary text-[12px]"
+          className="w-[50%] bg-rmlk-dark-light rounded-sm shadow-md p-[16px] flex flex-col gap-4 font-rmlk-secondary text-[12px] max-sm-rmlk:w-full"
         >
           <div className="w-full flex items-center justify-center flex-col gap-[16px]">
             <div className="relative w-[100px] h-[100px] overflow-hidden rounded-full border-2 border-rmlk-dark-lighter shadow-md cursor-pointer hover:border-blue-600 duration-200">

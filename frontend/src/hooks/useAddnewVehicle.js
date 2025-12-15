@@ -116,20 +116,29 @@ export const useAddnewVehicle = () => {
 
   const handleAddVehicleModal = (e) => {
     e.preventDefault();
+
+    // Trim string fields
+    const manufacturerTrimmed = Manufacturer?.trim();
+    const vehicleModelTrimmed = VehicleModel?.trim();
+    const bodyTypeTrimmed = bodyType?.trim();
+    const fuelTypeTrimmed = fuelType?.trim();
+    const fuelEfficiencyTrimmed = fuelEfficiency?.trim();
+
     if (
-      !Manufacturer ||
-      !VehicleModel ||
-      !bodyType ||
-      !seatingCapacity ||
-      !groundClearance ||
-      !fuelType ||
-      !fuelEfficiency ||
-      yearList.length == 0 ||
-      transmmissionList.length == 0
+      !manufacturerTrimmed ||
+      !vehicleModelTrimmed ||
+      !bodyTypeTrimmed ||
+      seatingCapacity == null || // allow 0
+      groundClearance == null || // allow 0
+      !fuelTypeTrimmed ||
+      !fuelEfficiencyTrimmed ||
+      yearList.length === 0 ||
+      transmmissionList.length === 0
     ) {
       toast.error("Please fill in all required fields");
       return;
     }
+
     setShowAddVehicleModal(true);
   };
 

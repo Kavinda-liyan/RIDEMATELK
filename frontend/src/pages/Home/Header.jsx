@@ -33,6 +33,7 @@ const Header = () => {
 
   return (
     <LandingPageWrapper id={"Home"} extraClass={"Header overflow-hidden"}>
+      
       <AnimatePresence mode="wait">
         <motion.img
           ref={bgImageRef}

@@ -131,8 +131,8 @@ const AddBodyTypesForm = () => {
                           -- Select --
                         </option>
                         {purposeArr?.map((purpose) => (
-                          <option key={purpose} value={purpose}>
-                            {purpose}
+                          <option key={purpose.lable} value={purpose.lable}>
+                            {purpose.lable}
                           </option>
                         ))}
                       </select>

@@ -24,6 +24,8 @@ function App() {
       "/favourite",
       "/profile",
       "/profile/update",
+      "/about",
+      "/contact",
     ].includes(location.pathname) || isVehicleResult;
 
   return (
@@ -34,7 +36,7 @@ function App() {
       <div className="flex min-h-screen bg-gray-100 relative ">
         {userInfo?.isAdmin && !hideSidenav && (
           <aside
-            className={`bg-rmlk-dark text-white w-[300px] overflow-hidden transition-all duration-500`}
+            className={`bg-rmlk-dark text-white w-[300px] overflow-hidden transition-all duration-500 max-sm-rmlk:hidden`}
           >
             <SideNav />
           </aside>

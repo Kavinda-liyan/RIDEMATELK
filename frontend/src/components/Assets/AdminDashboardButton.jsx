@@ -9,7 +9,7 @@ const AdminDashboardButton = () => {
       initial={{ opacity: 0, x: -100 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.8, ease: "easeOut", delay: 0.5 }}
-      className="fixed top-[80px] left-[60px] text-white font-rmlk-secondary text-[14px] z-50"
+      className="fixed top-[80px] left-[60px] text-white font-rmlk-secondary text-[14px] z-50 max-sm-rmlk:top-[70px] max-sm-rmlk:left-[20px]"
     >
       <Link
         to={"/admin/dashboard"}

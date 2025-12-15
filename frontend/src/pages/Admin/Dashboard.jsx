@@ -11,7 +11,7 @@ import {
   YAxis,
   Bar,
 } from "recharts";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import PageWrapper from "../../components/Assets/PageWrapper";
 import BreadCrumb from "../../components/BreadCrumb";
 import { useDashboardComponents } from "../../hooks/useDashboardComponents";
@@ -105,30 +105,15 @@ const Dashboard = () => {
     [bodyTypeBarData]
   );
 
-  const [pageLoading, setPageLoading] = useState(true);
-
-  const [value, onChange] = useState(new Date());
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setPageLoading(false);
-    }, 2000);
-
-    return () => clearTimeout(timeout);
-  }, []);
-
-  if (pageLoading) {
-    return (
-      <div className=" flex justify-center items-center h-dvh inset-1 w-full">
-        <Loader />
-      </div>
-    );
-  }
-
   return (
     <PageWrapper>
       <BreadCrumb links={[{ label: "Dashboard", to: "/admin/dashboard" }]} />
-      <div className="grid grid-cols-4 gap-[16px] font-rmlk-secondary my-[16px]">
+      <motion.div
+        initial={{ opacity: 0, y: -40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="grid grid-cols-4 gap-[16px] font-rmlk-secondary my-[16px] max-sm-rmlk:grid-cols-2"
+      >
         <DashboardPillers
           phillerName={"Registered Users "}
           phillerData={
@@ -164,7 +149,7 @@ const Dashboard = () => {
           icon={faCarAlt}
         />
         <DashboardPillers
-          phillerName={"Raring Count "}
+          phillerName={"Rating Count "}
           phillerData={
             useDashBoardHook.loadingRating
               ? "Loading..."
@@ -174,13 +159,13 @@ const Dashboard = () => {
           }
           icon={faStar}
         />
-      </div>
-      <div className="grid grid-cols-3 gap-[16px] my-[16px]">
+      </motion.div>
+      <div className="grid grid-cols-3 gap-[16px] my-[16px] max-sm-rmlk:grid-cols-1">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          className="bg-rmlk-dark-light rounded-md p-[8px] shadow-md col-span-1"
+          className="bg-rmlk-dark-light rounded-md p-[8px] shadow-md col-span-1 max-sm-rmlk:col-span-12"
         >
           <h3 className="text-[14px] text-center  text-white/90 font-rmlk-secondary">
             Fuel Type Distribution For {useDashBoardHook.AllVehicles} Vehicles
@@ -194,7 +179,7 @@ const Dashboard = () => {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-          className="bg-rmlk-dark-light rounded-md p-[8px] shadow-md col-span-2"
+          className="bg-rmlk-dark-light rounded-md p-[8px] shadow-md col-span-2 max-sm-rmlk:col-span-12"
         >
           <h3 className="text-[14px] text-center text-white/90 font-rmlk-secondary mb-2">
             Body Type Distribution For {useDashBoardHook.AllVehicles} Vehicles
