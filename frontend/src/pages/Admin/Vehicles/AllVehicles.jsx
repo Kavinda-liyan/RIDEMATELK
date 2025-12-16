@@ -164,7 +164,7 @@ const AllVehicles = () => {
               data.vehicles.map((vehicle, index) => (
                 <tr
                   key={vehicle._id}
-                  className={`text-[12px] font-rmlk-secondary transition-all duration-200 ${
+                  className={`text-[12px] font-rmlk-secondary transition-all hover:bg-rmlk-dark duration-200 ${
                     toggleAction === vehicle._id ? "bg-rmlk-dark" : ""
                   }`}
                   onClick={() => handleVehicleClick()}

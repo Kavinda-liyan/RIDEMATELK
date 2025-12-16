@@ -9,6 +9,9 @@ import AverageRatingField from "./AverageRatingField";
 import { useAllRecommendations } from "../../hooks/useAllRecommendations";
 import { useLocation } from "react-router-dom";
 import AdminDashboardButton from "../../components/Assets/AdminDashboardButton";
+import ikman from "../../assets/Links/ikman.svg";
+import riyasewana from "../../assets/Links/riyasewana.svg";
+import globe from "../../assets/Links/globe.svg";
 
 const VehicleDetails = () => {
   const {
@@ -65,6 +68,13 @@ const VehicleDetails = () => {
 
   const GCDescription =
     matchedGC?.description || "No ground clearance info available.";
+
+  const manufacturedYears = Array.isArray(vehicleData?.years)
+    ? [...vehicleData.years].sort((a, b) => a - b)
+    : [];
+
+  const firstYear = manufacturedYears[0];
+  const lastYear = manufacturedYears[manufacturedYears.length - 1];
 
   return (
     <>
@@ -131,6 +141,16 @@ const VehicleDetails = () => {
                         <tr>
                           <td className="font-semibold">Model</td>
                           <td>{vehicleData.Model.toUpperCase()}</td>
+                        </tr>
+                        <tr>
+                          <td className="font-semibold">Manufactured Years</td>
+                          <td>
+                            {manufacturedYears.length === 0
+                              ? "Not specified"
+                              : firstYear === lastYear
+                              ? firstYear
+                              : `${firstYear} – ${lastYear}`}
+                          </td>
                         </tr>
                         <tr>
                           <td className="font-semibold">Ground Clearance</td>
@@ -237,9 +257,9 @@ const VehicleDetails = () => {
                 <div className="flex-grow">
                   <h3 className="text-[14px] text-amber-500">
                     View this vehicle in online marketplaces for new or second
-                    hand cars.
+                    hand cars and similar models.
                   </h3>
-                  <div className="my-[8px] flex  gap-[8px]">
+                  <div className="my-[8px] flex  gap-[8px] flex-wrap">
                     {Array.isArray(vehicleData?.info_links) &&
                     vehicleData.info_links.length > 0 ? (
                       vehicleData.info_links.map(({ tag, link }, index) => (
@@ -248,17 +268,30 @@ const VehicleDetails = () => {
                           href={link}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className={`block text-rmlk-primary decoration-none text-center py-[6px] w-fit px-[32px] rounded-xs shadow-md cursor-pointer ${
+                          className={`flex items-center gap-[4px] text-rmlk-primary decoration-none text-center py-[6px] w-fit px-[32px] rounded-xs shadow-md cursor-pointer ${
                             tag === "ikman"
                               ? "bg-[#149777]"
                               : tag === `riyasewana`
                               ? "bg-[#039be6]"
                               : tag === "other"
-                              ? "bg-gray-900"
+                              ? "bg-gray-800"
                               : "bg-blue-600"
                           }`}
                         >
-                          {tag.charAt(0).toUpperCase() + tag.slice(1)}
+                          <img
+                            src={
+                              tag === "ikman"
+                                ? ikman
+                                : tag === "riyasewana"
+                                ? riyasewana
+                                : globe
+                            }
+                            alt="logo"
+                            className="h-[20px]"
+                          />{" "}
+                          {tag === "ikman" || tag === "riyasewana"
+                            ? tag.charAt(0).toUpperCase() + tag.slice(1)
+                            : "Find vehicle from official dealer"}
                         </a>
                       ))
                     ) : (
